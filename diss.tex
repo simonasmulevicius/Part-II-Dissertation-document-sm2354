@@ -1,0 +1,483 @@
+% Template for a Computer Science Tripos Part II project dissertation
+\documentclass[12pt,a4paper,twoside,openright]{report}
+\usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
+\usepackage[margin=25mm]{geometry}  % adjusts page layout
+\usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
+\usepackage{verbatim}
+\usepackage{docmute}   % only needed to allow inclusion of proposal.tex
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usepackage{multirow}
+
+\raggedbottom                           % try to avoid widows and orphans
+\sloppy
+\clubpenalty1000%
+\widowpenalty1000%
+
+\renewcommand{\baselinestretch}{1.1}    % adjust line spacing to make
+                                        % more readable
+
+\begin{document}
+
+\bibliographystyle{plain}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title
+
+
+\pagestyle{empty}
+
+\rightline{\LARGE \textbf{Simonas Mulevicius}}
+
+\vspace*{60mm}
+\begin{center}
+\Huge
+\textbf{QUIC offloading using NetFPGA smart NICs} \\[5mm]
+Computer Science Tripos -- Part II \\[5mm]
+Homerton College \\[5mm]
+\today  % today's date
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Proforma, table of contents and list of figures
+
+\pagestyle{plain}
+
+\chapter*{Proforma}
+
+{\large
+\begin{tabular}{ll}
+Name:               & \bf Simonas Mulevicius                       \\
+College:            & \bf Homerton College                     \\
+Project Title:      & \bf QUIC offloading using NetFPGA smart NICs \\
+Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
+Word Count:         & \bf 200\footnotemark[1] \\
+Project Originator: & Dr Andrew W. Moore                \\
+Supervisor:         & Dr Andrew W. Moore                \\ 
+\end{tabular}
+}
+\footnotetext[1]{This word count was computed
+by \texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
+}
+\stepcounter{footnote}
+
+
+\section*{Original Aims of the Project}
+
+TODO
+
+\section*{Work Completed}
+
+TODO
+
+\section*{Special Difficulties}
+
+TODO
+ 
+\newpage
+\section*{Declaration}
+
+I, Simonas Mulevicius of Homerton College, being a candidate for Part II of the Computer
+Science Tripos, hereby declare
+that this dissertation and the work described in it are my own work,
+unaided except as may be specified below, and that the dissertation
+does not contain material that has already been used to any substantial
+extent for a comparable purpose. I am content for my dissertation to
+be made available to the students and staff of the University.
+
+\bigskip
+\leftline{Signed [signature]}
+
+\medskip
+\leftline{Date [date]}
+
+
+%Professional Practice and Presentation 14%
+%Introduction and Preparation 26%
+%Implementation 40%
+%Evaluation and Conclusion 20%
+
+
+
+\tableofcontents
+
+\listoffigures
+
+\newpage
+\section*{Acknowledgements}
+
+The following people helped with the project setup or provided useful insights or hints on how to tackle project-related problems:
+\begin{itemize}
+    \item \textbf{Dr Marcin Wojcik} helped with general inquiries related to the setup of NetFPGA developing platform;
+    \item \textbf{Dr Andrew W. Moore} was my project supervisor and originator of the project idea;
+    \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory that were used for experiments during the Winter vacation;
+    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \textit{ngtcp2} \footnote{specific implementation of QUIC which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \textit{ngtcp2}.
+    
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% now for the chapters
+
+\pagestyle{headings}
+
+\chapter{Introduction}
+% ------------------------------------------------
+% TODO
+%
+% The introduction should explain the principal motivation for the project and show how the work fits into the broad area of surrounding computer science and give a brief survey of previous related work. It should generally be unnecessary to quote at length from technical papers or textbooks. If a simple bibliographic reference is insufficient, consign any lengthy quotation to an appendix.
+
+
+
+% FROM: https://www.cst.cam.ac.uk/teaching/part-ii/projects/assessment
+% Clear motivation, justifying potential benefits of success.
+%Good or excellent requirements analysis; justified and documented selection of suitable tools; good engineering approach.
+%Clear presentation of challenging background material covering a range of computer science topics beyond Part IB.
+% ------------------------------------------------
+
+
+\section{What is QUIC?}
+
+% TODO add references !!!!
+QUIC is a next-generation transport layer protocol.
+It aims to solve some of the design problems which are present in the TCP transport layer protocol.
+% TODO Add "See section X below"
+% TODO Add QUIC's diagram in the network stack
+% TODO Mention fast TLS1.3 handshake
+
+
+% TODO also, add references!
+For completeness, I have to mention that there have already been several attempts to overcome the head-of-line blocking problem present in TCP.
+However, attempts to roll out new and experimental versions of TCP were unsuccessful. %TODO justify - mention SPIDY and TCP.2??
+The main reason being that middleboxes (e.g. Network Address Translators or NATs for short) interfered with the TCP traffic.
+For instance, NATs made assumptions about the structure of TCP headers.
+As TCP/IP stack was and still is a predominant backbone of the Internet, some NATs offloaded some TCP processing to hardware or used some software optimisation techniques.
+Consequently, these premature optimisations interfered with TCP protocol's correctness - NATs simply rejected connections that used non-standard TCP packets.
+Another reason for the slow roll-out was that TCP's functionality is implemented in the kernel, meaning that in order to add changes to TCP, one would need to change a large number of different operating systems.
+Architects of QUIC learned these mistakes and attempted to prevent the ossification of QUIC in the future by using two interesting techniques.
+First of all, QUIC's code was elevated to userspace.
+In addition, in order to prevent NATs from interfering with QUIC, QUIC's packet headers are partially encrypted.
+
+
+
+
+\subsection{QUIC's advantages}
+
+\begin{itemize}
+  \item TODO mention head-of-line blocking
+  \item TODO mention reduced handshake protocol
+  \item TODO mention how QUIC solves the problem of ossification
+\end{itemize}
+
+\subsection{QUIC's header format}
+
+
+% \section{Number of words}
+% TODO TO USE
+
+% An approximate word count of the body of the dissertation may be
+% obtained using:
+
+% \texttt{wc diss.tex}
+
+% \noindent
+% Alternatively, try something like:
+% \verb/detex diss.tex | tr -cd '0-9A-Z a-z\n' | wc -w/
+
+
+\chapter{Preparation}
+% ------------------------------------------------
+% TODO
+%
+% Principally, this chapter should describe the work which was undertaken before code was written, hardware built or theories worked on. It should show how the project proposal was further refined and clarified, so that the implementation stage could go smoothly rather than by trial and error.
+
+%Throughout this chapter and indeed the whole dissertation, it is essential to demonstrate that a proper professional approach was employed.
+
+%The nature of this chapter will vary greatly from one dissertation to another but, underlining the professional approach, this chapter will very likely include a section headed "Requirements Analysis" and refer to appropriate software engineering techniques used in the dissertation. The chapter will also cite any new programming languages and systems which had to be learnt and will mention complicated theories or algorithms which required understanding.
+
+%It is essential to declare the starting point. This states any existing codebase or materials that your project builds on. The text here can commonly be identical to the text in your proposal, but it may enlarge on it or report variations. For instance, the true starting point may have turned out to be different from that declared in the proposal and such discrepancies must be explained.
+
+
+
+% FROM: https://www.cst.cam.ac.uk/teaching/part-ii/projects/assessment
+% Clear motivation, justifying potential benefits of success.
+%Good or excellent requirements analysis; justified and documented selection of suitable tools; good engineering approach.
+%Clear presentation of challenging background material covering a range of computer science topics beyond Part IB.
+% ------------------------------------------------
+
+
+
+
+\section{Why are there so many implementations of QUIC?}
+
+% TODO user space vs kernel space
+% TODO add a list of QUIC implementations
+
+As already mentioned in the Introduction section, QUIC \\
+TODO 
+
+\subsection{List of QUIC's implementations}
+% This is subsection see Appendix~\ref{referencedAppendixTag}. 
+
+\subsection{Why did I choose  \texttt{ngtcp2}?}
+%TODO: fix style and grammar:
+There are many implementations of QUIC (TODO add a link to Wikipedia article) written in different languages.
+I considered  \texttt{aioquic},  \texttt{MsQuic},  \texttt{ngtcp2},  \texttt{mvfst} and \texttt{Quant}.
+One of the primary goals of the project was to turn off header encryption of QUIC packets.
+% TODO mention why I needed to turn off header encryption in the first place
+Hence, I performed a survey to find QUIC implementation, which had an API to control encryption. 
+\texttt{Aioquic}, \texttt{MsQuic} and \texttt{ngtcp2} seemed to be the most promising.
+However, despite being a simple and well-documented implementation of QUIC, aioquic did not have an active development team that could answer technical questions.
+Similarly, MsQuic seemed promising, but some of the performance measurement tools used by the MsQuic team were proprietary and not yet released to the public.
+As this project is based on a paper written by Gianni Antichi and his colleagues, 9 \cite{Making_QUIC_Quicker}, thought that it would be wise to use similar testing conditions in this dissertation too.
+In particular, Gianni and his team evaluated several QUIC implementations, which were written in C or C++.
+Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, which is also written in C.
+% TODO add link to h2load
+Later on, I figured out that there is QUIC benchmarking tool called h2load, which is compatible with \texttt{ngtcp2}.
+% TODO mention that h2load integration with ngtcp2 is an experimental tool written by Mr  Tatsuhiro  Tsujikawa (the co-author of ngtcp2).
+
+
+\section{Requirements Analysis}
+
+
+
+
+\chapter{Implementation}
+% ------------------------------------------------
+% TODO
+
+%This chapter should describe what was actually produced: the programs which were written, the hardware which was built or the theory which was developed. Any design strategies that looked ahead to the testing stage should be described in order to demonstrate a professional approach was taken.
+
+%Descriptions of programs may include fragments of high-level code but large chunks of code are usually best left to appendices or omitted altogether. Analogous advice applies to circuit diagrams or detailed steps in a machine-checked proof.
+
+%The implementation chapter should include a section labelled "Repository Overview". The repository overview should be around one page in length and should describe the high-level structure of the source code found in your source code repository. It should describe whether the code was written from scratch or if it built on an existing project or tutorial. Making effective use of powerful tools and pre-existing code is often laudable, and will count to your credit if properly reported. Nevertheless, as in the rest of the dissertation, it is essential to draw attention to the parts of the work which are not your own. 
+
+%It should not be necessary to give a day-by-day account of the progress of the work but major milestones may sometimes be highlighted with advantage.
+
+
+% FROM: https://www.cst.cam.ac.uk/teaching/part-ii/projects/assessment
+%Contribution to the field.
+%Application of extra-curricular reading and original interpretation of previous work from academia or industry.
+%Challenging goals and substantial deliverables with excellent selection and application of appropriate mathematical, scientific and/or engineering techniques.
+%Clear and justified repository overview.
+%At most minor faults in execution or understanding.
+% ------------------------------------------------
+
+\section{Repository Overview} 
+% TODO add reference to the original page of ngtcp2
+First of all, I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
+
+\section{Using null encryption}
+% TODO add reference that encryption is turned on by default
+By design, QUIC uses encryption by default.
+It encrypts both the payloads of the packets and some fields in the packet headers.
+% TODO add a reference showing that QUIC crypto functions are expensive
+However, encryption and decryption operations were found to be computationally expensive.
+These intensive operations could have become a performance bottleneck of QUIC.
+To validate this claim, I had to measure the impact of cryptographic operations on QUIC's performance by comparing the throughput between the two server-client pairs.
+One pair had to use standard encryption and decryption procedures, while another had to exchange unencrypted packets.
+I achieved this by implementing logic that can turn on null encryption on \texttt{ngtcp2}.
+% TODO add a link to null encryption
+In essence, null encryption is a technique that effectively turns off encryption by encrypting/decrypting the data by ``XOR"ing the data with a key made entirely of zeroes (which leaves the data unchanged). 
+
+
+% TODO - say which operations are performed and which ones are omitted
+
+
+
+
+
+
+\chapter{Evaluation}
+% ------------------------------------------------
+%This is where Assessors will be looking for signs of success and for evidence of thorough and systematic evaluation. Sample output, tables of timings and photographs of workstation screens, oscilloscope traces or circuit boards may be included. Care should be employed to take a professional approach throughout. For example, a graph that does not indicate confidence intervals will generally leave a professional scientist with a negative impression. As with code, voluminous examples of sample output are usually best left to appendices or omitted altogether.
+
+%There are some obvious questions which this chapter will address. How many of the original goals were achieved? Were they proved to have been achieved? Did the program, hardware, or theory really work?
+
+%Assessors are well aware that large programs will very likely include some residual bugs. It should always be possible to demonstrate that a program works in simple cases and it is instructive to demonstrate how close it is to working in a really ambitious case.
+% ------------------------------------------------
+
+
+
+\section{Setup}
+
+As this project builds on the ideas presented in \cite{Making_QUIC_Quicker}, I thought that it would be reasonable to replicate a similar testing environment to obtain comparable results.
+
+\subsection{Logical setup}
+To test a simple single flow performance, it is sufficient to have a single QUIC server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
+To measure QUIC performance under different conditions, we need to add an additional network emulator between the QUIC client and the QUIC server.
+
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Logical_testing_environment.png}
+    \caption{Logical configuration of testing environment}
+    \label{fig:Logical_testing_environment}
+    \end{figure}
+
+\subsection{Physical setup}
+    In the ideal scenario, we might want to use three dedicated machines for performance measurements, as shown in the previous section.
+    However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
+    In this environment, one machine (A) hosts client-server pair, while another computer (B) acts as a network emulator.
+    The physical configuration differs from the logical configuration because I wanted to replicate testing conditions under which Gianni Antichi and his colleagues performed throughput measurements of QUIC \cite{Making_QUIC_Quicker}.
+    One advantage of having both server and client running on the same machine is that the shared system clock can be used to perform measurements more accurately. 
+    
+% TODO mention that the diagram was taken from Gianni's paper
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Physical_testing_environment.png}
+    \caption{Physical configuration of testing environment}
+    \label{fig:Physical_testing_environment}
+    \end{figure}
+    
+    As we can see from Figure~\ref{fig:Physical_testing_environment}, both QUIC client and server operate on different virtual network namespaces which do not have a shared localhost/loopback [TODO check the actual name] connection.
+    Client and server are assigned different network subnets.
+    An intermediate machine (B) is configured as default the gateway for both virtual network namespaces.
+    As a result, all the packets between the QUIC server and client have to travel via an intermediate machine (B).
+    Here, depending on the experiment, network perturbations (e.g. packet loss, delay, reordering) may be introduced.
+    IP forwarding is enabled on the intermediate machine (B), so it redirects QUIC packets from one subnet to another.
+
+
+
+\section{Parameter tuning}
+\subsection{Separated cores}
+\begin{itemize}
+  \item TODO mention advantages of core pinning
+  \item TODO add a chart showing lower performance variability when using different cores for testing 
+  \item TODO IDEA analyse the performance of different core pairs 
+\end{itemize}
+
+\subsection{Hyperthreading}
+TODO mention why I turned off hyperthreading
+
+\subsection{GSO}
+\begin{itemize}
+  \item TODO introduce GSO
+  \item TODO add a chart showing GSO's impact on throughput
+  \item TODO mention when GSO is relevant
+\end{itemize}
+
+\subsection{MTUs}
+\begin{itemize}
+  \item TODO introduce/refresh MTUs
+  \item TODO demonstrate the Jumbo frames impact for QUIC throughput
+  
+  
+  See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
+  
+  
+  
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table}[ht]
+
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \multirow{2}{*}{MTU (B)} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size\end{tabular}} & \multicolumn{4}{c|}{Throughput (MiB/s)}                                                     \\ \cline{3-6} 
+                             &                                                                                & minimum & maximum & mean    & \begin{tabular}[c]{@{}c@{}}standard \\ deviation\end{tabular} \\ \hline
+    \multirow{2}{*}{1280}    & 1MB                                                                            & 40.610  & 47.870  & 44.125  & 2.487                                                         \\ \cline{2-6} 
+                             & 1GB                                                                            & 98.990  & 105.200 & 103.950 & 1.794                                                         \\ \hline
+    \multirow{2}{*}{1500}    & 1MB                                                                            & 42.060  & 50.220  & 45.382  & 2.547                                                         \\ \cline{2-6} 
+                             & 1GB                                                                            & 107.920 & 110.820 & 110.001 & 0.942                                                         \\ \hline
+    \multirow{2}{*}{9000}    & 1MB                                                                            & 37.300  & 46.950  & 39.750  & 2.727                                                         \\ \cline{2-6} 
+                             & 1GB                                                                            & 135.940 & 141.500 & 139.616 & 1.852                                                         \\ \hline
+    \end{tabular}
+
+
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \multirow{2}{*}{MTU (B)} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size\end{tabular}} & \multicolumn{4}{c|}{Completion time (s)}                                                 \\ \cline{3-6} 
+                             &                                                                                & minimum & maximum & mean  & \begin{tabular}[c]{@{}c@{}}standard\\ deviation\end{tabular} \\ \hline
+    \multirow{2}{*}{1280}    & 1MB                                                                            & 0.020   & 0.023   & 0.022 & 0.001                                                        \\ \cline{2-6} 
+                             & 1GB                                                                            & 9.070   & 9.640   & 9.180 & 0.166                                                        \\ \hline
+    \multirow{2}{*}{1500}    & 1MB                                                                            & 0.019   & 0.023   & 0.021 & 0.001                                                        \\ \cline{2-6} 
+                             & 1GB                                                                            & 8.610   & 8.840   & 8.674 & 0.075                                                        \\ \hline
+    \multirow{2}{*}{9000}    & 1MB                                                                            & 0.020   & 0.026   & 0.024 & 0.001                                                        \\ \cline{2-6} 
+                             & 1GB                                                                            & 6.740   & 7.020   & 6.834 & 0.092                                                        \\ \hline
+    \end{tabular}
+
+
+
+
+    \centering
+    \caption{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files. In particular, this experiment measures QUIC throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
+    Furthermore, a server uses a single thread, only a single stream is used, and a single file transfer is performed for each experiment.
+    }
+    \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  \item TODO show that Jumbo frames are not accepted in the wild Internet
+\end{itemize}
+
+
+\section{Impact of cryptographic operations}
+
+\section{Comparison with TCP}
+
+
+
+\chapter{Conclusion}
+% ------------------------------------------------
+%This chapter is likely to be very short and it may well refer back to the Introduction. It might offer a reflection on the lessons learned and explain how you would have planned the project if starting again with the benefit of hindsight.
+
+
+% FROM: https://www.cst.cam.ac.uk/teaching/part-ii/projects/assessment
+%Clearly presented argument demonstrating success criteria met.
+%Good or excellent evidence of critical thought and interpretation of the results which substantiate any claims of success, improvements or novelty.
+%Conclusions provide an effective summary of work completed along with good future work.
+%Personal reflection on the lessons learned.
+% ------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% the bibliography
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{refs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% the appendices
+\appendix
+
+\chapter{Source A}
+
+
+\chapter{Source B}
+
+\section{appendix section}\label{referencedAppendixTag}
+
+
+\chapter{Project Proposal}
+
+\input{proposal}
+
+\end{document}

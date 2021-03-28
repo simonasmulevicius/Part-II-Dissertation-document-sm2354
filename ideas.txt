@@ -1,0 +1,67 @@
+
+What is the problem?  
+You are studying quic... you want to know how it works.... 
+
+What are you doing? studying Quic behaviour and identifying performance bottlenecks,.
+Why is it important?  QUIC logical succesor HTTP/v1-2-3
+
+TCP+TLS = latency crapup QUIC is UDP so faster.
+
+Despite being UDP, <offering lots of neatness> (you wont study multipath…) you will 
+focus on the bottleneck of a single QUIC flow.
+this is effectively “worst case quic”
+
+QUIC is optimised for loss, for parallel sessions for multiple objects
+for ....
+Despite being UDP
+
+So what are you doing thats clever/interesting/useful?  Despite being UDP....
+Why is this awesome / going to be awesome / etc.
+identifying aspects to do in HW offload.
+
+
+-=-=- 20210323
+
+In consultation with Professor Moore, I have refocussed my efforts to study QUIC behaviour. This work seeks to understand QUIC bottlenecks and performance behaviour, I have a hope for making changes to the code base but the performance study of QUIC under a number of variable conditions and in comparison with iperf is the focus of my work.
+
+
+What is the problem?  Why do people care?  What is your idea? Why is it cool?
+
+
+
+-=-=- 20210325
+
+In consultation with Professor Moore, I have focused my efforts to study QUIC behaviour. This work seeks to understand QUIC bottlenecks and performance behaviour, I have a hope for making changes to the code base but the performance study of QUIC under a number of variable conditions and in comparison with iperf is the focus of my work.
+ 
+ 
+What is the problem?  
+	QUIC transport layer protocol is still in the early development stage but we already need to start thinking about its performance. Otherwise, there is a possibility that because of the low QUIC throughput, it may not be adopted (as happened with earlier attempts to improve TCP). 
+ 
+Why do people care?  
+	Introduction of QUIC would be especially beneficial for countries which don’t have access to the low latency Internet connection.
+ 
+What is the idea? 
+There have been several similar attempts to measure QUIC performance under different scenarios. The most notable experiment [1] analysed impact of network delay and packet reordering for the QUIC throughput. My current analysis shows that a typical QUIC client spends around 82% of CPU time performing cryptographic operations. These results are consistent with previous studies which identified cryptographic functions as the current bottleneck of QUIC.
+ 
+The purpose of this work is to identify bottlenecks using a performance-centered study.
+ 
+I would need to first exclude cryptography
+Turn off encryption completely and investigate what might occur in QUIC. 
+This would simulate offloaded encryption.
+Previous studies analysed different implementations of QUIC (not ngtcp2), so the primary goal would be to run similar experiments with ngtcp2.
+Identify situations where QUIC (ngtcp2 in particular) outperforms TCP using current implementations
+I have a complete testing environment with a configured intermediate machine which can introduce traffic perturbations. 
+In addition, I have already performed some tests with respect to different MTUs and core pinning.
+ 
+ 
+Why is it interesting?
+QUIC is  a relatively new network technology.
+I am using QUIC in a non-standard way (without encryption)
+This analysis could be useful in the future when QUIC’s cryptographic operations would be offloaded to hardware (this experiment would simulate these conditions).
+On the other hand, QUIC with null encryption could be used in secure networks which are controlled by a single entity (e.g. within data centers).
+ 
+ 
+ 
+ 
+ 
+[1] Xiangrui Yang, Lars Eggert, Jörg Ott, Steve Uhlig, Zhigang Sun, and Gianni Antichi. 2020. Making QUIC Quicker With NIC Offload. In Proceedings of the Workshop on the Evolution, Performance, and Interoperability of QUIC (EPIQ '20). Association for Computing Machinery, New York, NY, USA, 21–27. DOI:https://doi.org/10.1145/3405796.3405827
