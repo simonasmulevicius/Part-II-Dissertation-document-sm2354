@@ -394,13 +394,6 @@ By specifying a particular IP version, we reduce the number of variable paramete
 Fortunately, at the time of writing, according to Google's IPv6 adoption tracker \cite{IPv6_Adoption_Statistics}, only a third of all Internet users (30-35 \% to be precise) use IPv6 to connect to Google's services.
 Hence, analysis involving IPv4 is still relevant today.
 
-\subsection{Separated cores}
-\begin{itemize}
-  \item TODO mention advantages of core pinning
-  \item TODO add a chart showing lower performance variability when using different cores for testing 
-  \item TODO IDEA analyse the performance of different core pairs 
-\end{itemize}
-
 \subsection{Hyper-threading}
 
 As Michael E. Thomadakis states on the 23rd page of \cite{hyperthreading_book}, \texttt{hyper-threading} (more generally known as \texttt{simultaneous multi-threading}) is a thread allocation technique that allows two threads to run on the same physical core at the same time.
@@ -409,6 +402,20 @@ As stated in \cite{hyperthreading_book}, this means that threads allocated to su
 This is problematic for precise experiments.
 On the one hand, a neighbouring thread might pre-fetch required data to the cache, but on the other hand, this thread might pollute the cache, thus hurting the performance of the thread which is being measured.
 Hence, to reduce the potential performance variability, I had to disable \texttt{hyper-threading} on the testing machines.
+
+
+\subsection{Separated cores}
+Machine A in Figure~\ref{fig:Physical_testing_environment} has 4 physical cores.
+To make performance tests even more predictable, I had to assign exclusive physical cores to the QUIC client and server using \texttt{taskset}\footnote{https://man7.org/linux/man-pages/man1/taskset.1.html} tool.
+In particular, \texttt{ngtcp2} server was assigned the first core, QUIC client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core while remaining two cores were assigned to all the remaining system processes.
+Robert Love refers to this technique of assigning particular processes to particular cores as \texttt{hard CPU affinity} \cite{CPU_Affinity}.
+
+% TODO add a chart showing better throughput when using different cores for testing
+
+
+% TODO add a chart showing lower performance variability when using different cores for testing
+
+
 
 \subsection{GSO}
 \begin{itemize}
