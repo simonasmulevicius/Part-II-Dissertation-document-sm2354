@@ -142,12 +142,22 @@ Furthermore, this document is written using a default dissertation template prov
 \section{What is QUIC?}
 
 % TODO add references !!!!
-QUIC is a next-generation transport layer protocol.
-It aims to solve some of the design problems which are present in the TCP transport layer protocol.
+QUIC is a next-generation transport layer protocol built on top of UDP.
+Figure~\ref{fig:QUIC_network_stack} shows network stack of QUIC.
+QUIC aims to solve some of the design problems which are present in the TCP transport layer protocol.
 %  TODO So what are those problems?! 
 
 
-% TODO Add QUIC's diagram in the network stack
+
+
+
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/QUIC_network_stack.PNG}
+    \caption{QUIC/UDP/IP network stack compared to TCP/IP network stack. This diagram is taken from IETF presentation about QUIC \cite{IETF_presentation_about_QUIC}}
+    \label{fig:QUIC_network_stack}
+    \end{figure}
+
 
 
 % TODO Mention fast TLS1.3 handshake
@@ -160,11 +170,11 @@ However, attempts to roll out new and experimental versions of TCP were unsucces
 The main reason being that middleboxes (e.g. Network Address Translators or NATs for short) interfered with the TCP traffic.
 For instance, NATs made assumptions about the structure of TCP headers.
 As TCP/IP stack was and still is a predominant backbone of the Internet, some NATs offloaded some TCP processing to hardware or used some software optimisation techniques.
-Consequently, these premature optimisations interfered with TCP protocol's correctness - NATs simply rejected connections that used non-standard TCP packets.
+Consequently, these premature optimisations interfered with TCP protocol's correctness - NATs rejected connections that used non-standard TCP packets.
 Another reason for the slow roll-out was that TCP's functionality is implemented in the kernel, meaning that in order to add changes to TCP, one would need to change a large number of different operating systems.
 Architects of QUIC learned these mistakes and attempted to prevent the ossification of QUIC in the future by using two interesting techniques.
-At first, QUIC's code was elevated to userspace.
-In addition, in order to prevent NATs from interfering with QUIC, QUIC's packet headers are partially encrypted.
+To simplify the deployment, QUIC's code operates in userspace.
+In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers are partially encrypted (see subsection \ref{subsection_QUIC_header_format}).
 
 
 
@@ -173,11 +183,19 @@ In addition, in order to prevent NATs from interfering with QUIC, QUIC's packet 
 
 \begin{itemize}
   \item TODO mention head-of-line blocking
-  \item TODO mention reduced handshake protocol
+  \item TODO mention combined handshake protocol
   \item TODO mention how QUIC solves the problem of ossification
 \end{itemize}
 
-\subsection{QUIC's header format}
+\subsection{QUIC's header format} \label{subsection_QUIC_header_format}
+
+\begin{itemize}
+  \item TODO mention that there packet header encryption is separate from payload encryption
+  \item TODO explain why do we need this separation
+  \item TODO present long and short headers, give a list of fields
+  \item TODO mention that packet numbers are encrypted but connection ID is not
+\end{itemize}
+
 
 
 % \section{Number of words}
@@ -216,33 +234,35 @@ In addition, in order to prevent NATs from interfering with QUIC, QUIC's packet 
 
 
 
-\section{Why are there so many implementations of QUIC?}
-
-% TODO user space vs kernel space
-% TODO add a list of QUIC implementations
-
-As already mentioned in the Introduction section, QUIC \\
-TODO 
+\section{Implementations of QUIC}
 
 \subsection{List of QUIC's implementations}
 % This is subsection see Appendix~\ref{referencedAppendixTag}. 
 
+\subsection{Why are there so many implementations of QUIC?}
+
+
+% TODO user space vs kernel space
+% TODO add a list of QUIC implementations
+
+As I have already mentioned in the Introduction section, QUIC \\
+TODO 
+
 \subsection{Why did I choose  \texttt{ngtcp2}?}
 %TODO: fix style and grammar:
 There are many implementations of QUIC (TODO add a link to Wikipedia article) written in different languages.
-I considered  \texttt{aioquic},  \texttt{MsQuic},  \texttt{ngtcp2},  \texttt{mvfst} and \texttt{Quant}.
+I considered  \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic},  \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic},  \texttt{ngtcp2}\footnote{https://github.com/ngtcp2/ngtcp2},  \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{Quant}\footnote{https://github.com/NTAP/quant}.
 One of the primary goals of the project was to turn off header encryption of QUIC packets.
 % TODO mention why I needed to turn off header encryption in the first place
 Hence, I performed a survey to find QUIC implementation, which had an API to control encryption. 
 \texttt{Aioquic}, \texttt{MsQuic} and \texttt{ngtcp2} seemed to be the most promising.
 However, despite being a simple and well-documented implementation of QUIC, aioquic did not have an active development team that could answer technical questions.
 Similarly, MsQuic seemed promising, but some of the performance measurement tools used by the MsQuic team were proprietary and not yet released to the public.
-As this project is based on a paper written by Gianni Antichi and his colleagues, 9 \cite{Making_QUIC_Quicker}, thought that it would be wise to use similar testing conditions in this dissertation too.
+As this project is based on a paper written by Gianni Antichi and his colleagues \cite{Making_QUIC_Quicker}, I thought that it would be wise to use similar testing conditions in this dissertation too.
 In particular, Gianni and his team evaluated several QUIC implementations, which were written in C or C++.
 Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, which is also written in C.
-% TODO add link to h2load
-Later on, I figured out that there is QUIC benchmarking tool called h2load, which is compatible with \texttt{ngtcp2}.
-% TODO mention that h2load integration with ngtcp2 is an experimental tool written by Mr  Tatsuhiro  Tsujikawa (the co-author of ngtcp2).
+Later on, I figured out that there is QUIC benchmarking tool called \texttt{h2load} \footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
+Moreover, h2load is an experimental tool written by Mr Tatsuhiro  Tsujikawa (the co-author of \texttt{ngtcp2}).
 
 
 \section{Requirements Analysis}
@@ -313,7 +333,7 @@ As this project builds on the ideas presented in \cite{Making_QUIC_Quicker}, I t
 
 \subsection{Logical setup}
 To test a simple single flow performance, it is sufficient to have a single QUIC server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
-To measure QUIC performance under different conditions, we need to add an additional network emulator between the QUIC client and the QUIC server.
+To measure QUIC performance under different conditions, we need to add network emulator between the QUIC client and the QUIC server.
 
     \begin{figure}[h]
     \centering
@@ -327,7 +347,7 @@ To measure QUIC performance under different conditions, we need to add an additi
     However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
     In this environment, one machine (A) hosts client-server pair, while another computer (B) acts as a network emulator.
     The physical configuration differs from the logical configuration because I wanted to replicate testing conditions under which Gianni Antichi and his colleagues performed throughput measurements of QUIC \cite{Making_QUIC_Quicker}.
-    One advantage of having both server and client running on the same machine is that the shared system clock can be used to perform measurements more accurately. 
+    One advantage of having both server and client running on the same machine is that the shared system clock can perform measurements more accurately. 
     
 % TODO mention that the diagram was taken from Gianni's paper
     \begin{figure}[ht]
@@ -342,7 +362,7 @@ To measure QUIC performance under different conditions, we need to add an additi
     An intermediate machine (B) is configured as default the gateway for both virtual network namespaces.
     As a result, all the packets between the QUIC server and client have to travel via an intermediate machine (B).
     Here, depending on the experiment, network perturbations (e.g. packet loss, delay, reordering) may be introduced.
-    IP forwarding is enabled on the intermediate machine (B), so it redirects QUIC packets from one subnet to another.
+    IP forwarding is enabled on the intermediate machine (B), redirecting QUIC packets from one subnet to another.
 
 
 
@@ -407,7 +427,7 @@ TODO mention why I turned off hyperthreading
 
 
     \centering
-    \caption{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files. In particular, this experiment measures QUIC throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
+    \caption{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} Completion time required to transfer specified files. In particular, this experiment measures QUIC throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
     Furthermore, a server uses a single thread, only a single stream is used, and a single file transfer is performed for each experiment.
     }
     \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
