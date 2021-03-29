@@ -236,8 +236,9 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 \section{Implementations of QUIC}
 
-\subsection{List of QUIC's implementations}
-% This is subsection see Appendix~\ref{referencedAppendixTag}. 
+\subsection{List of QUIC's implementations} \label{List_of_QUIC_implementations}
+According to QUIC Working Group \cite{number_of_QUIC_implementations}, there is 31 different implementation of QUIC. Most of the implementations, 22 to be precise, are written using C/C++ language family (e.g. \texttt{Chromium}\footnote{https://chromium.googlesource.com/chromium/src/net/+/master/quic/}) while remaining implementations use Rust (e.g. \texttt{quiche}\footnote{https://github.com/cloudflare/quiche}), Python (e.g. \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic}), Haskel (e.g. \texttt{Haskell quic}\footnote{https://github.com/kazu-yamamoto/quic}), Java (e.g. \texttt{kwik}\footnote{https://bitbucket.org/pjtr/kwik/src/master/}), Go (e.g. \texttt{quic-go}\footnote{https://github.com/lucas-clemente/quic-go}) or JavaScript (e.g. \texttt{Node.js QUIC}\footnote{https://github.com/nodejs/quic}).
+
 
 \subsection{Why are there so many implementations of QUIC?}
 
@@ -250,7 +251,7 @@ TODO
 
 \subsection{Why did I choose  \texttt{ngtcp2}?}
 %TODO: fix style and grammar:
-There are many implementations of QUIC (TODO add a link to Wikipedia article) written in different languages.
+There are many implementations of QUIC (see subsection \ref{List_of_QUIC_implementations}) written in different languages.
 I considered  \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic},  \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic},  \texttt{ngtcp2}\footnote{https://github.com/ngtcp2/ngtcp2},  \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{Quant}\footnote{https://github.com/NTAP/quant}.
 One of the primary goals of the project was to turn off header encryption of QUIC packets.
 % TODO mention why I needed to turn off header encryption in the first place
@@ -261,8 +262,8 @@ Similarly, MsQuic seemed promising, but some of the performance measurement tool
 As this project is based on a paper written by Gianni Antichi and his colleagues \cite{Making_QUIC_Quicker}, I thought that it would be wise to use similar testing conditions in this dissertation too.
 In particular, Gianni and his team evaluated several QUIC implementations, which were written in C or C++.
 Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, which is also written in C.
-Later on, I figured out that there is QUIC benchmarking tool called \texttt{h2load} \footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
-Moreover, h2load is an experimental tool written by Mr Tatsuhiro  Tsujikawa (the co-author of \texttt{ngtcp2}).
+Later on, I figured out that there is an experimental QUIC benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
+Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author of \texttt{ngtcp2}).
 
 
 \section{Requirements Analysis}
@@ -483,7 +484,9 @@ TODO mention why I turned off hyperthreading
     \label{fig:perf_results_of_h2load}
     \end{figure}
     
+\subsection{qlog}
 
+\subsection{qvis}
 
 \section{Impact of cryptographic operations}
 
