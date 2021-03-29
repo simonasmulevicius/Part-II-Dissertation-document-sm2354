@@ -8,6 +8,7 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
 \usepackage{multirow}
+\usepackage{url}
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -113,9 +114,10 @@ The following people helped with the project setup or provided useful insights o
     \item \textbf{Dr Marcin Wojcik} helped with general inquiries related to the setup of NetFPGA developing platform;
     \item \textbf{Dr Andrew W. Moore} was my project supervisor and originator of the project idea;
     \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory that were used for experiments during the Winter vacation;
-    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \textit{ngtcp2} \footnote{specific implementation of QUIC which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \textit{ngtcp2}.
-    
+    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \texttt{ngtcp2}\footnote{specific implementation of QUIC which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2}.
 \end{itemize}
+
+Furthermore, this document is written using a default dissertation template provided by Martin Richards \cite{how_to_write_a_dissertation_in_LATEX}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % now for the chapters
@@ -142,21 +144,26 @@ The following people helped with the project setup or provided useful insights o
 % TODO add references !!!!
 QUIC is a next-generation transport layer protocol.
 It aims to solve some of the design problems which are present in the TCP transport layer protocol.
-% TODO Add "See section X below"
+%  TODO So what are those problems?! 
+
+
 % TODO Add QUIC's diagram in the network stack
+
+
 % TODO Mention fast TLS1.3 handshake
 
 
 % TODO also, add references!
 For completeness, I have to mention that there have already been several attempts to overcome the head-of-line blocking problem present in TCP.
-However, attempts to roll out new and experimental versions of TCP were unsuccessful. %TODO justify - mention SPIDY and TCP.2??
+However, attempts to roll out new and experimental versions of TCP were unsuccessful. 
+%TODO justify - mention SPIDY and TCP.2??
 The main reason being that middleboxes (e.g. Network Address Translators or NATs for short) interfered with the TCP traffic.
 For instance, NATs made assumptions about the structure of TCP headers.
 As TCP/IP stack was and still is a predominant backbone of the Internet, some NATs offloaded some TCP processing to hardware or used some software optimisation techniques.
 Consequently, these premature optimisations interfered with TCP protocol's correctness - NATs simply rejected connections that used non-standard TCP packets.
 Another reason for the slow roll-out was that TCP's functionality is implemented in the kernel, meaning that in order to add changes to TCP, one would need to change a large number of different operating systems.
 Architects of QUIC learned these mistakes and attempted to prevent the ossification of QUIC in the future by using two interesting techniques.
-First of all, QUIC's code was elevated to userspace.
+At first, QUIC's code was elevated to userspace.
 In addition, in order to prevent NATs from interfering with QUIC, QUIC's packet headers are partially encrypted.
 
 
