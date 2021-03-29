@@ -108,8 +108,6 @@ be made available to the students and staff of the University.
 \newpage
 \section*{Acknowledgements}
 
-TODO delete this line
-
 The following people helped with the project setup or provided useful insights or hints on how to tackle project-related problems:
 \begin{itemize}
     \item \textbf{Dr Marcin Wojcik} helped with general inquiries related to the setup of NetFPGA developing platform;
@@ -442,6 +440,22 @@ TODO mention why I turned off hyperthreading
   
   \item TODO show that Jumbo frames are not accepted in the wild Internet
 \end{itemize}
+
+
+\section{Benchmarking tools}
+% Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
+
+
+\subsection{perf}
+
+\subsection{Flame charts}
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
+    \caption{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of all ngtcp2 operations are performed doing cryptographic operations} 
+    \label{fig:perf_results_of_h2load}
+    \end{figure}
+    
 
 
 \section{Impact of cryptographic operations}
