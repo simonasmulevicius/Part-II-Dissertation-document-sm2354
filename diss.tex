@@ -53,7 +53,7 @@ Name:               & \bf Simonas Mulevicius                       \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf QUIC offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 200\footnotemark[1] \\
+Word Count:         & \bf 300\footnotemark[1] \\
 Project Originator: & Dr Andrew W. Moore                \\
 Supervisor:         & Dr Andrew W. Moore                \\ 
 \end{tabular}
@@ -142,14 +142,8 @@ Furthermore, this document is written using a default dissertation template prov
 \section{What is QUIC?}
 
 % TODO add references !!!!
-QUIC is a next-generation transport layer protocol built on top of UDP.
-Figure~\ref{fig:QUIC_network_stack} shows network stack of QUIC.
-QUIC aims to solve some of the design problems which are present in the TCP transport layer protocol.
-%  TODO So what are those problems?! 
-
-
-
-
+QUIC is a next-generation transport layer protocol built on top of UDP \cite{chromium_blog_about_quic}.
+Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
 
     \begin{figure}[h]
     \centering
@@ -157,10 +151,34 @@ QUIC aims to solve some of the design problems which are present in the TCP tran
     \caption{QUIC/UDP/IP network stack compared to TCP/IP network stack. This diagram is taken from IETF presentation about QUIC \cite{IETF_presentation_about_QUIC}}
     \label{fig:QUIC_network_stack}
     \end{figure}
-
-
-
+    
+% encryption by default
 % TODO Mention fast TLS1.3 handshake
+% TODO mention zero RTT handshake
+
+
+
+QUIC aims to solve some of the design problems which are present in the TCP transport layer protocol.
+%  TODO So what are those problems?! 
+
+
+
+% TODO Key features of QUIC:
+% https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
+% congestion control
+%  loss detection with signaling (using new seq number)
+%  loss recovery
+% reliability
+% multiplexed (streams??)
+% Connection migration (https://peering.google.com/#/learn-more/quic)
+
+
+
+
+
+
+
+
 
 
 % TODO also, add references!
@@ -190,10 +208,10 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 \subsection{QUIC's header format} \label{subsection_QUIC_header_format}
 
 \begin{itemize}
-  \item TODO mention that there packet header encryption is separate from payload encryption
+  \item TODO mention that the packet header encryption is separate from payload encryption
   \item TODO explain why do we need this separation
-  \item TODO present long and short headers, give a list of fields
-  \item TODO mention that packet numbers are encrypted but connection ID is not
+  \item TODO present long and short headers give a list of fields
+  \item TODO mention that packet numbers are encrypted, but connection ID is not
 \end{itemize}
 
 
@@ -334,7 +352,7 @@ As this project builds on the ideas presented in \cite{Making_QUIC_Quicker}, I t
 
 \subsection{Logical setup}
 To test a simple single flow performance, it is sufficient to have a single QUIC server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
-To measure QUIC performance under different conditions, we need to add network emulator between the QUIC client and the QUIC server.
+To measure QUIC performance under different conditions, we need to add a network emulator between the QUIC client and the QUIC server.
 
     \begin{figure}[h]
     \centering
@@ -368,6 +386,14 @@ To measure QUIC performance under different conditions, we need to add network e
 
 
 \section{Parameter tuning}
+
+\subsection{IP version}
+
+To make results comparable with older studies, I decided to disable IPv6 in the testing environment.
+By specifying a particular IP version, we reduce the number of variable parameters.
+Fortunately, at the time of writing, according to Google's IPv6 adoption tracker \cite{IPv6_Adoption_Statistics}, only a third of all Internet users (30-35 \% to be precise) use IPv6 to connect to Google's services.
+Hence, analysis involving IPv4 is still relevant today.
+
 \subsection{Separated cores}
 \begin{itemize}
   \item TODO mention advantages of core pinning
@@ -375,8 +401,14 @@ To measure QUIC performance under different conditions, we need to add network e
   \item TODO IDEA analyse the performance of different core pairs 
 \end{itemize}
 
-\subsection{Hyperthreading}
-TODO mention why I turned off hyperthreading
+\subsection{Hyper-threading}
+
+As Michael E. Thomadakis states on the 23rd page of \cite{hyperthreading_book}, \texttt{hyper-threading} (more generally known as \texttt{simultaneous multi-threading}) is a thread allocation technique that allows two threads to run on the same physical core at the same time.
+On my particular testing machines, \texttt{hyper-threading} is implemented by assigning two virtual cores for every physical core.
+As stated in \cite{hyperthreading_book}, this means that threads allocated to such virtual cores would share the same physical resources (e.g. private L1 cache entries).
+This is problematic for precise experiments.
+On the one hand, a neighbouring thread might pre-fetch required data to the cache, but on the other hand, this thread might pollute the cache, thus hurting the performance of the thread which is being measured.
+Hence, to reduce the potential performance variability, I had to disable \texttt{hyper-threading} on the testing machines.
 
 \subsection{GSO}
 \begin{itemize}
@@ -506,6 +538,12 @@ TODO mention why I turned off hyperthreading
 %Personal reflection on the lessons learned.
 % ------------------------------------------------
 
+\section{Summary}
+
+\section{Reflection}
+
+\section{Future Work}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the bibliography
 \addcontentsline{toc}{chapter}{Bibliography}
@@ -527,4 +565,4 @@ TODO mention why I turned off hyperthreading
 
 \input{proposal}
 
-\end{document}
+ \end{document}
