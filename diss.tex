@@ -53,7 +53,7 @@ Name:               & \bf Simonas Mulevicius                       \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf QUIC offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 300\footnotemark[1] \\
+Word Count:         & \bf 370\footnotemark[1] \\
 Project Originator: & Dr Andrew W. Moore                \\
 Supervisor:         & Dr Andrew W. Moore                \\ 
 \end{tabular}
@@ -152,39 +152,38 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
     \label{fig:QUIC_network_stack}
     \end{figure}
     
-% encryption by default
-% TODO Mention fast TLS1.3 handshake
-% TODO mention zero RTT handshake
+    
+
+\subsection{List of QUIC features}
+% https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
+\begin{itemize}
+  \item TODO congestion control
+  \item TODO loss detection with signaling (using new seq number)
+  \item TODO loss recovery
+  \item TODO reliability
+  \item TODO multiplexed streams
+  \item TODO connection migration (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
+  \item TODO encryption by default
+  \item TODO Mention fast TLS1.3 handshake
+  \item TODO mention zero RTT handshake
+\end{itemize}
 
 
 
+\subsection{TCP's problems}
 QUIC aims to solve some of the design problems which are present in the TCP transport layer protocol.
 %  TODO So what are those problems?! 
+    
 
-
-
-% TODO Key features of QUIC:
-% https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
-% congestion control
-%  loss detection with signaling (using new seq number)
-%  loss recovery
-% reliability
-% multiplexed (streams??)
-% Connection migration (https://peering.google.com/#/learn-more/quic)
-
-
-
-
-
-
-
+\subsection{Previous attempts to improve TCP by using TCP1.2 [TODO CHECK THE NAME] and SPDY}
+[TODO describe SPDY]
 
 
 
 % TODO also, add references!
 For completeness, I have to mention that there have already been several attempts to overcome the head-of-line blocking problem present in TCP.
 However, attempts to roll out new and experimental versions of TCP were unsuccessful. 
-%TODO justify - mention SPIDY and TCP.2??
+%TODO justify - mention SPDY and TCP.2??
 The main reason being that middleboxes (e.g. Network Address Translators or NATs for short) interfered with the TCP traffic.
 For instance, NATs made assumptions about the structure of TCP headers.
 As TCP/IP stack was and still is a predominant backbone of the Internet, some NATs offloaded some TCP processing to hardware or used some software optimisation techniques.
@@ -200,6 +199,8 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 \subsection{QUIC's advantages}
 
 \begin{itemize}
+  \item Reduced latency:
+  According to [https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html]: "$<\ldots>$ QUIC outshines TCP under poor network conditions, shaving a full second off the Google Search page load time for the slowest 1\% of connections"
   \item TODO mention head-of-line blocking
   \item TODO mention combined handshake protocol
   \item TODO mention how QUIC solves the problem of ossification
@@ -260,12 +261,10 @@ According to QUIC Working Group \cite{number_of_QUIC_implementations}, there is 
 
 \subsection{Why are there so many implementations of QUIC?}
 
-
 % TODO user space vs kernel space
-% TODO add a list of QUIC implementations
 
-As I have already mentioned in the Introduction section, QUIC \\
-TODO 
+As I have already mentioned in the Introduction section, QUIC is implemented in the user space [TODO ADD SOURCE].
+
 
 \subsection{Why did I choose  \texttt{ngtcp2}?}
 %TODO: fix style and grammar:
@@ -512,6 +511,7 @@ Robert Love refers to this technique of assigning particular processes to partic
 \section{Benchmarking tools}
 % Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
 
+\subsection{Wireshark}
 
 \subsection{perf}
 
