@@ -148,13 +148,18 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
     \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/QUIC_network_stack.PNG}
-    \caption{QUIC/UDP/IP network stack compared to TCP/IP network stack. This diagram is taken from IETF presentation about QUIC \cite{IETF_presentation_about_QUIC}}
+    \caption{QUIC/UDP/IP network stack compared to TCP/IP network stack. This diagram is taken from IETF presentation about QUIC \cite{IETF_presentation_about_QUIC}.}
     \label{fig:QUIC_network_stack}
     \end{figure}
-    
-    
 
-\subsection{List of QUIC features}
+\begin{itemize}
+  \item TODO: What is the meaning of this encapsulated TLS 1.3 inside QUIC?\\
+  \item TODO: Why is UDP smaller than TCP on the left-hand side? \\
+  \item TODO: Similarly, Why is "HTTP over QUIC" layer smaller than HTTP/2?\\
+\end{itemize}
+
+
+\subsection{List of QUIC Features}
 % https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
 \begin{itemize}
   \item TODO congestion control
@@ -170,12 +175,12 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
 
 
 
-\subsection{TCP's problems}
+\subsection{TCP's Problems}
 QUIC aims to solve some of the design problems which are present in the TCP transport layer protocol.
 %  TODO So what are those problems?! 
     
 
-\subsection{Previous attempts to improve TCP by using TCP1.2 [TODO CHECK THE NAME] and SPDY}
+\subsection{Previous Attempts to Improve TCP by Using TCP1.2 [TODO CHECK THE NAME] and SPDY}
 [TODO describe SPDY]
 
 
@@ -196,7 +201,7 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 
 
-\subsection{QUIC's advantages}
+\subsection{QUIC's Advantages}
 
 \begin{itemize}
   \item Reduced latency:
@@ -206,7 +211,7 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
   \item TODO mention how QUIC solves the problem of ossification
 \end{itemize}
 
-\subsection{QUIC's header format} \label{subsection_QUIC_header_format}
+\subsection{QUIC's Header Format} \label{subsection_QUIC_header_format}
 
 \begin{itemize}
   \item TODO mention that the packet header encryption is separate from payload encryption
@@ -215,6 +220,8 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
   \item TODO mention that packet numbers are encrypted, but connection ID is not
 \end{itemize}
 
+
+\section{Related Work}
 
 
 % \section{Number of words}
@@ -255,11 +262,11 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 \section{Implementations of QUIC}
 
-\subsection{List of QUIC's implementations} \label{List_of_QUIC_implementations}
+\subsection{List of QUIC's Implementations} \label{List_of_QUIC_implementations}
 According to QUIC Working Group \cite{number_of_QUIC_implementations}, there is 31 different implementation of QUIC. Most of the implementations, 22 to be precise, are written using C/C++ language family (e.g. \texttt{Chromium}\footnote{https://chromium.googlesource.com/chromium/src/net/+/master/quic/}) while remaining implementations use Rust (e.g. \texttt{quiche}\footnote{https://github.com/cloudflare/quiche}), Python (e.g. \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic}), Haskel (e.g. \texttt{Haskell quic}\footnote{https://github.com/kazu-yamamoto/quic}), Java (e.g. \texttt{kwik}\footnote{https://bitbucket.org/pjtr/kwik/src/master/}), Go (e.g. \texttt{quic-go}\footnote{https://github.com/lucas-clemente/quic-go}) or JavaScript (e.g. \texttt{Node.js QUIC}\footnote{https://github.com/nodejs/quic}).
 
 
-\subsection{Why are there so many implementations of QUIC?}
+\subsection{Why are there so many Implementations of QUIC?}
 
 % TODO user space vs kernel space
 
@@ -313,7 +320,7 @@ Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author o
 % TODO add reference to the original page of ngtcp2
 First of all, I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
 
-\section{Using null encryption}
+\section{Using Null Encryption}
 % TODO add reference that encryption is turned on by default
 By design, QUIC uses encryption by default.
 It encrypts both the payloads of the packets and some fields in the packet headers.
@@ -349,7 +356,7 @@ In essence, null encryption is a technique that effectively turns off encryption
 
 As this project builds on the ideas presented in \cite{Making_QUIC_Quicker}, I thought that it would be reasonable to replicate a similar testing environment to obtain comparable results.
 
-\subsection{Logical setup}
+\subsection{Logical Setup}
 To test a simple single flow performance, it is sufficient to have a single QUIC server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
 To measure QUIC performance under different conditions, we need to add a network emulator between the QUIC client and the QUIC server.
 
@@ -360,7 +367,7 @@ To measure QUIC performance under different conditions, we need to add a network
     \label{fig:Logical_testing_environment}
     \end{figure}
 
-\subsection{Physical setup}
+\subsection{Physical Setup}
     In the ideal scenario, we might want to use three dedicated machines for performance measurements, as shown in the previous section.
     However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
     In this environment, one machine (A) hosts client-server pair, while another computer (B) acts as a network emulator.
@@ -384,9 +391,9 @@ To measure QUIC performance under different conditions, we need to add a network
 
 
 
-\section{Parameter tuning}
+\section{Parameter Tuning}
 
-\subsection{IP version}
+\subsection{IP Version}
 
 To make results comparable with older studies, I decided to disable IPv6 in the testing environment.
 By specifying a particular IP version, we reduce the number of variable parameters.
@@ -403,7 +410,7 @@ On the one hand, a neighbouring thread might pre-fetch required data to the cach
 Hence, to reduce the potential performance variability, I had to disable \texttt{hyper-threading} on the testing machines.
 
 
-\subsection{Separated cores}
+\subsection{Separated Cores}
 Machine A in Figure~\ref{fig:Physical_testing_environment} has 4 physical cores.
 To make performance tests even more predictable, I had to assign exclusive physical cores to the QUIC client and server using \texttt{taskset}\footnote{https://man7.org/linux/man-pages/man1/taskset.1.html} tool.
 In particular, \texttt{ngtcp2} server was assigned the first core, QUIC client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core while remaining two cores were assigned to all the remaining system processes.
@@ -527,7 +534,7 @@ Robert Love refers to this technique of assigning particular processes to partic
 
 \subsection{qvis}
 
-\section{Impact of cryptographic operations}
+\section{Impact of Cryptographic Operations}
 
 \section{Comparison with TCP}
 
