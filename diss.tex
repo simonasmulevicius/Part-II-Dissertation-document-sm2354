@@ -54,7 +54,7 @@ Name:               & \bf Simonas Mulevicius                       \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf QUIC offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 456\footnotemark[1] \\
+Word Count:         & \bf 626\footnotemark[1] \\
 Project Originator: & Dr Andrew W. Moore                \\
 Supervisor:         & Dr Andrew W. Moore                \\ 
 \end{tabular}
@@ -141,10 +141,9 @@ However, some formatting ideas are taken from Alex Coplan's dissertation \cite{A
 % ------------------------------------------------
 
 
-\section{What is QUIC?}
+\section{What is \texttt{QUIC?}}
 
-% TODO add references !!!!
-QUIC is a next-generation transport layer protocol built on top of UDP \cite{chromium_blog_about_quic}.
+\texttt{QUIC} is a next-generation transport layer protocol built on top of UDP \cite{chromium_blog_about_quic}.
 Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
 
     \begin{figure}[h]
@@ -178,7 +177,7 @@ In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Goog
 
 
 %  TODO So what are those problems?! 
-\subsection{TCP's Problems}
+\subsection{\texttt{HTTP/1.0} Problems caused by \texttt{TCP}}
 \texttt{QUIC} aims to solve some of the design problems which are present in the \texttt{TCP} transport layer protocol.
 As Charles M. Kozierok states in his book \cite{TCP_IP_Guide_Book},
 \texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
@@ -188,14 +187,7 @@ Opening a new \texttt{TCP} connection for every small web object causes \texttt{
 Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
 
 
-
-
-HTTP/2 and SPDY
-    
-
-
-
-\subsection{Previous Attempts to Improve TCP by Using TCP1.2 [TODO CHECK THE NAME] and SPDY}
+\subsection{Previous Attempts to Improve TCP by Using HTTP/1.1 and SPDY}
 [TODO describe SPDY]
 
 
@@ -311,7 +303,11 @@ Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author o
 
 \section{Requirements Analysis}
 
-
+\section{Starting Point}
+As mentioned in the previous sections, this project builds on top of \texttt{ngtcp2} implementation of \texttt{QUIC}.
+In other words, relevant networking stack tools such as cryptographic library (e.g. \texttt{OpenSSL}), benchmarking tool (e.g. \texttt{h2load}), custom \texttt{HTTP} layers (e.g. \texttt{nghttp2} and \texttt{ngtcp3}) have already been built and integrated. 
+Similarly, the concept of QUIC was introduced in the Part IB \enquote{Computer Networking} course and fundamentals of C and C++ were covered in \enquote{Programming in C and C++} course. 
+In addition, I used C++11 in my summer internship.
 
 
 \chapter{Implementation}
