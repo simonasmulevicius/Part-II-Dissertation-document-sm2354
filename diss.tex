@@ -9,6 +9,7 @@
 \usetikzlibrary{shapes.geometric, arrows}
 \usepackage{multirow}
 \usepackage{url}
+\usepackage{csquotes}
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -53,7 +54,7 @@ Name:               & \bf Simonas Mulevicius                       \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf QUIC offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 370\footnotemark[1] \\
+Word Count:         & \bf 456\footnotemark[1] \\
 Project Originator: & Dr Andrew W. Moore                \\
 Supervisor:         & Dr Andrew W. Moore                \\ 
 \end{tabular}
@@ -118,6 +119,7 @@ The following people helped with the project setup or provided useful insights o
 \end{itemize}
 
 Furthermore, this document is written using a default dissertation template provided by Martin Richards \cite{how_to_write_a_dissertation_in_LATEX}.
+However, some formatting ideas are taken from Alex Coplan's dissertation \cite{Alex_Coplan_dissertation}, which, according to \cite{Computer_Lab_dissertations}, is \enquote{highly commended by the examiners}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % now for the chapters
@@ -152,11 +154,12 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
     \label{fig:QUIC_network_stack}
     \end{figure}
 
-\begin{itemize}
-  \item TODO: What is the meaning of this encapsulated TLS 1.3 inside QUIC?\\
-  \item TODO: Why is UDP smaller than TCP on the left-hand side? \\
-  \item TODO: Similarly, Why is "HTTP over QUIC" layer smaller than HTTP/2?\\
-\end{itemize}
+% [TODO: WHAT end-to-end LATENCY?]
+One of the key ideas of QUIC is that it aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}, \cite{HTTP_3_the_past_the_present_and_the_future}. Hence, for this reason \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the QUIC protocol. 
+As Mattias Geniar said \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP},
+\texttt{HTTP over QUIC} layer (which is called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to QUIC.
+Similarly, UDP layer is smaller than TCP layer because UDP does not provide congestion control. 
+In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
 
 
 \subsection{List of QUIC Features}
@@ -174,11 +177,23 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
 \end{itemize}
 
 
-
-\subsection{TCP's Problems}
-QUIC aims to solve some of the design problems which are present in the TCP transport layer protocol.
 %  TODO So what are those problems?! 
+\subsection{TCP's Problems}
+\texttt{QUIC} aims to solve some of the design problems which are present in the \texttt{TCP} transport layer protocol.
+As Charles M. Kozierok states in his book \cite{TCP_IP_Guide_Book},
+\texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
+Similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
+\cite{HTTP_3_the_past_the_present_and_the_future}.
+Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase meaning that small files usually are not sent at the peak throughput \cite{HTTP_3_the_past_the_present_and_the_future}.
+Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
+
+
+
+
+HTTP/2 and SPDY
     
+
+
 
 \subsection{Previous Attempts to Improve TCP by Using TCP1.2 [TODO CHECK THE NAME] and SPDY}
 [TODO describe SPDY]
@@ -207,7 +222,9 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
   \item Reduced latency:
   According to [https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html]: "$<\ldots>$ QUIC outshines TCP under poor network conditions, shaving a full second off the Google Search page load time for the slowest 1\% of connections"
   \item TODO mention head-of-line blocking
-  \item TODO mention combined handshake protocol
+  \item TODO mention combined handshake protocol 
+  % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
+  
   \item TODO mention how QUIC solves the problem of ossification
 \end{itemize}
 
@@ -222,6 +239,8 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 
 \section{Related Work}
+\subsection{TODO: give an oveview of Gianni's paper}
+
 
 
 % \section{Number of words}
