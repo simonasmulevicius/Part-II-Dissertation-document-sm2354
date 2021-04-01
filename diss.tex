@@ -54,7 +54,7 @@ Name:               & \bf Simonas Mulevicius                       \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf QUIC offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 626\footnotemark[1] \\
+Word Count:         & \bf 4669\footnotemark[1] \\
 Project Originator: & Dr Andrew W. Moore                \\
 Supervisor:         & Dr Andrew W. Moore                \\ 
 \end{tabular}
@@ -157,7 +157,7 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
 One of the key ideas of QUIC is that it aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}, \cite{HTTP_3_the_past_the_present_and_the_future}. Hence, for this reason \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the QUIC protocol. 
 As Mattias Geniar said \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP},
 \texttt{HTTP over QUIC} layer (which is called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to QUIC.
-Similarly, UDP layer is smaller than TCP layer because UDP does not provide congestion control. 
+Similarly, the UDP layer is smaller than the TCP layer because UDP does not provide congestion control. 
 In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
 
 
@@ -181,25 +181,31 @@ In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Goog
 \texttt{QUIC} aims to solve some of the design problems which are present in the \texttt{TCP} transport layer protocol.
 As Charles M. Kozierok states in his book \cite{TCP_IP_Guide_Book},
 \texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
-Similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
+A similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
 \cite{HTTP_3_the_past_the_present_and_the_future}.
-Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase meaning that small files usually are not sent at the peak throughput \cite{HTTP_3_the_past_the_present_and_the_future}.
-Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
+Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase, meaning that small files usually are not sent at the peak throughput \cite{HTTP_3_the_past_the_present_and_the_future}.
+Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
 
 
-\subsection{Previous Attempts to Improve TCP by Using HTTP/1.1 and SPDY}
-[TODO describe SPDY]
+\subsection{Previous Attempts to Improve \texttt{TCP} by Using \texttt{HTTP/1.1} and \texttt{SPDY}}
+
+[TODO describe \texttt{HTTP/1.1}]
+% TODO: According https://www.oreilly.com/content/will-http2-make-my-site-faster/, HTTP/1.1 uses six TCP connections
+
+
+
+[TODO describe \texttt{SPDY}]
 
 
 
 % TODO also, add references!
-For completeness, I have to mention that there have already been several attempts to overcome the head-of-line blocking problem present in TCP.
+There have already been several attempts to overcome the head-of-line blocking problem present in TCP.
 However, attempts to roll out new and experimental versions of TCP were unsuccessful. 
 %TODO justify - mention SPDY and TCP.2??
 The main reason being that middleboxes (e.g. Network Address Translators or NATs for short) interfered with the TCP traffic.
 For instance, NATs made assumptions about the structure of TCP headers.
 As TCP/IP stack was and still is a predominant backbone of the Internet, some NATs offloaded some TCP processing to hardware or used some software optimisation techniques.
-Consequently, these premature optimisations interfered with TCP protocol's correctness - NATs rejected connections that used non-standard TCP packets.
+Consequently, these premature optimisations interfered with TCP protocol's correctness - NATs rejected connections that used experimental TCP packets.
 Another reason for the slow roll-out was that TCP's functionality is implemented in the kernel, meaning that in order to add changes to TCP, one would need to change a large number of different operating systems.
 Architects of QUIC learned these mistakes and attempted to prevent the ossification of QUIC in the future by using two interesting techniques.
 To simplify the deployment, QUIC's code operates in userspace.
@@ -212,7 +218,7 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 \begin{itemize}
   \item Reduced latency:
-  According to [https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html]: "$<\ldots>$ QUIC outshines TCP under poor network conditions, shaving a full second off the Google Search page load time for the slowest 1\% of connections"
+  According to [https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html]: "$<\ldots>$ QUIC outshines TCP under poor network conditions, shaving a full second off the Google Search page load time for the slowest 1\% of connections".
   \item TODO mention head-of-line blocking
   \item TODO mention combined handshake protocol 
   % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
@@ -231,7 +237,7 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 
 \section{Related Work}
-\subsection{TODO: give an oveview of Gianni's paper}
+\subsection{TODO: give an overview of Gianni's paper}
 
 
 
