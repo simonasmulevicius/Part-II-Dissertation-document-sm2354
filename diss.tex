@@ -60,10 +60,7 @@ Supervisor:         & Dr Andrew W. Moore                \\
 \end{tabular}
 }
 \footnotetext[1]{This word count was computed
-by \texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
-}
-
-% DISS_LENGTH=$(detex diss.tex | tr -cd '0-9A-Za-z \n' | wc -w); PROPOSAL_LENGTH=$(detex proposal.tex | tr -cd '0-9A-Za-z \n' | wc -w); echo "$(($DISS_LENGTH-$PROPOSAL_LENGTH))"
+by \texttt{DISS\_LENGTH=\$(detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w); PROPOSAL\_LENGTH=\$(detex proposal.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w); echo "\$((\$DISS\_LENGTH-\$PROPOSAL\_LENGTH))"}}
 
 \stepcounter{footnote}
 
