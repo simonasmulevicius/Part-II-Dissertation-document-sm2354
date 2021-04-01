@@ -214,7 +214,7 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 
 
-\subsection{QUIC's Advantages}
+\subsection{\texttt{QUIC}'s Advantages}
 
 \begin{itemize}
   \item Reduced latency:
@@ -226,7 +226,7 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
   \item TODO mention how QUIC solves the problem of ossification
 \end{itemize}
 
-\subsection{QUIC's Header Format} \label{subsection_QUIC_header_format}
+\subsection{\texttt{QUIC}'s Header Format} \label{subsection_QUIC_header_format}
 
 \begin{itemize}
   \item TODO mention that the packet header encryption is separate from payload encryption
@@ -234,6 +234,20 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
   \item TODO present long and short headers give a list of fields
   \item TODO mention that packet numbers are encrypted, but connection ID is not
 \end{itemize}
+
+
+\subsection{\texttt{QUIC}'s Adoption}
+
+At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt{QUIC} and $14.5\%$ used \texttt{HTTP/3} \cite{bib_Adoption_comparison_Between_http2_http3_quic}
+(see Figure~\ref{fig:Adoption_comparison_Between_http2_http3_quic}).
+
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Adoption_comparison_Between_http2_http3_quic.png}
+    \caption{Proportion of websites using \texttt{QUIC}, \texttt{HTTP/2} or \texttt{HTTP/3}. This diagram is taken from \cite{bib_Adoption_comparison_Between_http2_http3_quic}.}
+    \label{fig:Adoption_comparison_Between_http2_http3_quic}
+    \end{figure}
+
 
 
 \section{Related Work}
