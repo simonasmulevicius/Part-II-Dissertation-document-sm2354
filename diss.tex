@@ -132,7 +132,7 @@ However, some formatting ideas are taken from Alex Coplan's dissertation \cite{A
 \pagestyle{headings}
 
 \chapter{Introduction}
-In this chapter, I introduce \texttt{QUIC}, then I give the project's motivation, and I finish the chapter with a brief overview of \texttt{QUIC} performance measurements performed by other scientists.
+In this chapter, I briefly introduce \texttt{QUIC}, then I give the project's motivation, and I finish the chapter with an overview of \texttt{QUIC} performance measurements performed by other scientists.
 
 % ------------------------------------------------
 % TODO
@@ -160,15 +160,50 @@ In this chapter, I introduce \texttt{QUIC}, then I give the project's motivation
 
 
 \section{Motivation of the project}
-% TODO: use texts from the ideas.txt file and the email sent to overseers
+
+This project tries to understand the bottlenecks of \texttt{QUIC} and its performance behaviour.
+QUIC transport layer protocol is still in the early development stage.
+However, we already need to start thinking about its performance.
+Otherwise, there is a possibility that because of the low QUIC throughput, it may not be widely adopted (as happened with earlier attempts to improve TCP). 
+% TODO: add a reference to the source proving this claim
+
+
+The introduction of \texttt{QUIC} would be especially beneficial for countries that do not have access to the low latency Internet connection.
+% TODO: give a reason why 
+The most interesting part of this project is that  \texttt{QUIC} is a relatively new network technology and, as far as I am aware, there have not been any similar projects which tried to measure \texttt{QUIC}’s performance by \enquote{breaking} it (i.e. using \texttt{QUIC} without encryption).
+
+This analysis could be useful in the future when \texttt{QUIC}’s cryptographic operations would be offloaded to hardware. Nevertheless, these experiments could also have some tangible value for current times. 
+For instance, an experimental \texttt{QUIC} with null encryption could be used in secure networks controlled by a single entity (e.g. within a data centre).
+
+
+
+%-------IDEAS to add to this section:-------
+
+
+%The performance study of QUIC under several variable conditions (e.g. packet loss, reordering and delay) in comparison with iperf is the focus of my work.
+ 
+ 
+%The purpose of this work is to predict future bottlenecks. To achieve this, I would first need to exclude/bypass the cryptographic operations of  \texttt{QUIC}. I already have the functionality to turn on null-encryption on the server-side, so I would need to adopt similar ideas for the  \texttt{QUIC} client. Such a set-up would simulate offloaded encryption. Previous studies analysed different implementations of  \texttt{QUIC} (not ngtcp2), so the primary goal would be to run similar experiments with ngtcp2. After that, I would have to identify situations where  \texttt{QUIC} (ngtcp2 in particular) outperforms TCP using different network conditions. To achieve this, I have a complete testing environment with a configured intermediate machine that can introduce traffic perturbations. In addition, I have already performed some performance measurements using different MTUs. Furthermore, I estimated the impact of core pinning for these tests and took into account both hyperthreading and GSO.
+ 
+ 
+
+
+
+
 \subsection{High Level Overview of \texttt{QUIC}}
-\subsection{Why are performance measurement of \texttt{QUIC} important?}
+\subsection{Why are performance measurements of \texttt{QUIC} important?}
 
 \section{Related Work}
-\subsection{TODO: give an overview of Gianni's paper}
+There have been several similar attempts to measure QUIC performance under different scenarios. 
+The most notable experiment \cite{Making_QUIC_Quicker} analysed the impact of network delay and packet reordering for the QUIC throughput. 
+
+%\subsection{TODO: give an overview of Gianni's paper}
+
+
 
 \section{Completed Work}
-
+My current analysis shows that a typical QUIC client spends around 70\% of CPU time performing cryptographic operations. 
+These results are consistent with previous studies that identified cryptographic functions as the current bottleneck of QUIC \cite{Making_QUIC_Quicker}.
 
 
 
@@ -237,16 +272,17 @@ Finally, I finish this section by describing software engineering tools and tech
 
 \section{Networking Landscape Before \texttt{QUIC}}
 
-%  TODO So what are those problems?! 
+
 \subsection{\texttt{HTTP/1.0} Problems caused by \texttt{TCP}}
-\texttt{QUIC} aims to solve some of the design problems which are present in the \texttt{TCP} transport layer protocol.
-As Charles M. Kozierok states in his book \cite{TCP_IP_Guide_Book},
-\texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
-A similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
-\cite{HTTP_3_the_past_the_present_and_the_future}.
-Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase, meaning that small files usually are not sent at the peak throughput \cite{HTTP_3_the_past_the_present_and_the_future}.
-Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
-Even though, as stated in \cite{TCP_IP_Guide_Book_2}, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained, nowadays it is no longer efficient to open and close a new TCP connection for all the multiple embeded web objects associated with standard websites.
+
+    \texttt{QUIC} aims to solve some of the design problems which are present in the \texttt{TCP} transport.
+    As Charles M. Kozierok states in his book \cite{TCP_IP_Guide_Book},
+    \texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
+    A similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
+    \cite{HTTP_3_the_past_the_present_and_the_future}.
+    Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase, meaning that small files usually are not sent at the peak throughput \cite{HTTP_3_the_past_the_present_and_the_future}.
+    Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
+    Even though, as stated in \cite{TCP_IP_Guide_Book_2}, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained, nowadays it is no longer efficient to open and close a new TCP connection for all the multiple embeded web objects associated with standard websites.
 
 \subsection{Previous Attempts to Improve \texttt{TCP} by Using \texttt{HTTP/1.1}, \texttt{HTTP/2.0} and \texttt{SPDY}}
 
@@ -330,8 +366,8 @@ In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Goog
   \item TODO multiplexed streams
   \item TODO connection migration (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
   \item TODO encryption by default
-  \item TODO Mention fast TLS1.3 handshake
-  \item TODO mention zero RTT handshake
+  \item TODO fast TLS1.3 handshake
+  \item TODO zero RTT handshake
 \end{itemize}
 
 
@@ -390,7 +426,7 @@ According to QUIC Working Group \cite{number_of_QUIC_implementations}, there is 
 
 % TODO user space vs kernel space
 
-As I have already mentioned in the Introduction section, QUIC is implemented in the user space [TODO ADD SOURCE].
+As I have already mentioned in the previous sections, QUIC is implemented in the user space [TODO ADD SOURCE].
 
 
 \subsection{Why did I choose  \texttt{ngtcp2}?}
@@ -422,7 +458,6 @@ In addition, I used C++11 in my summer internship.
 % TODO: reference the starting point section from the initial project proposal
 
 \section{Software Engineering Techniques and Tools}
-% TODO finish
     To track the code changes, I used \texttt{Git} source control tool.
     In particular, I used \texttt{GitHub} to store forked repositories of \texttt{ngtcp2}, \texttt{openssl}, \texttt{nghttp2} and \texttt{nghttp3}.
     In addition, the dissertation document was written using online \LaTeX  editor called Overleaf\footnote{\url{https://www.overleaf.com/}} and changes were also committed to a separate repository on \texttt{GitHub}.
