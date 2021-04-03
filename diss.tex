@@ -163,6 +163,8 @@ In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Goog
 
 \subsection{List of QUIC Features}
 % https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
+% TODO: read https://tools.ietf.org/html/draft-ietf-quic-transport-32#section-1
+% TODO: read https://arxiv.org/pdf/1801.05168.pdf
 \begin{itemize}
   \item TODO congestion control
   \item TODO loss detection with signaling (using new seq number)
@@ -185,17 +187,39 @@ A similar idea is expressed in the article written by Alessandro Ghedini and Rus
 \cite{HTTP_3_the_past_the_present_and_the_future}.
 Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase, meaning that small files usually are not sent at the peak throughput \cite{HTTP_3_the_past_the_present_and_the_future}.
 Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
+Even though, as stated in \cite{TCP_IP_Guide_Book_2}, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained, nowadays it is no longer efficient to open and close a new TCP connection for all the multiple embeded web objects associated with standard websites.
+
+\subsection{Previous Attempts to Improve \texttt{TCP} by Using \texttt{HTTP/1.1}, \texttt{HTTP/2.0} and \texttt{SPDY}}
+
+According to the initial draft of \texttt{HTTP/1.1} \cite{RFC2068}, \texttt{HTTP/1.1} mitigates some of the \texttt{HTTP/1.0} problems by introducing persistent connections which in turn allow multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
+Another advantage of using a shared \texttt{TCP} connection is that by sending packets over a single \texttt{TCP} connection we can make better estimates of the actual round-trip time between the server and the client \cite{bib_Computer_Networking_L6}.
+Furthermore, \texttt{HTTP/1.1} enables pipelining of multiple \texttt{HTTP} requests over the same \texttt{TCP} connection.
+Hence, as stated in \cite{bib_digital_ocean_http11_vs_http2}, the client does not need to wait for an \texttt{HTTP} reply from the server before sending consecutive \texttt{HTTP} requests.
+However, the problem with \texttt{HTTP/1.1} is that \texttt{HTTP} replies need to be sent in order \cite{RFC7540} meaning that a missing packet of one \texttt{HTTP} request-reply pair could block subsequent requests \cite{bib_digital_ocean_http11_vs_http2}.
+In the literature this issue is called \enquote{head-of-line blocking} (abbreviated \texttt{HOL}).
+One possible workaround to hide the effect of \texttt{HOL} is to use several shared \texttt{TCP} connections \cite{bib_digital_ocean_http11_vs_http2}.
+In particular, according Javier Garza \cite{bib_will-http2-make-my-site-faster}, \texttt{HTTP/1.1} uses six \texttt{TCP} connections.
+But, as pointed out in \cite{bib_digital_ocean_http11_vs_http2}, the use of large number of \texttt{TCP} connections is not practical.
 
 
-\subsection{Previous Attempts to Improve \texttt{TCP} by Using \texttt{HTTP/1.1} and \texttt{SPDY}}
-
-[TODO describe \texttt{HTTP/1.1}]
-% TODO: According https://www.oreilly.com/content/will-http2-make-my-site-faster/, HTTP/1.1 uses six TCP connections
+%[TODO describe \texttt{SPDY}]
 
 
+%[TODO describe \texttt{HTTP/2.0}]
+As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the primary achievements of \texttt{HTTP/2.0} are that, compared with \texttt{HTTP/1.1}, \texttt{HTTP/2.0} improves throughput and reduces latency of \texttt{HTTP} protocol by improving utilisation of existing resources.
+For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
+Furthermore, as noted in the same source \cite[Chapter~12]{bib_grigorik2013}, 
+\texttt{HTTP/2.0} also improved multiplexing by sharing a single \texttt{TCP} connection over the varying number of streams.
+This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself [TODO find a source for this idea].
+% TODO find a source which explains why HTTP/2 fails with Head-of-line blocking
+In other words, if a \texttt{TCP} packet is lost, then latter \texttt{TCP} packets can not be delivered to the application layer until the missing packet is not retransmitted [TODO add a source for this idea].
+The reason for this is that \texttt{TCP} is a stream oriented protocol.
 
-[TODO describe \texttt{SPDY}]
 
+
+% Server push
+
+%[TODO what is the difference between \texttt{SPDY} and HTTP/2?]
 
 
 % TODO also, add references!
@@ -236,12 +260,13 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 \end{itemize}
 
 
+% TODO: ask Andrew if this subsection is relevant
 \subsection{\texttt{QUIC}'s Adoption}
 
 At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt{QUIC} and $14.5\%$ used \texttt{HTTP/3} \cite{bib_Adoption_comparison_Between_http2_http3_quic}
 (see Figure~\ref{fig:Adoption_comparison_Between_http2_http3_quic}).
 
-    \begin{figure}[h]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Adoption_comparison_Between_http2_http3_quic.png}
     \caption{Proportion of websites using \texttt{QUIC}, \texttt{HTTP/2} or \texttt{HTTP/3}. This diagram is taken from \cite{bib_Adoption_comparison_Between_http2_http3_quic}.}
@@ -252,6 +277,10 @@ At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt
 
 \section{Related Work}
 \subsection{TODO: give an overview of Gianni's paper}
+
+
+\section{Motivation of the project}
+% TODO: use texts from the ideas.txt file and the email sent to overseers
 
 
 
@@ -328,6 +357,7 @@ As mentioned in the previous sections, this project builds on top of \texttt{ngt
 In other words, relevant networking stack tools such as cryptographic library (e.g. \texttt{OpenSSL}), benchmarking tool (e.g. \texttt{h2load}), custom \texttt{HTTP} layers (e.g. \texttt{nghttp2} and \texttt{ngtcp3}) have already been built and integrated. 
 Similarly, the concept of QUIC was introduced in the Part IB \enquote{Computer Networking} course and fundamentals of C and C++ were covered in \enquote{Programming in C and C++} course. 
 In addition, I used C++11 in my summer internship.
+% TODO: reference the starting point section from the initial project proposal
 
 
 \chapter{Implementation}
