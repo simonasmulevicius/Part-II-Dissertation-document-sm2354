@@ -119,7 +119,8 @@ The following people helped with the project setup or provided useful insights o
     \item \textbf{Dr Marcin Wojcik} helped with general inquiries related to the setup of NetFPGA developing platform;
     \item \textbf{Dr Andrew W. Moore} was my project supervisor and originator of the project idea;
     \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory during the winter vacation;
-    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \texttt{ngtcp2}\footnote{specific implementation of QUIC which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2}.
+    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \texttt{ngtcp2}\footnote{specific implementation of QUIC which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2};
+    \item Part II students \textbf{Ms Akvile Valentukonyte} and \textbf{Mr Justas Janickas} participated in our weekly meetings where we all shared our achieved progress;
 \end{itemize}
 
 Furthermore, this document is written using a default dissertation template provided by Martin Richards \cite{how_to_write_a_dissertation_in_LATEX}.
@@ -421,9 +422,50 @@ In addition, I used C++11 in my summer internship.
 % TODO: reference the starting point section from the initial project proposal
 
 \section{Software Engineering Techniques and Tools}
+% TODO finish
+    To track the code changes, I used \texttt{Git} source control tool.
+    In particular, I used \texttt{GitHub} to store forked repositories of \texttt{ngtcp2}, \texttt{openssl}, \texttt{nghttp2} and \texttt{nghttp3}.
+    In addition, the dissertation document was written using online \LaTeX  editor called Overleaf\footnote{\url{https://www.overleaf.com/}} and changes were also committed to a separate repository on \texttt{GitHub}.
+    
+    Throughout the project, I tried to employ \texttt{Agile} software development practices.
+    For instance, for performance evaluation, I had to configure testing machines using repetitive commands but typing these instructions by hand is a laborious and error-prone process.
+    As a result, after detecting an error caused by an incorrect configuration, I usually augmented the \texttt{bash} setup script to set missing parameters automatically.
+    Furthermore, I had Weekly progress updates with several other Part II students.
+    During these virtual \enquote{stand-up meetings} I had an opportunity to reflect on project-related issues.
+    To record my daily progress, I used a logbook, stored in the \texttt{Google Docs}.
+    Besides that, I used an application called \texttt{Trello}\footnote{\url{https://trello.com/en-GB}} to group, track and re-order subtasks according to their importance (see Figure~\ref{fig:Trello_board}).
 
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Trello_board.PNG}
+    \caption{\texttt{Trello} board of important tasks}
+    \label{fig:Trello_board}
+    \end{figure}
+    
+    Furthermore, I took the necessary steps to be able to have remote access to the specialised hardware during the winter vacation.
+    In particular, I first enabled permanent remote access to the testing machines using remote desktop access software called \texttt{TeamViewer}\footnote{\url{https://www.teamviewer.com/en/}} so that I could access the aforementioned machines outside the college network.
+    Then, as shown in Figure~\ref{fig:setup_map}, I added additional redundant backup \texttt{ssh} connections between the testing computers to improve the resilience of the system in case one of the \texttt{TeamViewer} links failed.
+    Finally, my college granted permission to two non-technical students to enter my room and fix the machines inside it in case of an accident.
+    
 
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Setup map.png}
+    \caption{Contingency plan to work remotely}
+    \label{fig:setup_map}
+    \end{figure}
 
+    Besides that, I used different communication channels to discuss configuration and technical issues with other \texttt{QUIC} developers.
+    At first, I used \texttt{GitHub} to raise issues.
+    Then, I started using a direct messaging application called \texttt{Slack}\footnote{\url{https://slack.com/intl/en-gb/}} 
+    and it improved the speed of communications substantially.
+
+    Finally, to improve the development speed, after winter vacation, I brought an additional unused laptop.
+    This computer was used as a sandbox to test different implementations of \texttt{QUIC} before deploying them to the main machines.
+    Before then, I had a problem that testing machines had pre-configured software which used incompatible settings with the configuration parameters required for \texttt{QUIC} implementations (e.g. existing software stack used older OS version).
+    But with the help of the additional laptop, I was able to very correctness of \texttt{ngtcp2}, a selected implementation of \texttt{QUIC}.
+
+    % TODO: mention unit tests
 
 \chapter{Implementation}
 % ------------------------------------------------
