@@ -190,7 +190,7 @@ For instance, an experimental \texttt{QUIC} with null encryption could be used i
 
 
 
-\subsection{High Level Overview of \texttt{QUIC}}
+\subsection{High-Level Overview of \texttt{QUIC}}
 \subsection{Why are performance measurements of \texttt{QUIC} important?}
 
 \section{Related Work}
@@ -271,29 +271,30 @@ Finally, I finish this section by describing software engineering tools and tech
 
 
 \section{Networking Landscape Before \texttt{QUIC}}
+    \texttt{QUIC} aims to solve some of the design problems present in the \texttt{TCP} protocol, hoping that improvements in underlying transport layer protocols would improve the application layer protocols' performance.
+    In particular, the primary focus is to reduce latency and increase the throughput of the \texttt{HTTP} protocol.
+    Hence, it is worth studying previous attempts to improve the performance of HTTP.
 
 
 \subsection{\texttt{HTTP/1.0} Problems caused by \texttt{TCP}}
-
-    \texttt{QUIC} aims to solve some of the design problems which are present in the \texttt{TCP} transport.
     As Charles M. Kozierok states in his book \cite{TCP_IP_Guide_Book},
     \texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
     A similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
     \cite{HTTP_3_the_past_the_present_and_the_future}.
     Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase, meaning that small files usually are not sent at the peak throughput \cite{HTTP_3_the_past_the_present_and_the_future}.
-    Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
-    Even though, as stated in \cite{TCP_IP_Guide_Book_2}, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained, nowadays it is no longer efficient to open and close a new TCP connection for all the multiple embeded web objects associated with standard websites.
+    Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request, it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
+    Even though, as stated in \cite{TCP_IP_Guide_Book_2}, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained, nowadays it is no longer efficient to open and close a new TCP connection for all the multiple embedded web objects associated with standard websites.
 
 \subsection{Previous Attempts to Improve \texttt{TCP} by Using \texttt{HTTP/1.1}, \texttt{HTTP/2.0} and \texttt{SPDY}}
 
 According to the initial draft of \texttt{HTTP/1.1} \cite{RFC2068}, \texttt{HTTP/1.1} mitigates some of the \texttt{HTTP/1.0} problems by introducing persistent connections which in turn allow multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
-Another advantage of using a shared \texttt{TCP} connection is that by sending packets over a single \texttt{TCP} connection we can make better estimates of the actual round-trip time between the server and the client \cite{bib_Computer_Networking_L6}.
+Another advantage of using a shared \texttt{TCP} connection is that by sending packets over a single \texttt{TCP} connection, we can make better estimates of the actual round-trip time between the server and the client \cite{bib_Computer_Networking_L6}.
 Furthermore, \texttt{HTTP/1.1} enables pipelining of multiple \texttt{HTTP} requests over the same \texttt{TCP} connection.
 Hence, as stated in \cite{bib_digital_ocean_http11_vs_http2}, the client does not need to wait for an \texttt{HTTP} reply from the server before sending consecutive \texttt{HTTP} requests.
 However, the problem with \texttt{HTTP/1.1} is that \texttt{HTTP} replies need to be sent in order \cite{RFC7540} meaning that a missing packet of one \texttt{HTTP} request-reply pair could block subsequent requests \cite{bib_digital_ocean_http11_vs_http2}.
 In the literature this issue is called \enquote{head-of-line blocking} (abbreviated \texttt{HOL}).
 One possible workaround to hide the effect of \texttt{HOL} is to use several shared \texttt{TCP} connections \cite{bib_digital_ocean_http11_vs_http2}.
-In particular, according Javier Garza \cite{bib_will-http2-make-my-site-faster}, \texttt{HTTP/1.1} uses six \texttt{TCP} connections.
+In particular, according to Javier Garza \cite{bib_will-http2-make-my-site-faster}, \texttt{HTTP/1.1} uses six \texttt{TCP} connections.
 But, as pointed out in \cite{bib_digital_ocean_http11_vs_http2}, the use of large number of \texttt{TCP} connections is not practical.
 
 
@@ -308,7 +309,7 @@ Furthermore, as noted in the same source \cite[Chapter~12]{bib_grigorik2013},
 This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself [TODO find a source for this idea].
 % TODO find a source which explains why HTTP/2 fails with Head-of-line blocking
 In other words, if a \texttt{TCP} packet is lost, then latter \texttt{TCP} packets can not be delivered to the application layer until the missing packet is not retransmitted [TODO add a source for this idea].
-The reason for this is that \texttt{TCP} is a stream oriented protocol.
+The reason for this is that \texttt{TCP} is a stream-oriented protocol.
 
 
 
@@ -348,8 +349,9 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
 
 % [TODO: WHAT end-to-end LATENCY?]
 One of the key ideas of QUIC is that it aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}, \cite{HTTP_3_the_past_the_present_and_the_future}. Hence, for this reason \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the QUIC protocol. 
+% TODO: fix this jump of ideas
 As Mattias Geniar said \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP},
-\texttt{HTTP over QUIC} layer (which is called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to QUIC.
+\texttt{HTTP over QUIC} layer (which is now called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to QUIC.
 Similarly, the UDP layer is smaller than the TCP layer because UDP does not provide congestion control. 
 In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
 
