@@ -285,10 +285,13 @@ Finally, I finish this section by describing software engineering tools and tech
     Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request, it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete \cite{HTTP_3_the_past_the_present_and_the_future}.
     Even though, as stated in \cite{TCP_IP_Guide_Book_2}, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained, nowadays it is no longer efficient to open and close a new TCP connection for all the multiple embedded web objects associated with standard websites.
 
-\subsection{Previous Attempts to Improve \texttt{TCP} by Using \texttt{HTTP/1.1}, \texttt{HTTP/2.0} and \texttt{SPDY}}
+\subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{HTTP/1.1}}
 
-According to the initial draft of \texttt{HTTP/1.1} \cite{RFC2068}, \texttt{HTTP/1.1} mitigates some of the \texttt{HTTP/1.0} problems by introducing persistent connections which in turn allow multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
-Another advantage of using a shared \texttt{TCP} connection is that by sending packets over a single \texttt{TCP} connection, we can make better estimates of the actual round-trip time between the server and the client \cite{bib_Computer_Networking_L6}.
+According to the initial draft of \texttt{HTTP/1.1} \cite{RFC2068}, \texttt{HTTP/1.1} mitigates some of the \texttt{HTTP/1.0} problems by introducing persistent connections, which in turn allow multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
+Another advantage of using a shared \texttt{TCP} connection is that by sending packets over a single \texttt{TCP} connection, we can make better estimates of the actual round-trip time (\texttt{RTT}) between the server and the client \cite{bib_Computer_Networking_L6}.
+More precise \texttt{RTT} measurements allow us to utilise networking resources more consistently.
+For example, by evaluating \texttt{TCP} parameters, such as retransmission-timeout, more accurately, we can reduce the number of unnecessary pre-emptive \texttt{TCP} timeouts \cite{bib_rtt_tcp_Retransmissions}.
+
 Furthermore, \texttt{HTTP/1.1} enables pipelining of multiple \texttt{HTTP} requests over the same \texttt{TCP} connection.
 Hence, as stated in \cite{bib_digital_ocean_http11_vs_http2}, the client does not need to wait for an \texttt{HTTP} reply from the server before sending consecutive \texttt{HTTP} requests.
 However, the problem with \texttt{HTTP/1.1} is that \texttt{HTTP} replies need to be sent in order \cite{RFC7540} meaning that a missing packet of one \texttt{HTTP} request-reply pair could block subsequent requests \cite{bib_digital_ocean_http11_vs_http2}.
@@ -298,22 +301,22 @@ In particular, according to Javier Garza \cite{bib_will-http2-make-my-site-faste
 But, as pointed out in \cite{bib_digital_ocean_http11_vs_http2}, the use of large number of \texttt{TCP} connections is not practical.
 
 
+
+\subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{HTTP/2.0} and \texttt{SPDY}}
 %[TODO describe \texttt{SPDY}]
 
 
-%[TODO describe \texttt{HTTP/2.0}]
 As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the primary achievements of \texttt{HTTP/2.0} are that, compared with \texttt{HTTP/1.1}, \texttt{HTTP/2.0} improves throughput and reduces latency of \texttt{HTTP} protocol by improving utilisation of existing resources.
 For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
 Furthermore, as noted in the same source \cite[Chapter~12]{bib_grigorik2013}, 
 \texttt{HTTP/2.0} also improved multiplexing by sharing a single \texttt{TCP} connection over the varying number of streams.
-This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself [TODO find a source for this idea].
-% TODO find a source which explains why HTTP/2 fails with Head-of-line blocking
-In other words, if a \texttt{TCP} packet is lost, then latter \texttt{TCP} packets can not be delivered to the application layer until the missing packet is not retransmitted [TODO add a source for this idea].
+This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself \cite{bib_making_web_faster_with_http2}, \cite{bib_TCP_Head_of_line_blocking_stackoverflow},
+\cite{How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
+In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets, containing frames of other streams, can not be delivered to the application layer until the missing packet is not retransmitted \cite{bib_making_web_faster_with_http2}, \cite{bib_TCP_Head_of_line_blocking_stackoverflow}, 
+\cite{How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
 The reason for this is that \texttt{TCP} is a stream-oriented protocol.
 
-
-
-% Server push
+% MAYBE TODO: mention Server push functionality
 
 %[TODO what is the difference between \texttt{SPDY} and HTTP/2?]
 
