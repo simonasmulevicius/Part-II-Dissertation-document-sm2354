@@ -305,7 +305,8 @@ But, as pointed out in \cite{bib_digital_ocean_http11_vs_http2}, the use of larg
 \subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{HTTP/2.0} and \texttt{SPDY}}
 %[TODO describe \texttt{SPDY}]
 
-
+In order to improve \texttt{HTTP} performance, Google developed a session layer protocol called \texttt{SPDY} \cite{bib_SPDY_white_paper}.
+Then, now obsolete \texttt{SPDY} protocol was used as a blueprint when building the next-generation version of \texttt{HTTP} \cite{bib_SPDY_vs_HTTP2}.
 As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the primary achievements of \texttt{HTTP/2.0} are that, compared with \texttt{HTTP/1.1}, \texttt{HTTP/2.0} improves throughput and reduces latency of \texttt{HTTP} protocol by improving utilisation of existing resources.
 For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
 Furthermore, as noted in the same source \cite[Chapter~12]{bib_grigorik2013}, 
@@ -318,13 +319,15 @@ The reason for this is that \texttt{TCP} is a stream-oriented protocol.
 
 % MAYBE TODO: mention Server push functionality
 
-%[TODO what is the difference between \texttt{SPDY} and HTTP/2?]
+% TODO: what is the difference between \texttt{SPDY} and HTTP/2?
 
 
-%[TODO rewrite this paragraph with references]
-There have already been several attempts to overcome the head-of-line blocking problem present in TCP.
-However, attempts to roll out new and experimental versions of TCP were unsuccessful. 
-%TODO justify - mention SPDY and TCP.2??
+\subsection{Roll-out Problems when Deploying Protocol Upgrades}
+As we have seen in the previous sections, there have already been several attempts to overcome the head-of-line blocking problem present in \texttt{TCP}.
+However, attempts to roll out new and experimental versions of \texttt{TCP} were unsuccessful. 
+% TODO what TCP improvements were not successfully deployed?
+% TODO: mention contribution of IPv4 to the proliferation of middleboxes
+% TODO rewrite this paragraph with references
 The main reason being that middleboxes (e.g. Network Address Translators or NATs for short) interfered with the TCP traffic.
 For instance, NATs made assumptions about the structure of TCP headers.
 As TCP/IP stack was and still is a predominant backbone of the Internet, some NATs offloaded some TCP processing to hardware or used some software optimisation techniques.
@@ -500,7 +503,7 @@ In addition, I used C++11 in my summer internship.
     Then, I started using a direct messaging application called \texttt{Slack}\footnote{\url{https://slack.com/intl/en-gb/}} 
     and it improved the speed of communications substantially.
 
-    Finally, to improve the development speed, after winter vacation, I brought an additional unused laptop.
+    Finally, to improve the development speed, after winter vacation, I brought an additional laptop from home.
     This computer was used as a sandbox to test different implementations of \texttt{QUIC} before deploying them to the main machines.
     Before then, I had a problem that testing machines had pre-configured software which used incompatible settings with the configuration parameters required for \texttt{QUIC} implementations (e.g. existing software stack used older OS version).
     But with the help of the additional laptop, I was able to very correctness of \texttt{ngtcp2}, a selected implementation of \texttt{QUIC}.
@@ -531,6 +534,8 @@ In addition, I used C++11 in my summer internship.
 \section{Repository Overview} 
 % TODO add reference to the original page of ngtcp2
 First of all, I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
+
+In addition, I augmented \enquote{README} file of the primary repository with specific instructions on how to compile and run the software stack required for this project.
 
 \section{Using Null Encryption}
 % TODO add reference that encryption is turned on by default
@@ -769,6 +774,8 @@ Robert Love refers to this technique of assigning particular processes to partic
 \section{Reflection}
 
 \section{Future Work}
+
+% TODO: critique that offloading QUIC to hardware might stifle innovation in the long term.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the bibliography
