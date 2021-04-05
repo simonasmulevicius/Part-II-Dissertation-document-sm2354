@@ -519,12 +519,17 @@ In addition, I used C++11 in my summer internship.
     Then, I started using a direct messaging application called \texttt{Slack}\footnote{\url{https://slack.com/intl/en-gb/}} 
     and it improved the speed of communications substantially.
 
-    Finally, to improve the development speed, after winter vacation, I brought an additional laptop from home.
+    Furthermore, after winter vacation, I brought an additional laptop from home to improve the development speed.
     This computer was used as a sandbox to test different implementations of \texttt{QUIC} before deploying them to the main machines.
     Before then, I had a problem that testing machines had pre-configured software which used incompatible settings with the configuration parameters required for \texttt{QUIC} implementations (e.g. existing software stack used older OS version).
-    But with the help of the additional laptop, I was able to very correctness of \texttt{ngtcp2}, a selected implementation of \texttt{QUIC}.
-
+    However, with the help of the additional laptop, I was able to verify the correctness of \texttt{ngtcp2}, a selected implementation of \texttt{QUIC}.
     % TODO: mention unit tests
+    
+    Finally, for some aspects of the project, I used non-standard or not recommended practices.
+    For example, I ran testing machines with root privileges.
+    On the one hand, such a configuration would be insecure for the general computer user. On the other hand, using root privileges by default allowed me to avoid frequent issues with insufficient permissions as I had to run configuration commands which required top-level permissions multiple times.
+    
+    
 
 \chapter{Implementation}
 % ------------------------------------------------
