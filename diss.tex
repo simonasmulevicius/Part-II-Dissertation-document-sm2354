@@ -167,8 +167,7 @@ Customers expect cheap, high-throughput and low latency Internet connection.
 However, in the last decade, several trends have emerged.
 For example, in recent years, we observed a proliferation of mobile devices - according to \cite{bib_number_of_mobile_users}, at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet.
 Furthermore, we see the changing patterns of web development.
-In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g. from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos).
-% TODO [NOT MY IDEA! -> add source]
+In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g. from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
 But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet.
 % TODO [NOT MY IDEA! -> add source]
 Hence, the changing constraints and networking trends encourage us to re-evaluate past protocols.
@@ -340,18 +339,24 @@ The reason for this is that \texttt{TCP} is a stream-oriented protocol.
 
 \subsection{Roll-out Problems when Deploying Protocol Upgrades}
 As we have seen in the previous sections, there have already been several attempts to overcome the head-of-line blocking problem present in \texttt{TCP}.
-However, attempts to roll out new and experimental versions of \texttt{TCP} were unsuccessful. 
+However, attempts to roll out new and experimental versions of \texttt{TCP} were mostly unsuccessful \cite{bib_Netdev_0x13_QUIC_Tutorial}.
 % TODO what TCP improvements were not successfully deployed?
 % TODO: mention contribution of IPv4 to the proliferation of middleboxes
 % TODO rewrite this paragraph with references
-The main reason being that middleboxes (e.g. Network Address Translators or NATs for short) interfered with the TCP traffic.
-For instance, NATs made assumptions about the structure of TCP headers.
-As TCP/IP stack was and still is a predominant backbone of the Internet, some NATs offloaded some TCP processing to hardware or used some software optimisation techniques.
-Consequently, these premature optimisations interfered with TCP protocol's correctness - NATs rejected connections that used experimental TCP packets.
-Another reason for the slow roll-out was that TCP's functionality is implemented in the kernel, meaning that in order to add changes to TCP, one would need to change a large number of different operating systems.
-Architects of QUIC learned these mistakes and attempted to prevent the ossification of QUIC in the future by using two interesting techniques.
-To simplify the deployment, QUIC's code operates in userspace.
-In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers are partially encrypted (see subsection \ref{subsection_QUIC_header_format}).
+
+% TODO: Person X in conference Y said these ideas
+During the early 2000s, another architectural problem emerged.
+Around that time, the world faced an issue that the Internet was running out of IPv4 addresses.
+Hence, during that period, middleboxes (e.g. Network Address Translators or  \texttt{NATs} for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses \cite{MurphyNiallRichard2005Ina}, \cite{bib_Netdev_0x13_QUIC_Tutorial}.
+However, newly introduced middleboxes started to interfere with the \texttt{TCP} traffic \cite{bib_Netdev_0x13_QUIC_Tutorial}, \cite{PollardBarry2019HiAP}.
+For instance,  \texttt{NATs} made assumptions about the structure of \texttt{TCP} headers \cite{bib_Netdev_0x13_QUIC_Tutorial}, \cite{PollardBarry2019HiAP}.
+% TODO rewrite this paragraph with references
+As \texttt{TCP/IP} stack was and still is a predominant backbone of the Internet, some \texttt{NATs} offloaded some \texttt{TCP} processing to hardware or used some software optimisation techniques.
+Consequently, these premature optimisations interfered with \texttt{TCP} protocol's correctness - \texttt{NATs} rejected connections that used experimental \texttt{TCP} packets \cite{PollardBarry2019HiAP}.
+Another reason for the slow roll-out was that \texttt{TCP's} functionality is implemented in the kernel, meaning that in order to add changes to \texttt{TCP}, one would need to change a large number of different operating systems.
+Architects of \texttt{QUIC} learned these mistakes and attempted to prevent the ossification of \texttt{QUIC} in the future by using two interesting techniques.
+To simplify the deployment, \texttt{QUIC's} code operates in userspace.
+In addition, to prevent \texttt{NATs} from interfering with \texttt{QUIC}, \texttt{QUIC's} packet headers are partially encrypted (see subsection \ref{subsection_QUIC_header_format}) \cite{bib_Netdev_0x13_QUIC_Tutorial}.
 
 
 
@@ -359,13 +364,13 @@ In addition, to prevent NATs from interfering with QUIC, QUIC's packet headers a
 
 \section{\texttt{QUIC} Details}
 
-\texttt{QUIC} is a next-generation transport layer protocol built on top of UDP \cite{chromium_blog_about_quic}.
-Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
+\texttt{QUIC} is a next-generation transport layer protocol built on top of \texttt{UDP} \cite{chromium_blog_about_quic}.
+Figure~\ref{fig:QUIC_network_stack} shows the network stack of \texttt{QUIC}.
 
-    \begin{figure}[h]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/QUIC_network_stack.PNG}
-    \caption{QUIC/UDP/IP network stack compared to TCP/IP network stack. This diagram is taken from IETF presentation about QUIC \cite{IETF_presentation_about_QUIC}.}
+    \caption{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram is taken from \texttt{IETF} presentation about \texttt{QUIC} \cite{IETF_presentation_about_QUIC}.}
     \label{fig:QUIC_network_stack}
     \end{figure}
 
@@ -373,9 +378,9 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of QUIC.
 One of the key ideas of QUIC is that it aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}, \cite{HTTP_3_the_past_the_present_and_the_future}. Hence, for this reason \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the QUIC protocol. 
 % TODO: fix this jump of ideas
 As Mattias Geniar said \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP},
-\texttt{HTTP over QUIC} layer (which is now called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to QUIC.
-Similarly, the UDP layer is smaller than the TCP layer because UDP does not provide congestion control. 
-In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
+\texttt{HTTP over QUIC} layer (which is now called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to \texttt{QUIC}.
+Similarly, the \texttt{UDP} layer is smaller than the \texttt{TCP} layer because \texttt{UDP} does not provide congestion control. 
+In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
 
 
 \subsection{List of QUIC Features}
@@ -383,14 +388,33 @@ In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Goog
 % TODO: read https://tools.ietf.org/html/draft-ietf-quic-transport-32#section-1
 % TODO: read https://arxiv.org/pdf/1801.05168.pdf
 \begin{itemize}
+ \item TODO connection migration (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
+ 
+ 
+
+ % TODO: 
+ %more mobile devices than before - as I have already mentioned in the Introduction, more than 90% of all Internet users use mobile devices to connect to the Web \cite{bib_number_of_mobile_users}
+ % mobile devices -> can change location and Internet access point
+ % As TCP's connection is tied to a particular IP address, TCP would need to establish new connection every time network access point is changed  \cite{PollardBarry2019HiAP}
+ % TCP is old - assumed that IP address wouldn't change frequently  \cite{PollardBarry2019HiAP}
+ % This means that TCP would spend more time in this "slow-start" phase
+ % In contrast, QUIC has explicit connection ID which does not depend on the IP address > hence, clients can migrate 
+ 
+ 
+
+ 
+  \item TODO reliability
+  
+  \item TODO fast TLS1.3 handshake
+ 
   \item TODO congestion control
   \item TODO loss detection with signaling (using new seq number)
   \item TODO loss recovery
-  \item TODO reliability
+  
   \item TODO multiplexed streams
-  \item TODO connection migration (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
+  
   \item TODO encryption by default
-  \item TODO fast TLS1.3 handshake
+  
   \item TODO zero RTT handshake
 \end{itemize}
 
@@ -400,9 +424,11 @@ In other words, UDP sends packets in \enquote{fire and forget} manner \cite{Goog
 \begin{itemize}
   \item Reduced latency:
   According to [https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html]: "$<\ldots>$ QUIC outshines TCP under poor network conditions, shaving a full second off the Google Search page load time for the slowest 1\% of connections".
-  \item TODO mention head-of-line blocking
   \item TODO mention combined handshake protocol 
   % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
+
+  \item TODO solved \texttt{TCP} head-of-line blocking
+
   
   \item TODO mention how QUIC solves the problem of ossification
 \end{itemize}
@@ -494,7 +520,7 @@ In addition, I used C++11 in my summer internship.
     To record my daily progress, I used a logbook, stored in the \texttt{Google Docs}.
     Besides that, I used an application called \texttt{Trello}\footnote{\url{https://trello.com/en-GB}} to group, track and re-order subtasks according to their importance (see Figure~\ref{fig:Trello_board}).
 
-    \begin{figure}[h]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Trello_board.PNG}
     \caption{\texttt{Trello} board of important tasks}
@@ -507,7 +533,7 @@ In addition, I used C++11 in my summer internship.
     Finally, my college granted permission to two non-technical students to enter my room and fix the machines inside it in case of an accident.
     
 
-    \begin{figure}[h]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Setup map.png}
     \caption{Contingency plan to work remotely}
@@ -598,7 +624,7 @@ As this project builds on the ideas presented in \cite{Making_QUIC_Quicker}, I t
 To test a simple single flow performance, it is sufficient to have a single QUIC server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
 To measure QUIC performance under different conditions, we need to add a network emulator between the QUIC client and the QUIC server.
 
-    \begin{figure}[h]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Logical_testing_environment.png}
     \caption{Logical configuration of testing environment}
@@ -673,8 +699,13 @@ Robert Love refers to this technique of assigning particular processes to partic
 
 \subsection{GSO}
 \begin{itemize}
-  \item TODO introduce GSO
+  \item TODO introduce GSO (General Segmentation Offload)
+  % Great performance improvements
+  
+  
   \item TODO add a chart showing GSO's impact on throughput
+  
+  
   \item TODO mention when GSO is relevant
 \end{itemize}
 
