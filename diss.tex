@@ -54,7 +54,7 @@ Name:               & \bf Simonas Mulevicius                       \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf QUIC offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 2282\footnotemark[1] \\
+Word Count:         & \bf 3706\footnotemark[1] \\
 Project Originator: & Dr Andrew W. Moore                \\
 Supervisor:         & Dr Andrew W. Moore                \\ 
 \end{tabular}
@@ -160,16 +160,32 @@ In this chapter, I briefly introduce \texttt{QUIC}, then I give the project's mo
 
 
 \section{Motivation of the project}
+% TODO add reference to the ideas of this paragraph:
+Nowadays, more and more people have access to the Internet.
+As the scale of the web continues to grow, both companies and researchers look for ways to satisfy ever-increasing market demand to improve the user experience of Internet users.
+Customers expect cheap, high-throughput and low latency Internet connection.
+However, in the last decade, several trends have emerged.
+For example, in recent years, we observed a proliferation of mobile devices - according to \cite{bib_number_of_mobile_users}, at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet.
+Furthermore, we see the changing patterns of web development.
+In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g. from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos).
+% TODO [NOT MY IDEA! -> add source]
+But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet.
+% TODO [NOT MY IDEA! -> add source]
+Hence, the changing constraints and networking trends encourage us to re-evaluate past protocols.
+By using innovative solutions, we can continue improving the performance of the Internet. 
+One of such ideas is \texttt{QUIC} - the new transport layer protocol.
+
+
 
 This project tries to understand the bottlenecks of \texttt{QUIC} and its performance behaviour.
-QUIC transport layer protocol is still in the early development stage.
+\texttt{QUIC} transport layer protocol is still in the early development stage.
 However, we already need to start thinking about its performance.
-Otherwise, there is a possibility that because of the low QUIC throughput, it may not be widely adopted (as happened with earlier attempts to improve TCP). 
+Otherwise, there is a possibility that because of the low QUIC throughput, it may not be widely adopted (as happened with earlier attempts to improve \texttt{TCP}). 
 % TODO: add a reference to the source proving this claim
 
 
 The introduction of \texttt{QUIC} would be especially beneficial for countries that do not have access to the low latency Internet connection.
-% TODO: give a reason why 
+% TODO: give a reason why and add a reference to the author of this idea 
 The most interesting part of this project is that  \texttt{QUIC} is a relatively new network technology and, as far as I am aware, there have not been any similar projects which tried to measure \texttt{QUIC}’s performance by \enquote{breaking} it (i.e. using \texttt{QUIC} without encryption).
 
 This analysis could be useful in the future when \texttt{QUIC}’s cryptographic operations would be offloaded to hardware. Nevertheless, these experiments could also have some tangible value for current times. 
@@ -599,13 +615,13 @@ To measure QUIC performance under different conditions, we need to add a network
     \label{fig:Physical_testing_environment}
     \end{figure}
     
-    As we can see from Figure~\ref{fig:Physical_testing_environment}, both QUIC client and server operate on different virtual network namespaces which do not have a shared localhost/loopback [TODO check the actual name] connection.
+    As we can see from Figure~\ref{fig:Physical_testing_environment}, both \texttt{QUIC} client and server operate on different virtual network namespaces which do not have a shared loopback connection.
     Client and server are assigned different network subnets.
     An intermediate machine (B) is configured as default the gateway for both virtual network namespaces.
-    As a result, all the packets between the QUIC server and client have to travel via an intermediate machine (B).
+    As a result, all the packets between the \texttt{QUIC} server and client have to travel via an intermediate machine (B).
     Here, depending on the experiment, network perturbations (e.g. packet loss, delay, reordering) may be introduced.
-    IP forwarding is enabled on the intermediate machine (B), redirecting QUIC packets from one subnet to another.
-
+    IP forwarding is enabled on the intermediate machine (B), redirecting \texttt{QUIC} packets from one subnet to another.
+    Correctness of this configuration was tested by inspecting transit packets on the machine B.
 
 
 \section{Parameter Tuning}
@@ -617,7 +633,7 @@ By specifying a particular IP version, we reduce the number of variable paramete
 Fortunately, at the time of writing, according to Google's IPv6 adoption tracker \cite{IPv6_Adoption_Statistics}, only a third of all Internet users (30-35 \% to be precise) use IPv6 to connect to Google's services.
 Hence, analysis involving IPv4 is still relevant today.
 
-\subsection{Hyper-threading}
+\subsection{Hyper-threading}\label{Hyperthreading_Subsection_Tag}
 
 As Michael E. Thomadakis states on the 23rd page of \cite{hyperthreading_book}, \texttt{hyper-threading} (more generally known as \texttt{simultaneous multi-threading}) is a thread allocation technique that allows two threads to run on the same physical core at the same time.
 On my particular testing machines, \texttt{hyper-threading} is implemented by assigning two virtual cores for every physical core.
@@ -627,11 +643,21 @@ On the one hand, a neighbouring thread might pre-fetch required data to the cach
 Hence, to reduce the potential performance variability, I had to disable \texttt{hyper-threading} on the testing machines.
 
 
-\subsection{Separated Cores}
-Machine A in Figure~\ref{fig:Physical_testing_environment} has 4 physical cores.
+\subsection{Separated Cores} \label{SeparatedCores_Subsection_Tag}
+Machine A in Figure~\ref{fig:Physical_testing_environment} has four physical cores (see Figure~\ref{fig:memory_topology}).
 To make performance tests even more predictable, I had to assign exclusive physical cores to the QUIC client and server using \texttt{taskset}\footnote{https://man7.org/linux/man-pages/man1/taskset.1.html} tool.
-In particular, \texttt{ngtcp2} server was assigned the first core, QUIC client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core while remaining two cores were assigned to all the remaining system processes.
+In particular, \texttt{ngtcp2} server was assigned the first core (marked as \enquote{P\#0} in Figure~\ref{fig:memory_topology}).
+QUIC client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core (marked as \enquote{P\#1}).
+Finally, remaining two cores (marked as \enquote{P\#2} and \enquote{P\#3}) were assigned to all the remaining system processes.
 Robert Love refers to this technique of assigning particular processes to particular cores as \texttt{hard CPU affinity} \cite{CPU_Affinity}.
+
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/memory_topology.png}
+    \caption{Memory topology of machine A (Figure generated by \texttt{lstopo} command)}
+    \label{fig:memory_topology}
+    \end{figure}
+
 
 % TODO add a chart showing better throughput when using different cores for testing
 
