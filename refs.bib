@@ -309,26 +309,6 @@ chapter   = {9},
 publisher = {Manning Publications}
 }
 
-
-
-
-
-@misc{REFERENCE_NAME,
-  author = {AUTHOR},
-  title = {TITLE},
-  howpublished = {\url{URL}},
-  year = {YEAR}, 
-  note = "[Online; accessed 1 April 2021]"
-}
-
-
-
-
-
-
-
-
-
 @inproceedings{Making_QUIC_Quicker,
 author = {Yang, Xiangrui and Eggert, Lars and Ott, J\"{o}rg and Uhlig, Steve and Sun, Zhigang and Antichi, Gianni},
 title = {Making {QUIC} Quicker With {NIC} Offload},
@@ -349,4 +329,42 @@ series = {EPIQ '20}
 
 
 
+@techreport{ietf-quic-transport-draft,
+  author = {Jana Iyengar and Martin Thomson},
+  title = {{QUIC}: A {UDP}-Based Multiplexed and Secure Transport},
+  howpublished = {Working Draft},
+  type = {Internet-Draft},
+  number = {draft-ietf-quic-transport-32},
+  year = {2020},
+  month = {October},
+  institution = {IETF Secretariat},
+  url = {http://www.ietf.org/internet-drafts/draft-ietf-quic-transport-32.txt},
+  note = {\url{http://www.ietf.org/internet-drafts/draft-ietf-quic-transport-32.txt} (p. 38)},
+}
 
+
+@inproceedings{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources,
+author = {Langley, Adam and Riddoch, Alistair and Wilk, Alyssa and Vicente, Antonio and Krasic, Charles and Zhang, Dan and Yang, Fan and Kouranov, Fedor and Swett, Ian and Iyengar, Janardhan and Bailey, Jeff and Dorfman, Jeremy and Roskind, Jim and Kulik, Joanna and Westin, Patrik and Tenneti, Raman and Shade, Robbie and Hamilton, Ryan and Vasiliev, Victor and Chang, Wan-Teh and Shi, Zhongyi},
+title = {The QUIC Transport Protocol: Design and Internet-Scale Deployment},
+year = {2017},
+isbn = {9781450346535},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3098822.3098842},
+doi = {10.1145/3098822.3098842},
+abstract = {We present our experience with QUIC, an encrypted, multiplexed, and low-latency transport protocol designed from the ground up to improve transport performance for HTTPS traffic and to enable rapid deployment and continued evolution of transport mechanisms. QUIC has been globally deployed at Google on thousands of servers and is used to serve traffic to a range of clients including a widely-used web browser (Chrome) and a popular mobile video streaming app (YouTube). We estimate that 7\% of Internet traffic is now QUIC. We describe our motivations for developing a new transport, the principles that guided our design, the Internet-scale process that we used to perform iterative experiments on QUIC, performance improvements seen by our various services, and our experience deploying QUIC globally. We also share lessons about transport design and the Internet ecosystem that we learned from our deployment.},
+booktitle = {Proceedings of the Conference of the ACM Special Interest Group on Data Communication},
+pages = {183–196},
+numpages = {14},
+location = {Los Angeles, CA, USA},
+series = {SIGCOMM '17}
+}
+
+
+@misc{REFERENCE_NAME,
+  author = {AUTHOR},
+  title = {TITLE},
+  howpublished = {\url{URL}},
+  year = {YEAR}, 
+  note = "[Online; accessed 1 April 2021]",
+}

@@ -214,7 +214,7 @@ The most notable experiment \cite{Making_QUIC_Quicker} analysed the impact of ne
 
 %\subsection{TODO: give an overview of Gianni's paper}
 
-
+% TODO: READ: https://dl.acm.org/doi/pdf/10.1145/3242102.3242106!!!
 
 \section{Completed Work}
 My current analysis shows that a typical QUIC client spends around 70\% of CPU time performing cryptographic operations. 
@@ -339,12 +339,8 @@ The reason for this is that \texttt{TCP} is a stream-oriented protocol.
 
 \subsection{Roll-out Problems when Deploying Protocol Upgrades}
 As we have seen in the previous sections, there have already been several attempts to overcome the head-of-line blocking problem present in \texttt{TCP}.
-However, attempts to roll out new and experimental versions of \texttt{TCP} were mostly unsuccessful \cite{bib_Netdev_0x13_QUIC_Tutorial}.
+However, attempts to roll out new and experimental versions of \texttt{TCP} to yield benefits to the protocols in the application layer were mostly unsuccessful \cite{bib_Netdev_0x13_QUIC_Tutorial}, \cite{PollardBarry2019HiAP}.
 % TODO what TCP improvements were not successfully deployed?
-% TODO: mention contribution of IPv4 to the proliferation of middleboxes
-% TODO rewrite this paragraph with references
-
-% TODO: Person X in conference Y said these ideas
 During the early 2000s, another architectural problem emerged.
 Around that time, the world faced an issue that the Internet was running out of IPv4 addresses.
 Hence, during that period, middleboxes (e.g. Network Address Translators or  \texttt{NATs} for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses \cite{MurphyNiallRichard2005Ina}, \cite{bib_Netdev_0x13_QUIC_Tutorial}.
@@ -353,7 +349,7 @@ For instance,  \texttt{NATs} made assumptions about the structure of \texttt{TCP
 % TODO rewrite this paragraph with references
 As \texttt{TCP/IP} stack was and still is a predominant backbone of the Internet, some \texttt{NATs} offloaded some \texttt{TCP} processing to hardware or used some software optimisation techniques.
 Consequently, these premature optimisations interfered with \texttt{TCP} protocol's correctness - \texttt{NATs} rejected connections that used experimental \texttt{TCP} packets \cite{PollardBarry2019HiAP}.
-Another reason for the slow roll-out was that \texttt{TCP's} functionality is implemented in the kernel, meaning that in order to add changes to \texttt{TCP}, one would need to change a large number of different operating systems.
+Another reason for the slow roll-out of \texttt{TCP} improvements was that \texttt{TCP's} functionality is implemented in the kernel, meaning that in order to add changes to \texttt{TCP}, one would need to change a large number of different operating systems  \cite{PollardBarry2019HiAP}.
 Architects of \texttt{QUIC} learned these mistakes and attempted to prevent the ossification of \texttt{QUIC} in the future by using two interesting techniques.
 To simplify the deployment, \texttt{QUIC's} code operates in userspace.
 In addition, to prevent \texttt{NATs} from interfering with \texttt{QUIC}, \texttt{QUIC's} packet headers are partially encrypted (see subsection \ref{subsection_QUIC_header_format}) \cite{bib_Netdev_0x13_QUIC_Tutorial}.
@@ -367,6 +363,7 @@ In addition, to prevent \texttt{NATs} from interfering with \texttt{QUIC}, \text
 \texttt{QUIC} is a next-generation transport layer protocol built on top of \texttt{UDP} \cite{chromium_blog_about_quic}.
 Figure~\ref{fig:QUIC_network_stack} shows the network stack of \texttt{QUIC}.
 
+% TODO: redo this Figure -> rename "HTTP over QUIC" to "HTTP/3"
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/QUIC_network_stack.PNG}
@@ -378,7 +375,7 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of \texttt{QUIC}.
 One of the key ideas of QUIC is that it aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}, \cite{HTTP_3_the_past_the_present_and_the_future}. Hence, for this reason \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the QUIC protocol. 
 % TODO: fix this jump of ideas
 As Mattias Geniar said \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP},
-\texttt{HTTP over QUIC} layer (which is now called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to \texttt{QUIC}.
+\texttt{HTTP over QUIC} layer (which is now called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to \texttt{QUIC} \cite{bib_grigorik2013}.
 Similarly, the \texttt{UDP} layer is smaller than the \texttt{TCP} layer because \texttt{UDP} does not provide congestion control. 
 In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
 
@@ -388,22 +385,22 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
 % TODO: read https://tools.ietf.org/html/draft-ietf-quic-transport-32#section-1
 % TODO: read https://arxiv.org/pdf/1801.05168.pdf
 \begin{itemize}
- \item TODO connection migration (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
+ \item \textbf{Connection migration} 
+ % (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
+ 
+    As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Web \cite{bib_number_of_mobile_users}.
+    An important aspect of portable devices is that their location, and thus Internet access point, can change relatively frequently \cite{PollardBarry2019HiAP}.
+    This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address \cite{PollardBarry2019HiAP}.
+    As a result, \texttt{TCP} needs to establish a new connection every time the network access point is changed \cite{PollardBarry2019HiAP}.
+    This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the "slow-start" phase and perform additional handshakes.
+    This example demonstrates that \texttt{TCP} protocol is old as it assumed that \texttt{IP} address would not frequently change \cite{PollardBarry2019HiAP}.
+    In contrast, \texttt{QUIC} is more suitable to handle connections via mobile devices.
+    In particular, \texttt{QUIC} has an explicit connection ID that does not depend on the IP address \cite{PollardBarry2019HiAP}.
+    Hence, \texttt{QUIC} clients can migrate between multiple networks without having to re-establish a \texttt{QUIC} connection.
  
  
-
- % TODO: 
- %more mobile devices than before - as I have already mentioned in the Introduction, more than 90% of all Internet users use mobile devices to connect to the Web \cite{bib_number_of_mobile_users}
- % mobile devices -> can change location and Internet access point
- % As TCP's connection is tied to a particular IP address, TCP would need to establish new connection every time network access point is changed  \cite{PollardBarry2019HiAP}
- % TCP is old - assumed that IP address wouldn't change frequently  \cite{PollardBarry2019HiAP}
- % This means that TCP would spend more time in this "slow-start" phase
- % In contrast, QUIC has explicit connection ID which does not depend on the IP address > hence, clients can migrate 
- 
- 
-
- 
-  \item TODO reliability
+  \item \textbf{Reliability}
+    \texttt{QUIC} also provides reliable data delivery because the main purpose of it is to replace \texttt{TCP} \cite{ietf-quic-transport-draft} by offering identical or better guarantees.
   
   \item TODO fast TLS1.3 handshake
  
@@ -450,6 +447,8 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
 
 At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt{QUIC} and $14.5\%$ used \texttt{HTTP/3} \cite{bib_Adoption_comparison_Between_http2_http3_quic}
 (see Figure~\ref{fig:Adoption_comparison_Between_http2_http3_quic}).
+% TODO: add another analysis which calculates QUIC traffic
+
 
     \begin{figure}[ht]
     \centering
@@ -474,10 +473,9 @@ According to QUIC Working Group \cite{number_of_QUIC_implementations}, there is 
 
 \subsection{Why are there so many Implementations of QUIC?}
 
-% TODO user space vs kernel space
-
-As I have already mentioned in the previous sections, QUIC is implemented in the user space [TODO ADD SOURCE].
-
+As I have already mentioned in the previous sections, \texttt{QUIC} is implemented in the user-space.
+Hence, this flexibility simplifies the development and deployment of the new \texttt{QUIC} implementations.
+However, there is an associated cost of using protocol written in user space - as Adam Langley and his colleagues noted \cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}, \texttt{QUIC} server required 3.5 more \texttt{CPU} resources.
 
 \subsection{Why did I choose  \texttt{ngtcp2}?}
 %TODO: fix style and grammar:
