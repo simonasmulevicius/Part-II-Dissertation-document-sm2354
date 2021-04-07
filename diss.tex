@@ -509,6 +509,11 @@ In addition, I used C++11 in my summer internship.
     To track the code changes, I used \texttt{Git} source control tool.
     In particular, I used \texttt{GitHub} to store forked repositories of \texttt{ngtcp2}, \texttt{openssl}, \texttt{nghttp2} and \texttt{nghttp3}.
     In addition, the dissertation document was written using online \LaTeX  editor called Overleaf\footnote{\url{https://www.overleaf.com/}} and changes were also committed to a separate repository on \texttt{GitHub}.
+    Furthermore, I used different coding environments.
+    At first, I worked with \texttt{NetBeans} IDE.
+    But as I was extensively analysing existing code written by other programmers (i.e. \texttt{ngtcp2} and its related components), I needed an effective tool to search through the codebase.
+    Hence, I opted for \texttt{Visual Studio Code} IDE which also had a convenient tool to compare \texttt{git} changes.
+    
     
     Throughout the project, I tried to employ \texttt{Agile} software development practices.
     For instance, for performance evaluation, I had to configure testing machines using repetitive commands but typing these instructions by hand is a laborious and error-prone process.
@@ -525,10 +530,12 @@ In addition, I used C++11 in my summer internship.
     \label{fig:Trello_board}
     \end{figure}
     
-    Furthermore, I took the necessary steps to be able to have remote access to the specialised hardware during the winter vacation.
-    In particular, I first enabled permanent remote access to the testing machines using remote desktop access software called \texttt{TeamViewer}\footnote{\url{https://www.teamviewer.com/en/}} so that I could access the aforementioned machines outside the college network.
+    During the winter vacation I returned back home so I had made the necessary steps beforehand to be able to have remote access to the specialised hardware.
+    In particular, I first enabled permanent remote access to the testing machines using remote desktop access software called \texttt{TeamViewer}\footnote{\url{https://www.teamviewer.com/en/}}.
+    It allowed me to access the aforementioned machines outside the college network.
     Then, as shown in Figure~\ref{fig:setup_map}, I added additional redundant backup \texttt{ssh} connections between the testing computers to improve the resilience of the system in case one of the \texttt{TeamViewer} links failed.
-    Finally, my college granted permission to two non-technical students to enter my room and fix the machines inside it in case of an accident.
+    Finally, to further mitigate potential risks, I had two emergency contacts (two non-technical students from the same college) who were granted a permission to enter my room and access the machines inside it in case of an accident.
+    This last step turned out to be useful because I was able to ask my fellow students to turn off the testing machines before the college network was shut down for maintenance operations.
     
 
     \begin{figure}[ht]
