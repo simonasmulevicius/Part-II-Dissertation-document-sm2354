@@ -617,14 +617,21 @@ In addition, I used C++11 in my summer internship.
 % ------------------------------------------------
 
 \section{Repository Overview} 
-% TODO add reference to the original page of ngtcp2
+% TODO
+[TODO add reference to the original page of ngtcp2]
 First of all, I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
 
 In addition, I augmented \enquote{README} file of the primary repository with specific instructions on how to compile and run the software stack required for this project.
 
+% TODO
+[TODO: mention that I forked part of networking stack required to run ngtcp2. In particular, I worked on a separate openssl(embeded security layer), ngtcp2 (transport layer), nghttp2 and nghttp3 (application layers) ]
+
+% TODO
+[TODO: mention improved null encryption]
+
 \section{Using Null Encryption}
 % TODO
-[TODO add reference that encryption of QUIC is turned on by default]
+[TODO add reference saying that encryption of QUIC is turned on by default]
 
 By design, QUIC uses encryption by default.
 It encrypts both the payloads of the packets and some fields in the packet headers.
@@ -643,10 +650,13 @@ I achieved this by implementing logic that can turn on null encryption on \textt
 In essence, null encryption is a technique that effectively turns off encryption by encrypting/decrypting the data by ``XOR"ing the data with a key made entirely of zeroes (which leaves the data unchanged). 
 
 % TODO
-[TODO - say which cryptographic operations are performed and which ones are omitted when using null-crypto]
+[TODO - say which cryptographic operations are performed and which ones are omitted when using my implementation of null-crypto]
 
 
 
+\section{Testing scripts}
+% TODO
+[TODO describe the structure and design of testing scripts (Python invokes bash scripts $>$ extracts data $>$ saves/aggregates data)]
 
 
 
@@ -747,19 +757,21 @@ Robert Love refers to this technique of assigning particular processes to partic
 \subsection{GSO}
 \begin{itemize}
   \item TODO introduce GSO (General Segmentation Offload)
-  % Great performance improvements
   
   
   \item TODO add a chart showing GSO's impact on throughput
   
   
   \item TODO mention when GSO is relevant
+  
+  \item TODO state that from now on, GSO is used in all the remaining tests by default because GSO provided great performance improvements
 \end{itemize}
 
 \subsection{MTUs}
 \begin{itemize}
   \item TODO introduce/refresh MTUs
   \item TODO demonstrate the Jumbo frames impact for QUIC throughput
+  \item TODO state that MTUs above 1500 bytes are not prevalent in the Internet
   
   
   See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
@@ -849,6 +861,19 @@ Robert Love refers to this technique of assigning particular processes to partic
 \subsection{perf}
 
 \subsection{Flame charts}
+% TODO
+[TODO: describe x and y axis]
+
+[TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]]
+
+[TODO: limitations and overheads of sampling]
+
+[TODO: describe the selection process of frequencies (why 997 and not 1000)]
+
+[TODO: describe the meaning of colours]
+
+
+
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
@@ -857,12 +882,29 @@ Robert Love refers to this technique of assigning particular processes to partic
     \end{figure}
     
 \subsection{qlog}
+% TODO
+[TODO give a high-level overview of qlog format]
 
 \subsection{qvis}
+% TODO
+[TODO: why is it hard to visualise QUIC's behaviour?]
+
+
+
 
 \section{Impact of Cryptographic Operations}
+[TODO: add a chart showing the performance of h2load-ngtcp2 pair with null encryption and without it (i.e. use -P option)]
+
+[TODO: also, mention the selection of sampling frequencies]
+
+
+\section{Comparison with UDP}
+[TODO: add a comparison of QUIC's throughput vs UDP's throughput]
+
 
 \section{Comparison with TCP}
+[TODO: add a comparison of QUIC vs TCP]
+
 
 
 
@@ -883,8 +925,8 @@ Robert Love refers to this technique of assigning particular processes to partic
 \section{Reflection}
 
 \section{Future Work}
-
-% TODO: critique that offloading QUIC to hardware might stifle innovation in the long term.
+% TODO
+[TODO: critique that offloading QUIC to hardware might stifle innovation in the long term. ]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the bibliography
