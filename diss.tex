@@ -735,11 +735,13 @@ To measure QUIC performance under different conditions, we need to add a network
     I derived these conclusions by comparing round-trip-times (using \texttt{ping} tool) and the maximum available \texttt{UDP} throughput (using \texttt{iperf3} tool) under two different conditions.
     At first, I measured performance when packets travel from one physical interface of machine A to its another physical interface via machine B.
     Then, I performed identical tests but without the intermediate machine meaning that packets were still forced to go from one physical interface to another via a loopback cable.
-    Results were as follows: the maximum \texttt{UDP} throughput via machine B was 4.11 Gbits/sec and via loopback cables this number was 4.12 Gbits/sec.
+    Results were as follows: the maximum \texttt{UDP} throughput via machine B was 4.11 Gbits/sec [TODO: redo experiment] and via loopback cables this number was 9.91 Gbits/sec.
+    In both case, throughput was measured on the receiver side.
     Similarly, after introducing the intermediate machine, the \texttt{RTT} increased from:
     
     \textbf{"RTT min/avg/max/mdev = 0.077/0.118/0.156/0.026 ms"}\\
     (\url{https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_maximum-iperf-troughput_via-loopback-cables/ping_result.txt})
+    %[TODO: update these numbers with the new values from "test_ping-via-loopback-cables]
     
     to
     
@@ -752,6 +754,10 @@ To measure QUIC performance under different conditions, we need to add a network
     [TODO: add a table of results showing that lower RTT of looback cables increased throughput of ngtcp-h2load by about 10\%]
     % https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_unencrypted-ngtcp2-throughput_via-loopback_delay-0ms_uncorrelated-loss-0_0_percent_improved-null-encryption_with-command-line-option/result.ods
     
+
+    However, \texttt{TCP} throughput via loopback cable was 9.89 Gbis/sec
+
+
 
 \section{Parameter Tuning}
 
