@@ -356,7 +356,11 @@ This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \tex
 In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets, containing frames of other streams, can not be delivered to the application layer until the missing packet is not retransmitted \cite{bib_making_web_faster_with_http2}, \cite{bib_TCP_Head_of_line_blocking_stackoverflow}, 
 \cite{How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
 The reason for this is that \texttt{TCP} is a stream-oriented protocol.
+In addition, as Gaetano Carlucci and his colleagues state \cite{HTTP_over_UDP_An_Experimental_Investigation_of_QUIC}, the lost \texttt{TCP} packet would reduce the congestion window for all streams multiplexed over the same \texttt{TCP} connection.
 
+
+
+% TODO
 [MAYBE TODO: mention Server push functionality]
 [TODO: what is the difference between \texttt{SPDY} and HTTP/2?]
 
@@ -585,9 +589,8 @@ In addition, I used C++11 in my summer internship.
     This computer was used as a sandbox to test different implementations of \texttt{QUIC} before deploying them to the main machines.
     Before then, I had a problem that testing machines had pre-configured software which used incompatible settings with the configuration parameters required for \texttt{QUIC} implementations (e.g. existing software stack used older OS version).
     However, with the help of the additional laptop, I was able to verify the correctness of \texttt{ngtcp2}, a selected implementation of \texttt{QUIC}.
-    
-    % TODO
-    [TODO: mention unit tests]
+    Besides that, I ensured the correctness of the null encryption of \texttt{ngtcp2} by writing and running several integration tests.
+    In particular, these tests check whether or not the received \texttt{HTML} file is identical to the transmitted \texttt{HTML} file.
     
     Finally, for some aspects of the project, I used non-standard or not recommended practices.
     For example, I ran testing machines with root privileges.
@@ -616,6 +619,10 @@ In addition, I used C++11 in my summer internship.
 %At most minor faults in execution or understanding.
 % ------------------------------------------------
 
+
+In this chapter I first give an overview of the repository structure.
+
+
 \section{Repository Overview} 
 % TODO
 [TODO add reference to the original page of ngtcp2]
@@ -626,9 +633,6 @@ In addition, I augmented \enquote{README} file of the primary repository with sp
 % TODO
 [TODO: mention that I forked part of networking stack required to run ngtcp2. In particular, I worked on a separate openssl(embeded security layer), ngtcp2 (transport layer), nghttp2 and nghttp3 (application layers) ]
 
-% TODO
-[TODO: mention improved null encryption]
-
 \section{Using Null Encryption}
 % TODO
 [TODO add reference saying that encryption of QUIC is turned on by default]
@@ -636,10 +640,11 @@ In addition, I augmented \enquote{README} file of the primary repository with sp
 By design, QUIC uses encryption by default.
 It encrypts both the payloads of the packets and some fields in the packet headers.
 
+
+However, encryption and decryption operations were found to be computationally expensive.
 % TODO
 [TODO add a reference showing that QUIC crypto functions are expensive]
 
-However, encryption and decryption operations were found to be computationally expensive.
 These intensive operations could have become a performance bottleneck of QUIC.
 To validate this claim, I had to measure the impact of cryptographic operations on QUIC's performance by comparing the throughput between the two server-client pairs.
 One pair had to use standard encryption and decryption procedures, while another had to exchange unencrypted packets.
@@ -652,6 +657,21 @@ In essence, null encryption is a technique that effectively turns off encryption
 % TODO
 [TODO - say which cryptographic operations are performed and which ones are omitted when using my implementation of null-crypto]
 
+
+% TODO
+[TODO: mention improved null encryption]
+
+% TODO
+[TODO: mention that I later on found existing null encryption and decryption mechanisms in the unit tests of \texttt{ngtcp2}. 
+However, my implementation was developed independently and without knowledge about the existence of these functions.
+This can be proven by my commit history and communication history on the \texttt{Slack} messaging platform.
+Furthermore, the performance analysis I described before allowed me to identify potential bottlenecks of my implementation.
+Hence, I was able to improve my null cryptographic operations in a systematic way.]
+
+
+\section{Preparation scripts}
+% TODO 
+[TODO describe scripts written in \texttt{~/.zshrc} and \texttt{~/.bashrc}]
 
 
 \section{Testing scripts}
@@ -711,6 +731,27 @@ To measure QUIC performance under different conditions, we need to add a network
     IP forwarding is enabled on the intermediate machine (B), redirecting \texttt{QUIC} packets from one subnet to another.
     Correctness of this configuration was tested by inspecting transit packets on the machine B.
 
+    The intermediate machine adds only limited overhead.
+    I derived these conclusions by comparing round-trip-times (using \texttt{ping} tool) and the maximum available \texttt{UDP} throughput (using \texttt{iperf3} tool) under two different conditions.
+    At first, I measured performance when packets travel from one physical interface of machine A to its another physical interface via machine B.
+    Then, I performed identical tests but without the intermediate machine meaning that packets were still forced to go from one physical interface to another via a loopback cable.
+    Results were as follows: the maximum \texttt{UDP} throughput via machine B was 4.11 Gbits/sec and via loopback cables this number was 4.12 Gbits/sec.
+    Similarly, after introducing the intermediate machine, the \texttt{RTT} increased from:
+    
+    \textbf{"RTT min/avg/max/mdev = 0.077/0.118/0.156/0.026 ms"}\\
+    (\url{https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_maximum-iperf-troughput_via-loopback-cables/ping_result.txt})
+    
+    to
+    
+    \textbf{"RTT min/avg/max/mdev = 0.188/0.262/0.353/0.065 ms"}\\
+    (\url{https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_maximum-iperf-troughput_via-B/ping_result.txt})
+    
+    (Here each result was obtained after running ten \texttt{ping} experiments).
+    
+    % TODO
+    [TODO: add a table of results showing that lower RTT of looback cables increased throughput of ngtcp-h2load by about 10\%]
+    % https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_unencrypted-ngtcp2-throughput_via-loopback_delay-0ms_uncorrelated-loss-0_0_percent_improved-null-encryption_with-command-line-option/result.ods
+    
 
 \section{Parameter Tuning}
 
@@ -750,9 +791,10 @@ Robert Love refers to this technique of assigning particular processes to partic
 [TODO add a chart showing better throughput when using different cores for testing]
 
 % TODO
-[ TODO add a chart showing lower performance variability when using different cores for testing ]
+[TODO add a chart showing lower performance variability when using different cores for testing ]
 
-
+% TODO
+[TODO according to https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf, "CPU affinity" reduces cache misses]
 
 \subsection{GSO}
 \begin{itemize}
@@ -777,6 +819,18 @@ Robert Love refers to this technique of assigning particular processes to partic
   See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
   
   
+\subsection{Interrupt Request Queue (IRQ) Balancing} 
+% TODO: introduce the concept
+[TODO: say that I tried this technique and it did not yield any noticeable effects. Probably because the core pinning is already turned on ]
+
+
+\subsection{Size of the buffers}  
+% TODO
+[TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf]  
+
+[TODO: 2. State that adjusted buffers reduce UDP packet loss rate] 
+ 
+ 
   
 % Please add the following required packages to your document preamble:
 % \usepackage{multirow}
@@ -855,10 +909,20 @@ Robert Love refers to this technique of assigning particular processes to partic
 
 \section{Benchmarking tools}
 % Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
+\subsection{iperf}
+% TODO
+[TODO: state that iperf generates TCP and UDP traffic]
+
+[TODO: mention pecularities of UDP traffic generation (by default UDP bitrate is caped); can adjust UDP send or receive (TODO check which one) buffer size]
+
 
 \subsection{Wireshark}
 
 \subsection{perf}
+% TODO
+[TODO: state that perf is a performance analysis tool which measures CPU performance by sampling the call stack]
+
+
 
 \subsection{Flame charts}
 % TODO
@@ -872,7 +936,7 @@ Robert Love refers to this technique of assigning particular processes to partic
 
 [TODO: describe the meaning of colours]
 
-
+[TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames - before that they were optimised by compiler and some stacks were partially anonymous]
 
     \begin{figure}[ht]
     \centering
@@ -893,6 +957,18 @@ Robert Love refers to this technique of assigning particular processes to partic
 
 
 \section{Impact of Cryptographic Operations}
+% TODO:
+% Ran experiments with different network conditions:
+% > delay
+% > uncorrelated packet loss - meaning that the probability of loosing a packet does not increase if the previous packet is lost
+% > (TODO) packet reordering
+
+% conditions:
+%  sampling frequency=997 (step locking)
+%  MTU=default(1252)
+%  number of samples
+
+
 [TODO: add a chart showing the performance of h2load-ngtcp2 pair with null encryption and without it (i.e. use -P option)]
 
 [TODO: also, mention the selection of sampling frequencies]
