@@ -117,7 +117,7 @@ be made available to the students and staff of the University.
 The following people helped with the project setup or provided useful insights or hints on how to tackle project-related problems:
 \begin{itemize}
     \item \textbf{Dr Marcin Wojcik} helped with general inquiries related to the setup of NetFPGA developing platform;
-    \item \textbf{Dr Andrew W. Moore} was my project supervisor and originator of the project idea;
+    \item \textbf{Professor Andrew W. Moore} was my project supervisor and originator of the project idea;
     \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory during the winter vacation;
     \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \texttt{ngtcp2}\footnote{specific implementation of QUIC which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2};
     \item Part II students \textbf{Ms Akvile Valentukonyte} and \textbf{Mr Justas Janickas} participated in our weekly meetings where we all shared our achieved progress;
@@ -209,10 +209,23 @@ For instance, an experimental \texttt{QUIC} with null encryption could be used i
 \subsection{Why are performance measurements of \texttt{QUIC} important?}
 
 \section{Related Work}
-There have been several similar attempts to measure QUIC performance under different scenarios. 
-The most notable experiment \cite{Making_QUIC_Quicker} analysed the impact of network delay and packet reordering for the QUIC throughput. 
+There have been several similar attempts to measure \texttt{QUIC} performance under different network scenarios. 
+The most notable experiment performed by Gianni Antichi and his colleagues \cite{Making_QUIC_Quicker} analysed the impact of network delay, packet reordering and packet delay for the \texttt{QUIC} throughput. 
+In this paper, the authors analyse several different implementations of \texttt{QUIC} written in the C/C++ language family.
+Performance analysis of \texttt{QUIC} was performed between the two machines - one hosted client and server while another introduced network perturbations.
+As demonstrated in Figure~\ref{fig:Physical_testing_environment}, in this dissertation, I used a similar physical setup for performance analysis of \texttt{QUIC}.
+The major findings of \cite{Making_QUIC_Quicker} show that even slight packet reordering substantially decreases the throughput of \texttt{QUIC}.
+This paper's authors suggest that one reason for such behaviour is that reordered packets might be treated as lost packets \cite{Making_QUIC_Quicker}. 
 
-\subsection{TODO: give an overview of Gianni's paper}
+
+
+
+
+
+
+% TODO: mention the work of QUIC performance measurements.
+% https://dl.acm.org/doi/pdf/10.1145/3242102.3242106
+
 
 
 \section{Completed Work}
@@ -342,11 +355,11 @@ But, as pointed out in \cite{bib_digital_ocean_http11_vs_http2}, the use of larg
 
 
 
-\subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{HTTP/2.0} and \texttt{SPDY}}
+\subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{SPDY} and \texttt{HTTP/2.0}}
 %[TODO describe \texttt{SPDY}]
 
 In order to improve \texttt{HTTP} performance, Google developed a session layer protocol called \texttt{SPDY} \cite{bib_SPDY_white_paper}.
-Then, now obsolete \texttt{SPDY} protocol was used as a blueprint when building the next-generation version of \texttt{HTTP} \cite{bib_SPDY_vs_HTTP2}.
+Then, now obsolete \texttt{SPDY} protocol was used as a blueprint when building the next-generation version of \texttt{HTTP} called \texttt{HTTP/2.0} \cite{bib_SPDY_vs_HTTP2}.
 As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the primary achievements of \texttt{HTTP/2.0} are that, compared with \texttt{HTTP/1.1}, \texttt{HTTP/2.0} improves throughput and reduces latency of \texttt{HTTP} protocol by improving utilisation of existing resources.
 For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
 Furthermore, as noted in the same source \cite[Chapter~12]{bib_grigorik2013}, 
@@ -362,7 +375,8 @@ In addition, as Gaetano Carlucci and his colleagues state \cite{HTTP_over_UDP_An
 
 % TODO
 [MAYBE TODO: mention Server push functionality]
-[TODO: what is the difference between \texttt{SPDY} and HTTP/2?]
+
+[MAYBE TODO: what is the difference between \texttt{SPDY} and HTTP/2?]
 
 
 \subsection{Roll-out Problems when Deploying Protocol Upgrades}
@@ -427,20 +441,31 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
     Hence, \texttt{QUIC} clients can migrate between multiple networks without having to re-establish a \texttt{QUIC} connection.
  
  
-  \item \textbf{Reliability}
-    \texttt{QUIC} also provides reliable data delivery because the main purpose of it is to replace \texttt{TCP} \cite{ietf-quic-transport-draft} by offering identical or better guarantees.
+  \item \textbf{Reliability and  congestion control}
+    \texttt{QUIC} also provides reliable data delivery because the main purpose of it is to replace \texttt{TCP} \cite{ietf-quic-transport-draft} by offering identical or better guarantees. 
+    Similarly, \texttt{QUIC} implements congestion control because, as have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
   
   \item TODO fast TLS1.3 handshake
  
-  \item TODO congestion control
-  \item TODO loss detection with signaling (using new seq number)
+ 
+  \item TODO zero RTT handshake
+ 
+  \item TODO encryption by default
+  % TODO
+  [TODO: add a source saying that ISPs don't support QUIC without embeded security layer]
+  
   \item TODO loss recovery
   
   \item TODO multiplexed streams
   
-  \item TODO encryption by default
   
-  \item TODO zero RTT handshake
+  
+  
+  
+  
+  \item TODO loss detection with signaling (using new seq number)
+  
+  
 \end{itemize}
 
 
@@ -713,13 +738,11 @@ To measure QUIC performance under different conditions, we need to add a network
     The physical configuration differs from the logical configuration because I wanted to replicate testing conditions under which Gianni Antichi and his colleagues performed throughput measurements of QUIC \cite{Making_QUIC_Quicker}.
     One advantage of having both server and client running on the same machine is that the shared system clock can perform measurements more accurately. 
     
-% TODO 
-[TODO mention that the diagram was taken from Gianni's paper]
 
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Physical_testing_environment.png}
-    \caption{Physical configuration of testing environment}
+    \caption{Physical configuration of testing environment. This scheme is an adaptation of the configuration environment used in  \cite{Making_QUIC_Quicker}}
     \label{fig:Physical_testing_environment}
     \end{figure}
     
@@ -755,7 +778,58 @@ To measure QUIC performance under different conditions, we need to add a network
     % https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_unencrypted-ngtcp2-throughput_via-loopback_delay-0ms_uncorrelated-loss-0_0_percent_improved-null-encryption_with-command-line-option/result.ods
     
 
-    However, \texttt{TCP} throughput via loopback cable was 9.89 Gbis/sec
+    Similarly, \texttt{TCP} throughput via loopback cable was 9.89 Gbis/sec.
+    [TODO: what was TCP throughput via machine B?]
+
+
+    Large segmentation offload and \texttt{TCP} segmentation offload mechanisms were in place on the machine A. 
+
+
+\section{Benchmarking tools}
+% Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
+\subsection{iperf}
+% TODO
+[TODO: state that iperf generates TCP and UDP traffic]
+
+[TODO: mention pecularities of UDP traffic generation (by default UDP bitrate is caped); can adjust UDP send or receive (TODO check which one) buffer size]
+
+
+\subsection{Wireshark}
+
+\subsection{perf}
+% TODO
+[TODO: state that perf is a performance analysis tool which measures CPU performance by sampling the call stack]
+
+
+
+\subsection{Flame charts}
+% TODO
+[TODO: describe x and y axis]
+
+[TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]]
+
+[TODO: limitations and overheads of sampling]
+
+[TODO: describe the selection process of frequencies (why 997 and not 1000)]
+
+[TODO: describe the meaning of colours]
+
+[TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames - before that they were optimised by compiler and some stacks were partially anonymous]
+
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
+    \caption{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of all ngtcp2 operations are performed doing cryptographic operations} 
+    \label{fig:perf_results_of_h2load}
+    \end{figure}
+    
+\subsection{qlog}
+% TODO
+[TODO give a high-level overview of qlog format]
+
+\subsection{qvis}
+% TODO
+[TODO: why is it hard to visualise QUIC's behaviour?]
 
 
 
@@ -768,28 +842,43 @@ By specifying a particular IP version, we reduce the number of variable paramete
 Fortunately, at the time of writing, according to Google's IPv6 adoption tracker \cite{IPv6_Adoption_Statistics}, only a third of all Internet users (30-35 \% to be precise) use IPv6 to connect to Google's services.
 Hence, analysis involving IPv4 is still relevant today.
 
+%TODO
+[TODO: Ubuntu 20.04 has different mechanism  to disable IPv6 - check that it is still working ]
+
 \subsection{Hyper-threading}\label{Hyperthreading_Subsection_Tag}
 
 As Michael E. Thomadakis states on the 23rd page of \cite{hyperthreading_book}, \texttt{hyper-threading} (more generally known as \texttt{simultaneous multi-threading}) is a thread allocation technique that allows two threads to run on the same physical core at the same time.
-On my particular testing machines, \texttt{hyper-threading} is implemented by assigning two virtual cores for every physical core.
-As stated in \cite{hyperthreading_book}, this means that threads allocated to such virtual cores would share the same physical resources (e.g. private L1 cache entries).
+On the testing machines \texttt{Hyper-threading} was implemented by assigning two virtual cores for every physical core (see Figure~\ref{fig:topology_with_hyperthreading}).
+For instance, in this diagram core \enquote{L \#0} has two \enquote{processing units} marked as \enquote{PU L\#0} and \enquote{PU L\#1}.
+
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figs/topology_with_hyperthreading.png}
+    \caption{Memory topology of machine A when \texttt{hyper-threading} is turned on (Figure generated by \texttt{lstopo} command)}
+    \label{fig:topology_with_hyperthreading}
+    \end{figure}
+
+As stated in \cite{hyperthreading_book}, this means that threads allocated to such virtual cores (also marked as \enquote{processing units} in the diagram above) would share the same physical resources (e.g. private L1 cache entries).
 This is problematic for precise experiments.
 On the one hand, a neighbouring thread might pre-fetch required data to the cache, but on the other hand, this thread might pollute the cache, thus hurting the performance of the thread which is being measured.
 Hence, to reduce the potential performance variability, I had to disable \texttt{hyper-threading} on the testing machines.
 
 
+
+    
+    
 \subsection{Separated Cores} \label{SeparatedCores_Subsection_Tag}
-Machine A in Figure~\ref{fig:Physical_testing_environment} has four physical cores (see Figure~\ref{fig:memory_topology}).
+Machine A from Figure~\ref{fig:Physical_testing_environment} has four physical cores (see Figure~\ref{fig:memory_topology}).
 To make performance tests even more predictable, I had to assign exclusive physical cores to the QUIC client and server using \texttt{taskset}\footnote{https://man7.org/linux/man-pages/man1/taskset.1.html} tool.
 In particular, \texttt{ngtcp2} server was assigned the first core (marked as \enquote{P\#0} in Figure~\ref{fig:memory_topology}).
 QUIC client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core (marked as \enquote{P\#1}).
 Finally, remaining two cores (marked as \enquote{P\#2} and \enquote{P\#3}) were assigned to all the remaining system processes.
 Robert Love refers to this technique of assigning particular processes to particular cores as \texttt{hard CPU affinity} \cite{CPU_Affinity}.
 
-    \begin{figure}[ht]
+    \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/memory_topology.png}
-    \caption{Memory topology of machine A (Figure generated by \texttt{lstopo} command)}
+    \includegraphics[width=0.8\textwidth]{figs/memory_topology.png}
+    \caption{Memory topology of machine A  when \texttt{hyper-threading} is turned off (Figure generated by \texttt{lstopo} command)}
     \label{fig:memory_topology}
     \end{figure}
 
@@ -913,51 +1002,6 @@ Robert Love refers to this technique of assigning particular processes to partic
 \end{itemize}
 
 
-\section{Benchmarking tools}
-% Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
-\subsection{iperf}
-% TODO
-[TODO: state that iperf generates TCP and UDP traffic]
-
-[TODO: mention pecularities of UDP traffic generation (by default UDP bitrate is caped); can adjust UDP send or receive (TODO check which one) buffer size]
-
-
-\subsection{Wireshark}
-
-\subsection{perf}
-% TODO
-[TODO: state that perf is a performance analysis tool which measures CPU performance by sampling the call stack]
-
-
-
-\subsection{Flame charts}
-% TODO
-[TODO: describe x and y axis]
-
-[TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]]
-
-[TODO: limitations and overheads of sampling]
-
-[TODO: describe the selection process of frequencies (why 997 and not 1000)]
-
-[TODO: describe the meaning of colours]
-
-[TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames - before that they were optimised by compiler and some stacks were partially anonymous]
-
-    \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
-    \caption{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of all ngtcp2 operations are performed doing cryptographic operations} 
-    \label{fig:perf_results_of_h2load}
-    \end{figure}
-    
-\subsection{qlog}
-% TODO
-[TODO give a high-level overview of qlog format]
-
-\subsection{qvis}
-% TODO
-[TODO: why is it hard to visualise QUIC's behaviour?]
 
 
 
@@ -988,6 +1032,17 @@ Robert Love refers to this technique of assigning particular processes to partic
 [TODO: add a comparison of QUIC vs TCP]
 
 
+
+
+\section{QUIC performance evaluation}
+
+
+\subsection{Impact of link delay}
+% TODO check if delay or latency
+
+
+
+\subsection{Impact of packet loss}
 
 
 \chapter{Conclusion}
