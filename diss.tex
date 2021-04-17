@@ -802,6 +802,13 @@ To measure QUIC performance under different conditions, we need to add a network
 [TODO: state that perf is a performance analysis tool which measures CPU performance by sampling the call stack]
 
 
+[TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]]
+
+[TODO: limitations and overheads of sampling]
+
+[TODO: describe the selection process of frequencies (why 997 and not 1000)]
+
+
 
 \subsection{Flame Graphs}
 \texttt{Flame Graphs} \footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool which is used to visualise the performance of the program.
@@ -823,29 +830,19 @@ Hence, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can tell that 
 Furthermore, in order to better identify the most frequent function calls, stack frames sampled at different times can be merged if they have a shared ancestor \cite{CPU_Flame_graphs}.
 As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
 
+In the standard \texttt{Flame Graph}, different frames are coloured differently in order to increase visual contrast between the neighbouring cells in the diagram \cite{CPU_Flame_graphs} (see yellow, orange and red rows in Figure~\ref{fig:perf_results_of_h2load}).
+However, in this project, I am also using \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs} \cite{Differential_Flame_Graphs}.
+The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph} but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph} \cite{Differential_Flame_Graphs}.
+
+% TODO
+[TODO: add an example of \texttt{Differential Flame Graph}]
 
 
-%can identify functions which  to measure CPU 
-
-% call stack 
 % sampling based method
 
 
 
-
-% TODO
-
-[TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]]
-
-[TODO: limitations and overheads of sampling]
-
-[TODO: describe the selection process of frequencies (why 997 and not 1000)]
-
-[TODO: colours are meaningless http://www.brendangregg.com/blog/2014-11-09/differential-flame-graphs.html in simple Flame Graphs
-
-but in differential Flame Graphs they do have meaning]
-
-[TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames - before that they were optimised by compiler and some stacks were partially anonymous]
+[MAYBE TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames - before that they were optimised by compiler and some stacks were partially anonymous  -- add a reason why this problem occurred - compiler optimised one register?]
 
     \begin{figure}[ht]
     \centering
