@@ -435,7 +435,7 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
     An important aspect of portable devices is that their location, and thus Internet access point, can change relatively frequently \cite{PollardBarry2019HiAP}.
     This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address \cite{PollardBarry2019HiAP}.
     As a result, \texttt{TCP} needs to establish a new connection every time the network access point is changed \cite{PollardBarry2019HiAP}.
-    This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the "slow-start" phase and perform additional handshakes.
+    This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the \enquote{slow-start} phase and perform additional handshakes.
     This example demonstrates that \texttt{TCP} protocol is old as it assumed that \texttt{IP} address would not frequently change \cite{PollardBarry2019HiAP}.
     In contrast, \texttt{QUIC} is more suitable to handle connections via mobile devices.
     In particular, \texttt{QUIC} has an explicit connection ID that does not depend on the IP address \cite{PollardBarry2019HiAP}.
@@ -443,10 +443,24 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
  
  
   \item \textbf{Reliability and  congestion control}
+  
     \texttt{QUIC} also provides reliable data delivery because the main purpose of it is to replace \texttt{TCP} \cite{ietf-quic-transport-draft} by offering identical or better guarantees. 
     Similarly, \texttt{QUIC} implements congestion control because, as have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
   
-  \item TODO fast TLS1.3 handshake
+  \item \textbf{Fast \texttt{TLS1.3} handshake}
+     \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
+    \caption{Comparison of handshakes required to issue \texttt{HTTP} request. Left section demonstrates that traditionally multiple round trip times are required to establish connection to issue \texttt{HTTP} request. Right section of the diagram shows that \texttt{QUIC} on the other hand combines transport and security layer handshakes. This diagram is taken from \cite{the-road-to-quic}.}
+    \label{fig:QUIC_handshake_vs_TCP-TLS_handshake}
+    \end{figure}
+ 
+ % TODO: Why do we need a TCP handshake?
+ % TODO: why do we need a TLS handshake?
+ % TODO: what info is sent in QUIC handshake?
+ % MAYBE TODO: mention possible amplification attacks of QUIC (https://blog.cloudflare.com/the-road-to-quic/) 
+ 
+ 
  
  
   \item TODO zero RTT handshake
