@@ -428,6 +428,27 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
 % TODO: read https://tools.ietf.org/html/draft-ietf-quic-transport-32#section-1
 % TODO: read https://arxiv.org/pdf/1801.05168.pdf
 \begin{itemize}
+
+\item \textbf{Fast \texttt{TLS1.3} handshake}
+
+As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the primary innovations of \texttt{QUIC} is that it combines transport and security layer handshakes.
+
+
+     \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
+    \caption{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of the similar diagram taken from \cite{the-road-to-quic}.}
+    \label{fig:QUIC_handshake_vs_TCP-TLS_handshake}
+    \end{figure}
+ 
+ % TODO: Why do we need a TCP handshake?
+ % TODO: why do we need a TLS handshake?
+ % TODO: what info is sent in QUIC handshake?
+ % MAYBE TODO: mention possible amplification attacks of QUIC (https://blog.cloudflare.com/the-road-to-quic/) 
+ 
+
+
+
  \item \textbf{Connection migration} 
  % (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
  
@@ -447,21 +468,6 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
     \texttt{QUIC} also provides reliable data delivery because the main purpose of it is to replace \texttt{TCP} \cite{ietf-quic-transport-draft} by offering identical or better guarantees. 
     Similarly, \texttt{QUIC} implements congestion control because, as have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
   
-  \item \textbf{Fast \texttt{TLS1.3} handshake}
-     \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
-    \caption{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is taken from \cite{the-road-to-quic}.}
-    \label{fig:QUIC_handshake_vs_TCP-TLS_handshake}
-    \end{figure}
- 
- % TODO: Why do we need a TCP handshake?
- % TODO: why do we need a TLS handshake?
- % TODO: what info is sent in QUIC handshake?
- % MAYBE TODO: mention possible amplification attacks of QUIC (https://blog.cloudflare.com/the-road-to-quic/) 
- 
- 
- 
  
   \item TODO zero RTT handshake
  
@@ -496,6 +502,8 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
 
   
   \item TODO mention how QUIC solves the problem of ossification
+  
+  \item TODO include https://blog.cloudflare.com/http-3-vs-http-2/
 \end{itemize}
 
 
@@ -551,17 +559,13 @@ However, there is an associated cost of using protocol written in user space - a
 %TODO: fix style and grammar:
 There are many implementations of QUIC (see subsection \ref{List_of_QUIC_implementations}) written in different languages.
 I considered  \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic},  \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic},  \texttt{ngtcp2}\footnote{https://github.com/ngtcp2/ngtcp2},  \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{Quant}\footnote{https://github.com/NTAP/quant}.
-One of the primary goals of the project was to turn off header encryption of QUIC packets.
-
-% TODO
-[TODO mention why I needed to turn off header encryption in the first place]
-
-Hence, I performed a survey to find QUIC implementation, which had an API to control encryption. 
+Before changing the direction of the dissertation, one of the primary goals of the project was to turn off header encryption of QUIC packets so that I could inspect these packets in hardware.
+Hence, I performed a survey to find \texttt{QUIC} implementation, which had an API to control encryption. 
 \texttt{Aioquic}, \texttt{MsQuic} and \texttt{ngtcp2} seemed to be the most promising.
-However, despite being a simple and well-documented implementation of QUIC, aioquic did not have an active development team that could answer technical questions.
-Similarly, MsQuic seemed promising, but some of the performance measurement tools used by the MsQuic team were proprietary and not yet released to the public.
+However, despite being a simple and well-documented implementation of \texttt{QUIC}, aioquic did not have an active development team that could answer technical questions.
+Similarly, MsQuic seemed promising, but some of the performance measurement tools used by the \texttt{MsQuic} team were proprietary and not yet released to the public.
 As this project is based on a paper written by Gianni Antichi and his colleagues \cite{Making_QUIC_Quicker}, I thought that it would be wise to use similar testing conditions in this dissertation too.
-In particular, Gianni and his team evaluated several QUIC implementations, which were written in C or C++.
+In particular, Gianni and his team evaluated several \texttt{QUIC} implementations, which were written in C or C++.
 Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, which is also written in C.
 Later on, I figured out that there is an experimental QUIC benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
 Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author of \texttt{ngtcp2}).
