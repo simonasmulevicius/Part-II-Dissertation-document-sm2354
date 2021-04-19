@@ -815,6 +815,36 @@ To measure QUIC performance under different conditions, we need to add a network
 
 \subsection{Wireshark}
 
+\texttt{Wireshark} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}). 
+
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
+    \caption{\texttt{Wireshark} captured several \texttt{QUIC} packets whose numbers (abbreviated PKN) are decrypted and displayed on the right hand side.}
+    \label{fig:Wireshark_screenshot}
+    \end{figure}
+    
+When required, I ran \texttt{Wireshark} on the intermediate machine to inspect size of the packets transferred between the \texttt{QUIC} client and server.
+It is worth mentioning that \texttt{QUIC} packets are encrypted.
+Hence, I had to share server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g. packet number) of observed \texttt{QUIC} packets.
+
+I used \texttt{Wireshark} in an ethical manner meaning that I only used it to analyse traffic between the dedicated interfaces.
+In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because testing environment used separate network interfaces. 
+
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
+    \caption{\texttt{Wireshark} was not used to capture packets from the college network}
+    \label{fig:Wireshark_separation}
+    \end{figure}
+
+
+
+
+
+% Ethical aspect 
+
+
 \subsection{perf}
 % TODO
 [TODO: state that perf is a performance analysis tool which measures CPU performance by sampling the call stack]
