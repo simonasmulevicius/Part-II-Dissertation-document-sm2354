@@ -1039,34 +1039,29 @@ As far as testing conditions are concerned, the intermediate machine was not con
 \subsection{MTUs}
 \begin{itemize}
   \item TODO introduce/refresh MTUs
-  \item TODO demonstrate the Jumbo frames impact for QUIC throughput
-  \item TODO state that MTUs above 1500 bytes are not prevalent in the Internet
+  \item TODO demonstrate the Jumbo frames impact for iperf/QUIC throughput
   
   
-  See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
+  
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Iperf3 UDP throughput using different MTUs (localhost).png}
+    \caption{Impact of MTU size for iperf throughput (when packets travel via localhost)}
+    \label{fig:MTU_impact_for_localhost_iperf_throughput}
+    \end{figure}
+    
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Iperf3 UDP throughput using different MTUs (A1-to-B-to-A2).png}
+    \caption{Impact of MTU size for iperf throughput (when packets travel via the intermediate machine)}
+    \label{fig:}
+    \end{figure}
   
   
-\subsection{Interrupt Request Queue (IRQ) Balancing} 
-Breno Henrique Leitao in his work suggested using \cite{Tuning_10Gb_network_cards_on_Linux} Interrupt Request Queue (IRQ) Balancing to improve general throughput of the testing system.
-By default, \texttt{IRQ} is enabled meaning that operating system aims to distribute the burden of handling interrupts evenly over all the processors \cite{Tuning_10Gb_network_cards_on_Linux}.
-The suggestion was to delegate processing of certain interrupts to specified processors hoping that this would improve performance of cores that were designated for the \texttt{QUIC} tests.
-However, \texttt{IRQ} did not yield any noticeable effects for the \texttt{UDP} throughput measured by \texttt{iperf3} so I decided to leave the default \texttt{IRQ} settings on.
-One plausible explanation for this insignificant improvement could be that the testing environment used already saturated network link.
-In other words, measured maximum available throughput before and after experiment was around 9.8Gbits/second while the maximum theoretical limit of the link was 10Gbits/second. 
-
-
-\subsection{Size of the buffers} 
-
-% TODO
-[TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf]  
-
-[TODO: 2. State that adjusted buffers reduce UDP packet loss rate] 
- 
- 
   
 % Please add the following required packages to your document preamble:
 % \usepackage{multirow}
-\begin{table}[ht]
+\begin{table}[H]
 
     \begin{tabular}{|c|c|c|c|c|c|}
     \hline
@@ -1103,39 +1098,31 @@ In other words, measured maximum available throughput before and after experimen
     \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
 \end{table}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  \item TODO show that Jumbo frames are not accepted in the wild Internet / TODO state that MTUs above 1500 bytes are not prevalent in the Internet
   
   
+  See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
   
-  \item TODO show that Jumbo frames are not accepted in the wild Internet
+  
+\subsection{Interrupt Request Queue (IRQ) Balancing} 
+Breno Henrique Leitao in his work suggested using \cite{Tuning_10Gb_network_cards_on_Linux} Interrupt Request Queue (IRQ) Balancing to improve general throughput of the testing system.
+By default, \texttt{IRQ} is enabled meaning that operating system aims to distribute the burden of handling interrupts evenly over all the processors \cite{Tuning_10Gb_network_cards_on_Linux}.
+The suggestion was to delegate processing of certain interrupts to specified processors hoping that this would improve performance of cores that were designated for the \texttt{QUIC} tests.
+However, \texttt{IRQ} did not yield any noticeable effects for the \texttt{UDP} throughput measured by \texttt{iperf3} so I decided to leave the default \texttt{IRQ} settings on.
+One plausible explanation for this insignificant improvement could be that the testing environment used already saturated network link.
+In other words, measured maximum available throughput before and after experiment was around 9.8Gbits/second while the maximum theoretical limit of the link was 10Gbits/second. 
+
+
+\subsection{Size of the buffers} 
+
+% TODO
+[TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf]  
+
+[TODO: 2. State that adjusted buffers reduce UDP packet loss rate] 
+ 
+ 
+  
 \end{itemize}
 
 
