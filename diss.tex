@@ -11,6 +11,8 @@
 \usepackage{url}
 \usepackage{csquotes}
 \usepackage{float}
+\usepackage{textcomp}
+ 
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -677,6 +679,20 @@ In addition, I augmented \enquote{README} file of the primary repository with sp
 % TODO
 [TODO: mention that I forked part of networking stack required to run ngtcp2. In particular, I worked on a separate openssl(embeded security layer), ngtcp2 (transport layer), nghttp2 and nghttp3 (application layers) ]
 
+\section{Preparation scripts}
+As I have already mentioned, I wrote several scripts to prepare testing machines for performance analysis.
+These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see \ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
+
+
+ % TODO mention ping test
+ % TODO state that it configures virtual namespaces to separate server from client
+ % TODO add scripts to appendix
+
+The automatic preparation scripts improved development speed because certain repetitive tasks were automated.
+Furthermore, the setup of the testing environment became more predictable, meaning that performance tests generated more reproducible results.
+
+
+
 \section{Using Null Encryption}
 % TODO
 [TODO add reference saying that encryption of QUIC is turned on by default]
@@ -713,16 +729,15 @@ Furthermore, the performance analysis I described before allowed me to identify 
 Hence, I was able to improve my null cryptographic operations in a systematic way.]
 
 
-\section{Preparation scripts}
-% TODO 
-[TODO describe scripts written in \texttt{~/.zshrc} and \texttt{~/.bashrc}]
+
 
 
 \section{Testing scripts}
 % TODO
 [TODO describe the structure and design of testing scripts (Python invokes bash scripts $>$ extracts data $>$ saves/aggregates data)]
 
-
+% TODO
+[TODO mention that machine A controls machine B via ssh]
 
 \chapter{Evaluation}
 % ------------------------------------------------
@@ -833,7 +848,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
 
 \subsection{Wireshark}
 
-\texttt{Wireshark} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
+\texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
 \texttt{Wireshark} visualises key information about the packets - source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
 
     \begin{figure}[H]
@@ -1166,12 +1181,132 @@ In other words, measured maximum available throughput before and after experimen
 % the appendices
 \appendix
 
-\chapter{Source A}
+\chapter{Preparation script from \texttt{\textasciitilde/.zshrc}} \label{preparation_script_from_zshrc}
 
+\begin{verbatim}
+# ----------------------------------------------------
+# 
+# Debug information used for QUIC offloading project    
+# 
+# Simonas Mulevicius, sm2354@cam.ac.uk
+# 
+
+echo "0. Running ~/.zshrc"
+
+echo "Setting up go environment"
+export PATH=$PATH:/usr/local/go/bin
+
+# ...
+
+# echo "2. Setting X11-forwarding"
+# xauth add $(xauth -f ~user109/.Xauthority list | tail -1)
+
+echo "3. List of available ports"
+ifconfig -a
+
+# ...
+
+echo "6.  Waking up network interfaces:"
+echo "6.0 Deleting old assignment of network interfaces"
+ip netns delete mr_client
+ip netns delete mr_server
+ip netns add mr_client
+ip netns add mr_server
+
+echo "6.1 Initial configuration:"
+sleep 4
+ip link set eth2 up
+ip link set eth3 up
+ip link set nf0 up
+ip link set nf1 up
+ip link set nf2 up
+ip link set nf3 up
+sleep 4
+
+export client_subnet="10.1.1"
+export server_subnet="10.2.2"
+export client_IP=${client_subnet}".100"
+export server_IP=${server_subnet}".101"
+export client_default_gateway_IP=${client_subnet}".1"
+export server_default_gateway_IP=${server_subnet}".1"
+
+echo "client_IP: $client_IP"
+echo "server_IP: $server_IP"
+echo "client_default_gateway_IP: $client_default_gateway_IP"
+echo "server_default_gateway_IP: $server_default_gateway_IP"
+
+echo "6.2 Setting IP addresses for nf0, nf1, eth2, eth3"
+ifconfig nf0  10.4.4.100 netmask 255.255.255.0
+ifconfig nf1  10.4.4.101 netmask 255.255.255.0
+ifconfig nf2  10.4.4.102 netmask 255.255.255.0
+ifconfig nf3  10.4.4.103 netmask 255.255.255.0
+ifconfig eth2 $client_IP netmask 255.255.255.0
+ifconfig eth3 $server_IP netmask 255.255.255.0
+
+ip link set dev eth2 mtu 1500
+ip link set dev eth3 mtu 1500
+
+ifconfig -a
+
+
+echo "6.3 Setting virtual namespaces"
+ip link set dev eth2 netns mr_client
+ip link set dev eth3 netns mr_server
+ip netns exec mr_client ip addr add $client_IP/24 dev eth2
+ip netns exec mr_server ip addr add $server_IP/24 dev eth3
+ip netns exec mr_client ip link set dev eth2 up
+ip netns exec mr_server ip link set dev eth3 up
+sleep 2
+ip netns exec mr_client route add default gw $client_default_gateway_IP eth2
+ip netns exec mr_server route add default gw $server_default_gateway_IP eth3
+
+ip netns exec mr_client ip route show
+ip netns exec mr_server ip route show
+
+echo "6.3.1 Configuration of network namespaces"
+ip netns exec mr_client ip addr list | grep "eth2"
+ip netns exec mr_server ip addr list | grep "eth3"
+echo "\n"
+
+ip netns exec mr_client ping -c1 "$server_IP" | grep "received"
+ip netns exec mr_client ping -c1 "$client_default_gateway_IP" | grep "received"
+ip netns exec mr_server ping -c1 "$client_IP" | grep "received"
+ip netns exec mr_server ping -c1 "$server_default_gateway_IP" | grep "received"
+
+echo "\n"
+
+
+cd /root/evaluation/Part-II-dissertation
+
+echo "8. Setting SSLKEYLOGFILE"
+export SSLKEYLOGFILE=/root/evaluation/unencrypted_stack/ngtcp2/examples/server.key
+echo " SSLKEYLOGFILE: $SSLKEYLOGFILE"
+
+echo "9. Turn off hyperthreading"
+echo off > /sys/devices/system/cpu/smt/control
+lscpu | grep "per core"
+
+# ...
+
+echo "11. checking if offload is turned on..."
+echo "  CLIENT:"
+ip netns exec mr_client ethtool -K eth2 lro on
+ip netns exec mr_client ethtool -k eth2 | grep large-receive-offload
+ip netns exec mr_client ethtool -k eth2 | grep tcp-segmentation-offload
+
+echo "  SERVER:"
+ip netns exec mr_server ethtool -K eth3 lro on
+ip netns exec mr_server ethtool -k eth3 | grep large-receive-offload
+ip netns exec mr_server ethtool -k eth3 | grep tcp-segmentation-offload
+
+#
+# ----------------------------------------------------
+
+\end{verbatim}
 
 \chapter{Source B}
 
-\section{appendix section}\label{referencedAppendixTag}
+    \section{appendix section}\label{referencedAppendixTag}
 
 
 \chapter{Project Proposal}
