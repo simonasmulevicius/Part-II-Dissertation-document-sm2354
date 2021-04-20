@@ -206,12 +206,23 @@ For instance, an experimental \texttt{QUIC} with null encryption could be used i
  
 
 \subsection{High-Level Overview of \texttt{QUIC}}
-I delve into more detail about \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but briefly speaking \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (which is also described in the later sections % TODO).
+I delve into more detail about \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but briefly speaking \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (which is also described in the later sections - see \ref{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}).
 On the one hand, \texttt{QUIC} breaks the separation of transport and security layer protocols. 
 On the other hand, \texttt{QUIC} protocol offers some performance benefits for modern-day traffic flows (see section~\ref{QUIC_advantages}).
 
 
 \subsection{Why are performance measurements of \texttt{QUIC} important?}
+
+\texttt{QUIC}, after being publicly launched by \texttt{Google} in 2013 \cite{Chromium_Blog_Experimenting_with_quic}, \texttt{QUIC} is still a relatively new protocol that is still in the development stage.
+Hence, any performance measurements of \texttt{QUIC} could guide the ongoing efforts to build this new high-performance transport layer protocol.
+Furthermore, there are strong indications showing that \texttt{QUIC} could be widely adopted in the future.
+For instance, \texttt{Google}, one of the major advocates for \texttt{QUIC}, operates both on the server side (e.g. search engine or video streaming service \texttt{YouTube}) and the client side (e.g. \texttt{Google Chrome} browser for desktop and mobile devices) \cite{A_QUICk_Introduction_to_HTTP3}.
+Hence, using its existing market presence \texttt{Google} could potentially encourage the faster adoption of \texttt{QUIC}.
+Actually, according to the report published in 2016\cite{RuthJan2018AFLa}, at that time around 40\% of all traffic of \texttt{Google} was using \texttt{QUIC}.
+Similarly, other large technology companies such as \texttt{Facebook} or \texttt{Microsoft} are also building their own implementations of \texttt{QUIC} (correspondingly \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic}).
+These companies are also pushing the deployment of \texttt{QUIC}. 
+For example, according to the report from \texttt{Facebook} published in 2020 \cite{how-facebook-is-bringing-quic-to-billions}, \texttt{QUIC} was used for the three quarters of \texttt{Facebook} traffic. 
+In conclusion, it is highly likely that \texttt{QUIC} would get wide range of support in the future meaning that current performance measurements of \texttt{QUIC} could help shape the future.
 
 \section{Related Work}
 There have been several similar attempts to measure \texttt{QUIC} performance under different network scenarios. 
@@ -360,7 +371,7 @@ But, as pointed out in \cite{bib_digital_ocean_http11_vs_http2}, the use of larg
 
 
 
-\subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{SPDY} and \texttt{HTTP/2.0}}
+\subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{SPDY} and \texttt{HTTP/2.0}} \label{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}
 %[TODO describe \texttt{SPDY}]
 
 In order to improve \texttt{HTTP} performance, Google developed a session layer protocol called \texttt{SPDY} \cite{bib_SPDY_white_paper}.
