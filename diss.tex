@@ -1003,8 +1003,19 @@ Robert Love refers to this technique of assigning particular processes to partic
     \label{fig:memory_topology}
     \end{figure}
 
-% TODO
-[TODO add a chart showing better throughput when using different cores for testing]
+In addition, to evaluate the impact of core pinning, I measured throughput of \texttt{QUIC} under two different conditions by sending a file of the specified size over the intermediate machine.
+At first, I allocated both \texttt{QUIC} server and client to the same core (see the red dashes in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500}).
+Then, I performed identical throughput analysis tests with separated cores meaning that \texttt{QUIC} server and client resided on the two different cores.
+Blue dashes in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500} demonstrate that core pinning almost doubled the maximum \texttt{QUIC} throughput for the transfer of large files (above 100MB).
+However, impact of core pinning is not substantial when transferring small files.
+One explanation of this could be that transmission time of small files is dominated by the overhead of networking stack and transmission time of a single packet.
+As far as testing conditions are concerned, the intermediate machine was not configured to introduce additional explicit traffic perturbations.
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figs/Throughput via node B (A-to-B-to-A)_MTU=1500.png}
+    \caption{Impact of core pinning for \texttt{QUIC} throughput}
+    \label{fig:Throughput_via_A-to-B-to-A_MTU=1500}
+    \end{figure}
 
 % TODO
 [TODO add a chart showing lower performance variability when using different cores for testing ]
