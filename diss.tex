@@ -806,10 +806,15 @@ To measure QUIC performance under different conditions, we need to add a network
 
 \section{Benchmarking tools}
 % Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
-\subsection{iperf}
-% TODO
-[TODO: state that iperf generates TCP and UDP traffic]
+\subsection{iperf3}
+\texttt{Iperf3} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
+\texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
+As \texttt{QUIC} builds on top of \texttt{UDP}, then we can assume that \texttt{UDP}'s throughput is a theoretical maximum \texttt{QUIC} throughput.
+However, \texttt{UDP} does not provide a similar set of guarantees as \texttt{QUIC} does.
+Hence, to put \texttt{QUIC} into the perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
+An important point to mention is that \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver would see different throughput values.
 
+% TODO
 [TODO: mention pecularities of UDP traffic generation (by default UDP bitrate is caped); can adjust UDP send or receive (TODO check which one) buffer size]
 
 
