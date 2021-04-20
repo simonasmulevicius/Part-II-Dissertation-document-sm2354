@@ -205,10 +205,12 @@ For instance, an experimental \texttt{QUIC} with null encryption could be used i
  
  
 
-
-
-
 \subsection{High-Level Overview of \texttt{QUIC}}
+I delve into more detail about \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but briefly speaking \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (which is also described in the later sections % TODO).
+On the one hand, \texttt{QUIC} breaks the separation of transport and security layer protocols. 
+On the other hand, \texttt{QUIC} protocol offers some performance benefits for modern-day traffic flows (see section~\ref{QUIC_advantages}).
+
+
 \subsection{Why are performance measurements of \texttt{QUIC} important?}
 
 \section{Related Work}
@@ -403,7 +405,7 @@ In addition, to prevent \texttt{NATs} from interfering with \texttt{QUIC}, \text
 
 
 
-\section{\texttt{QUIC} Details}
+\section{\texttt{QUIC} Details} \label{QUIC_details_section}
 
 \texttt{QUIC} is a next-generation transport layer protocol built on top of \texttt{UDP} \cite{chromium_blog_about_quic}.
 Figure~\ref{fig:QUIC_network_stack} shows the network stack of \texttt{QUIC}.
@@ -492,7 +494,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 \end{itemize}
 
 
-\subsection{\texttt{QUIC}'s Advantages}
+\subsection{\texttt{QUIC}'s Advantages} \label{QUIC_advantages}
 
 \begin{itemize}
   \item Reduced latency:
@@ -755,8 +757,8 @@ Hence, I was able to improve my null cryptographic operations in a systematic wa
 As this project builds on the ideas presented in \cite{Making_QUIC_Quicker}, I thought that it would be reasonable to replicate a similar testing environment to obtain comparable results.
 
 \subsection{Logical Setup}
-To test a simple single flow performance, it is sufficient to have a single QUIC server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
-To measure QUIC performance under different conditions, we need to add a network emulator between the QUIC client and the QUIC server.
+To test a simple single flow performance, it is sufficient to have a single \texttt{QUIC} server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
+To measure \texttt{QUIC} performance under different conditions, we need to add a network emulator between the \texttt{QUIC} client and the \texttt{QUIC} server.
 
     \begin{figure}[ht]
     \centering
@@ -780,13 +782,19 @@ To measure QUIC performance under different conditions, we need to add a network
     \label{fig:Physical_testing_environment}
     \end{figure}
     
-    As we can see from Figure~\ref{fig:Physical_testing_environment}, both \texttt{QUIC} client and server operate on different virtual network namespaces which do not have a shared loopback connection.
+    As we can see from Figure~\ref{fig:Physical_testing_environment}, both \texttt{QUIC} client and server operate on different virtual network namespaces which do not have shared point-to-point links.
     Client and server are assigned different network subnets.
-    An intermediate machine (B) is configured as default the gateway for both virtual network namespaces.
+    An intermediate machine (B) is configured as the default gateway for both virtual network namespaces.
     As a result, all the packets between the \texttt{QUIC} server and client have to travel via an intermediate machine (B).
     Here, depending on the experiment, network perturbations (e.g. packet loss, delay, reordering) may be introduced.
+    In particular, to simulate different networking conditions I used \texttt{NetEm} tool (abbreviation of \enquote{Network Emulator})\footnote{http://manpages.ubuntu.com/manpages/trusty/man8/tc-netem.8.html}.
+    The small implementation detail of \texttt{NetEm} is that by default it introduces traffic perturbations for the packets leaving the network interface but not the incoming packets \cite{Ubuntu_Manpage_NetEm}.
+    Hence, to simulate symmetrical network conditions I had to specify \texttt{NetEm} rules for both interfaces of the intermediate machine.
+    For this reason, in other diagrams, I represent Network Emulator as separated into two sections (see Figure~\ref{fig:Wireshark_separation}).
+    
+    
     IP forwarding is enabled on the intermediate machine (B), redirecting \texttt{QUIC} packets from one subnet to another.
-    Correctness of this configuration was tested by inspecting transit packets on the machine B.
+    Correctness of the experimental environment was tested by inspecting transit packets on the machine B.
 
     The intermediate machine adds only limited overhead.
     I derived these conclusions by comparing round-trip-times (using \texttt{ping} tool) and the maximum available \texttt{UDP} throughput (using \texttt{iperf3} tool) under two different conditions.
