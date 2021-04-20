@@ -809,20 +809,34 @@ To measure QUIC performance under different conditions, we need to add a network
 \subsection{iperf3}
 \texttt{Iperf3} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
 \texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
-As \texttt{QUIC} builds on top of \texttt{UDP}, then we can assume that \texttt{UDP}'s throughput is a theoretical maximum \texttt{QUIC} throughput.
+We can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
 However, \texttt{UDP} does not provide a similar set of guarantees as \texttt{QUIC} does.
+For example, \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver could see different throughput values.
 Hence, to put \texttt{QUIC} into the perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
-An important point to mention is that \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver would see different throughput values.
+An important aspect of \texttt{TCP} is that its congestion control mechanism allows sender to discover an appropriate sending bitrate.
+In contrast, \texttt{UDP} does not take into account the state of the network.
+Consequently, if unlimited \texttt{UDP} throughput is allowed, then one could flood the network by running \texttt{iperf3} to measure \texttt{UDP} throughput.
+However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network so no damage was done to the public network.
+
 
 % TODO
-[TODO: mention pecularities of UDP traffic generation (by default UDP bitrate is caped); can adjust UDP send or receive (TODO check which one) buffer size]
+[TODO: mention that one can adjust UDP send or receive (TODO check which one) buffer size]
+
+
+
+\subsection{ping}
+\texttt{Ping} is a network analysis tool used to measure the round trip time between the two communicating parties.
+As mentioned in \cite{internet-control-message-protocol-icmp}, \texttt{ping} uses Internet Control Message Protocol (or \texttt{ICMP} for short) to issue a request-reply pair.
+Round trip time measurements were used to test the correctness of the testing environment (e.g. to measure additional network delay induced by the intermediate machine).
+However, on \texttt{ping} could not be used to measure one-way delay because network delays can be asymmetric.
 
 
 \subsection{Wireshark}
 
-\texttt{Wireshark} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}). 
+\texttt{Wireshark} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
+\texttt{Wireshark} visualises key information about the packets - source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
     \caption{\texttt{Wireshark} captured several \texttt{QUIC} packets whose numbers (abbreviated PKN) are decrypted and displayed on the right hand side.}
@@ -833,21 +847,16 @@ When required, I ran \texttt{Wireshark} on the intermediate machine to inspect s
 It is worth mentioning that \texttt{QUIC} packets are encrypted.
 Hence, I had to share server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g. packet number) of observed \texttt{QUIC} packets.
 
-I used \texttt{Wireshark} in an ethical manner meaning that I only used it to analyse traffic between the dedicated interfaces.
+I used \texttt{Wireshark} in an ethical manner meaning that I only used it to analyse traffic between the dedicated network interfaces.
 In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because testing environment used separate network interfaces. 
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
-    \caption{\texttt{Wireshark} was not used to capture packets from the college network}
+    \caption{Testing was performed on a private network. Hence, \texttt{Wireshark} was not used to capture packets from the college network}
     \label{fig:Wireshark_separation}
     \end{figure}
 
-
-
-
-
-% Ethical aspect 
 
 
 \subsection{perf}
