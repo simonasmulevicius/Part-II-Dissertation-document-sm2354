@@ -84,7 +84,19 @@ In particular, I spent more than one month working on the remote set-up, but I c
 A suspected issue is a possible hardware fault.
 Hence, to continue working on the project, I had to return to my college room, where I had physical access to another pair of specialised computers.
  
+ 
+ 
 \newpage
+
+
+
+
+
+
+
+
+
+
 \section*{Declaration}
 
 I, Simonas Mulevicius of Homerton College, being a candidate for Part II of the Computer
@@ -100,6 +112,11 @@ be made available to the students and staff of the University.
 
 \medskip
 \leftline{Date [date]}
+
+
+
+
+
 
 
 %Professional Practice and Presentation 14%
@@ -444,6 +461,27 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
 % TODO: read https://arxiv.org/pdf/1801.05168.pdf
 \begin{itemize}
 
+
+ \item \textbf{Connection migration} 
+ % (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
+ 
+    As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Web \cite{bib_number_of_mobile_users}.
+    An important aspect of portable devices is that their location, and thus Internet access point, can change relatively frequently \cite{PollardBarry2019HiAP}.
+    This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address \cite{PollardBarry2019HiAP}.
+    As a result, \texttt{TCP} needs to establish a new connection every time the network access point is changed \cite{PollardBarry2019HiAP}.
+    This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the \enquote{slow-start} phase and perform additional handshakes.
+    This example demonstrates that \texttt{TCP} protocol is old as it assumed that \texttt{IP} address would not frequently change \cite{PollardBarry2019HiAP}.
+    In contrast, \texttt{QUIC} is more suitable to handle connections via mobile devices.
+    In particular, \texttt{QUIC} has an explicit connection ID that does not depend on the IP address \cite{PollardBarry2019HiAP}.
+    Hence, \texttt{QUIC} clients can migrate between multiple networks without having to re-establish a \texttt{QUIC} connection.
+    
+    
+    
+
+
+
+
+
 \item \textbf{Fast \texttt{TLS1.3} handshake}
 
 As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the primary innovations of \texttt{QUIC} is that it combines transport and security layer handshakes.
@@ -464,29 +502,18 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 
 
 
- \item \textbf{Connection migration} 
- % (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
- 
-    As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Web \cite{bib_number_of_mobile_users}.
-    An important aspect of portable devices is that their location, and thus Internet access point, can change relatively frequently \cite{PollardBarry2019HiAP}.
-    This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address \cite{PollardBarry2019HiAP}.
-    As a result, \texttt{TCP} needs to establish a new connection every time the network access point is changed \cite{PollardBarry2019HiAP}.
-    This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the \enquote{slow-start} phase and perform additional handshakes.
-    This example demonstrates that \texttt{TCP} protocol is old as it assumed that \texttt{IP} address would not frequently change \cite{PollardBarry2019HiAP}.
-    In contrast, \texttt{QUIC} is more suitable to handle connections via mobile devices.
-    In particular, \texttt{QUIC} has an explicit connection ID that does not depend on the IP address \cite{PollardBarry2019HiAP}.
-    Hence, \texttt{QUIC} clients can migrate between multiple networks without having to re-establish a \texttt{QUIC} connection.
+
  
  
   \item \textbf{Reliability and  congestion control}
   
     \texttt{QUIC} also provides reliable data delivery because the main purpose of it is to replace \texttt{TCP} \cite{ietf-quic-transport-draft} by offering identical or better guarantees. 
-    Similarly, \texttt{QUIC} implements congestion control because, as have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
+    Similarly, \texttt{QUIC} implements congestion control because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
   
  
   \item TODO zero RTT handshake
  
-  \item TODO encryption by default
+  \item Another feature of \texttt{QUIC} is that it uses \textbf{encryption by default} \cite{the-road-to-quic}.
   % TODO
   [TODO: add a source saying that ISPs don't support QUIC without embeded security layer]
   
@@ -505,7 +532,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 \end{itemize}
 
 
-\subsection{\texttt{QUIC}'s Advantages} \label{QUIC_advantages}
+\subsection{Advantages of \texttt{QUIC}} \label{QUIC_advantages}
 
 \begin{itemize}
   \item Reduced latency:
@@ -522,6 +549,15 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 \end{itemize}
 
 
+
+\subsection{Disadvantages of \texttt{QUIC}} \label{QUIC_disadvantages}
+
+\begin{itemize}
+  \item .
+  
+  [TODO: say that encrypted QUIC traffic would be invisible to the ISPs? https://owmobility.com/why-is-googles-quic-leaving-network-operators-in-the-dark/]
+\end{itemize}
+  
 
 \subsection{\texttt{QUIC}'s Header Format} \label{subsection_QUIC_header_format}
 
@@ -694,7 +730,7 @@ In addition, I augmented \enquote{README} file of the primary repository with sp
 
 \section{Preparation scripts}
 As I have already mentioned, I wrote several scripts to prepare testing machines for performance analysis.
-These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see \ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
+These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see Appendix~\ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
 
 
  % TODO mention ping test
@@ -894,10 +930,9 @@ In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did 
 
 
 \subsection{perf}
+\texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack.
+
 % TODO
-[TODO: state that perf is a performance analysis tool which measures CPU performance by sampling the call stack]
-
-
 [TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]]
 
 [TODO: limitations and overheads of sampling]
@@ -950,6 +985,7 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
 \subsection{qlog and qvis}
 % TODO
 [TODO give a high-level overview of qlog format]
+
 [TODO: why is it hard to visualise QUIC's behaviour?]
 
 
