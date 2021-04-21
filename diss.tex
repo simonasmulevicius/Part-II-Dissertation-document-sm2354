@@ -251,7 +251,11 @@ The major findings of \cite{Making_QUIC_Quicker} show that even slight packet re
 This paper's authors suggest that one reason for such behaviour is that reordered packets might be treated as lost packets \cite{Making_QUIC_Quicker}. 
 
 
-
+During the later stages of project development I discovered that an ability to disable encryption of \texttt{QUIC} was already proposed by Nick Banks from \texttt{Microsoft} \cite{banks-quic-disable-encryption-00}.
+% TODO:
+% \texttt{Microsoft} -> MsQuic
+% > smart first secure handshake
+% > can turn off crypto for subsequent packets if both ends aggree
 
 
 
@@ -502,8 +506,9 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 
 
 
-
- 
+  \item TODO zero RTT handshake
+  
+  
  
   \item \textbf{Reliability and  congestion control}
   
@@ -511,21 +516,17 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
     Similarly, \texttt{QUIC} implements congestion control because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
   
  
-  \item TODO zero RTT handshake
+
  
   \item Another feature of \texttt{QUIC} is that it uses \textbf{encryption by default} \cite{the-road-to-quic}.
   % TODO
-  [TODO: add a source saying that ISPs don't support QUIC without embeded security layer]
+  [TODO: add a source saying that now ISPs don't support QUIC without embeded security layer].
+  However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks \cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
   
   \item TODO loss recovery
   
   \item TODO multiplexed streams
-  
-  
-  
-  
-  
-  
+ 
   \item TODO loss detection with signaling (using new seq number)
   
   
@@ -550,14 +551,6 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 
 
 
-\subsection{Disadvantages of \texttt{QUIC}} \label{QUIC_disadvantages}
-
-\begin{itemize}
-  \item .
-  
-  [TODO: say that encrypted QUIC traffic would be invisible to the ISPs? https://owmobility.com/why-is-googles-quic-leaving-network-operators-in-the-dark/]
-\end{itemize}
-  
 
 \subsection{\texttt{QUIC}'s Header Format} \label{subsection_QUIC_header_format}
 
