@@ -251,12 +251,12 @@ The major findings of \cite{Making_QUIC_Quicker} show that even slight packet re
 This paper's authors suggest that one reason for such behaviour is that reordered packets might be treated as lost packets \cite{Making_QUIC_Quicker}. 
 
 
-During the later stages of project development I discovered that an ability to disable encryption of \texttt{QUIC} was already proposed by Nick Banks from \texttt{Microsoft} \cite{banks-quic-disable-encryption-00}.
-% TODO:
-% \texttt{Microsoft} -> MsQuic
-% > smart first secure handshake
-% > can turn off crypto for subsequent packets if both ends aggree
-
+During the later stages of project development I discovered that the option to disable encryption of \texttt{QUIC} was already proposed by Mr Nick Banks from \texttt{Microsoft} \cite{banks-quic-disable-encryption-00}.
+In private conversation N. Banks said that his ideas had been already implemented in MsQuic, the aforementioned \texttt{Microsoft}'s implementation of \texttt{QUIC}.
+The proposed solution works as follows.
+At first, communicating end hosts still have to complete a secure handshake \cite{banks-quic-disable-encryption-00}.
+After that, if both client and server express their will to turn off encryption, then plaintext packets are used for communications (i.e. both packet headers and payloads are unencrypted) \cite{banks-quic-disable-encryption-00}.
+However, as Mr N. Banks mentioned in the private conversation, one drawback of continuing to use encryption for the first \texttt{QUIC} handshake is that performance of \texttt{QUIC} handshake is not improved.
 
 
 
