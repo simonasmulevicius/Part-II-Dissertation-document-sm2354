@@ -235,11 +235,11 @@ Hence, any performance measurements of \texttt{QUIC} could guide the ongoing eff
 Furthermore, there are strong indications showing that \texttt{QUIC} could be widely adopted in the future.
 For instance, \texttt{Google}, one of the major advocates for \texttt{QUIC}, operates both on the server side (e.g. search engine or video streaming service \texttt{YouTube}) and the client side (e.g. \texttt{Google Chrome} browser for desktop and mobile devices) \cite{A_QUICk_Introduction_to_HTTP3}.
 Hence, using its existing market presence \texttt{Google} could potentially encourage the faster adoption of \texttt{QUIC}.
-Actually, according to the report published in 2016\cite{RuthJan2018AFLa}, at that time around 40\% of all traffic of \texttt{Google} was using \texttt{QUIC}.
+Actually, according to the report published in 2016 \cite{RuthJan2018AFLa}, at that time around 40\% of all traffic of \texttt{Google} was using \texttt{QUIC}.
 Similarly, other large technology companies such as \texttt{Facebook} or \texttt{Microsoft} are also building their own implementations of \texttt{QUIC} (correspondingly \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic}).
 These companies are also pushing the deployment of \texttt{QUIC}. 
 For example, according to the report from \texttt{Facebook} published in 2020 \cite{how-facebook-is-bringing-quic-to-billions}, \texttt{QUIC} was used for the three quarters of \texttt{Facebook} traffic. 
-In conclusion, it is highly likely that \texttt{QUIC} would get wide range of support in the future meaning that current performance measurements of \texttt{QUIC} could help shape the future.
+In conclusion, it is highly likely that \texttt{QUIC} would get wide range of support meaning that current performance measurements of \texttt{QUIC} could help shape the future.
 
 \section{Related Work}
 There have been several similar attempts to measure \texttt{QUIC} performance under different network scenarios. 
@@ -257,6 +257,17 @@ The proposed solution works as follows.
 At first, communicating end hosts still have to complete a secure handshake \cite{banks-quic-disable-encryption-00}.
 After that, if both client and server express their will to turn off encryption, then plaintext packets are used for communications (i.e. both packet headers and payloads are unencrypted) \cite{banks-quic-disable-encryption-00}.
 However, as Mr N. Banks mentioned in the private conversation, one drawback of continuing to use encryption for the first \texttt{QUIC} handshake is that performance of \texttt{QUIC} handshake is not improved.
+
+During the write-up phase, I found that Sanadhi published a similar analysis of the \texttt{QUIC} protocol in 2018 \cite{overview_of_the_QUIC_protocol}.
+It is worth pointing out both me and Sandhi used the same implementation of \texttt{QUIC}, called \texttt{ngtcp2}.
+Indeed, \texttt{ngtcp2} has a well-documented code-base with several examples (e.g. client and server implementations) so it is a reasonable choice of the starting point for the analysis of \texttt{QUIC}.   
+However, back in 2018 \texttt{QUIC} was still in the early development stage as it had only been publicaly published for several years \cite{Chromium_Blog_Experimenting_with_quic}.
+Hence, in the Master project, Sanadhi focused on the correctness of \texttt{ngtcp2} and another implementation of \texttt{QUIC} called \texttt{gQUIC}.
+She or he inspected the correct order of packet exchange.
+In addition, no quantitative performance analysis of the protocol was performed for this Master project. 
+Nevertheless, in the \enquote{Future work} chapter the author suggests carrying out performance analysis of \texttt{QUIC} under different simulated network conditions.
+As a result, my work could be viewed as the continuation of the previous analysis of \texttt{QUIC}.
+
 
 
 
@@ -522,6 +533,12 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
   % TODO
   [TODO: add a source saying that now ISPs don't support QUIC without embeded security layer].
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks \cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
+  
+  
+  \item % TODO
+  [TODO: state that QUIC is implemented in user space rather than kernel space.]
+  [TODO: state why companies like user space (https://www.snellman.net/blog/archive/2016-12-01-quic-tou/)]
+  
   
   \item TODO loss recovery
   
