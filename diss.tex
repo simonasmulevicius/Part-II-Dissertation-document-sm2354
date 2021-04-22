@@ -656,11 +656,17 @@ Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author o
 \section{Starting Point}
 As mentioned in the previous sections, this project builds on top of \texttt{ngtcp2} implementation of \texttt{QUIC}.
 In other words, relevant networking stack tools such as cryptographic library (e.g. \texttt{OpenSSL}), benchmarking tool (e.g. \texttt{h2load}), custom \texttt{HTTP} layers (e.g. \texttt{nghttp2} and \texttt{ngtcp3}) have already been built and integrated. 
-Similarly, the concept of QUIC was introduced in the Part IB \enquote{Computer Networking} course and fundamentals of C and C++ were covered in \enquote{Programming in C and C++} course. 
-In addition, I used C++11 in my summer internship.
+Moreover, in this project I extensively used the ideas from  Gianni Antichi and his colleagues \cite{Making_QUIC_Quicker} when configuring the testing environment of \texttt{QUIC}.
+In particular, I replicated their physical and architectural layout of components required to simulate different conditions of the network (see section \ref{physical_setup_subsection}).
 
-% TODO
-[TODO: reference the starting point section from the initial project proposal]
+The concepts of \texttt{QUIC} were introduced in the Part IB \enquote{Computer Networking} and Part II \enquote{Principles of Communications} courses.
+In addition, fundamentals of C and C++ were covered in \enquote{Programming in C and C++} course. 
+Besides that, I used C++11 in my summer internship.
+
+Throughout the project, the focus of the dissertation changed from hardware to software.
+Hence, hardware offloading oriented code (e.g. \texttt{NetFPGA} codebase) and tools (e.g. \texttt{Xilinx/Vivado} tools for programming with FPGAs) used at the beginning of the project had little utility for the remaining part of the dissertation.
+In addition, I did not end up using the high-speed network emulator called \texttt{TLEM} \cite{TLEM_tool} because the existing network emulation tool called \texttt{NetEm} did not seem to add a noticeable performance overhead for the selected testing workloads.
+
 
 \section{Software Engineering Techniques and Tools}
     To track the code changes, I used \texttt{Git} source control tool.
@@ -848,7 +854,7 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
     \label{fig:Logical_testing_environment}
     \end{figure}
 
-\subsection{Physical Setup}
+\subsection{Physical Setup} \label{physical_setup_subsection}
     In the ideal scenario, we might want to use three dedicated machines for performance measurements, as shown in the previous section.
     However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
     In this environment, one machine (A) hosts client-server pair, while another computer (B) acts as a network emulator.
