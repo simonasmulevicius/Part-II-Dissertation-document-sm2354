@@ -532,20 +532,22 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 
 
 
-  \item TODO zero RTT handshake
+  \item 
+    According to the \texttt{IETF QUIC} draft, Section 1 \cite{ietf-quic-transport-draft}, \texttt{QUIC} offers \textbf{zero round-trip-time connections} (abbreviated \texttt{0-RTT}) provided that the server and client had an established connection in the recent past \cite{introducing-0-rtt}.
+    In other words, under the aforementioned circumstances, \texttt{QUIC} server and client can start exchanging data without having to wait for the completion of the new handshake \cite{ietf-quic-transport-draft}.
   
   
  
-  \item \textbf{Reliability and  congestion control}
-  
-    \texttt{QUIC} also provides reliable data delivery because the main purpose of it is to replace \texttt{TCP} \cite{ietf-quic-transport-draft} by offering identical or better guarantees. 
-    Similarly, \texttt{QUIC} implements congestion control because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
+  \item 
+    According to the same \texttt{IETF QUIC} draft, Section 7 \cite{ietf-quic-transport-draft}, \texttt{QUIC} also provides \textbf{reliable data delivery}.
+    The main purpose of this is to replace \texttt{TCP} by offering identical or better guarantees. 
+    Similarly, \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
   
  
 
 
   \item 
-  An interesting design choice of \texttt{QUIC} is that it is  \texttt{implemented in user space-rather than kernel-space} \cite{the-road-to-quic}, \cite{Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel}.
+  An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space-rather than kernel-space} \cite{the-road-to-quic}, \cite{Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel}.
   The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly deployed (e.g. by deploying protocol updates with the software updates) \cite{the-road-to-quic}.
   In addition, as Snellman states, with several exceptions such as Google, Microsoft or Apple, operating systems are usually not controlled by the same companies as the ones that develop client-side software, such as browsers \cite{2016-12-01-quic-tou}.
   Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user-space.
@@ -553,9 +555,8 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
   
   
  
-  \item Another feature of \texttt{QUIC} is that it uses \textbf{encryption by default} \cite{the-road-to-quic}.
-  % TODO
-  [TODO: add a source saying that now ISPs don't support QUIC without embeded security layer].
+  \item Another feature of \texttt{QUIC} is that its packets are \textbf{encrypted by default} \cite{the-road-to-quic}.
+  % [MAYBE TODO: add a source saying that now ISPs don't support QUIC without embeded security layer].
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks \cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
   
   
