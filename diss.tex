@@ -199,13 +199,12 @@ In this chapter, I briefly introduce \texttt{QUIC}, then I give the project's mo
 % TODO add reference to the ideas of this paragraph:
 Nowadays, more and more people have access to the Internet.
 As the scale of the web continues to grow, both companies and researchers look for ways to satisfy ever-increasing market demand to improve the user experience of Internet users.
-Customers expect cheap, high-throughput and low latency Internet connection.
+Customers expect cheap, high-throughput and low latency Internet connections.
 However, in the last decade, several trends have emerged.
 For example, in recent years, we observed a proliferation of mobile devices - according to \cite{bib_number_of_mobile_users}, at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet.
 Furthermore, we see the changing patterns of web development.
 In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g. from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
-But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet.
-% TODO [NOT MY IDEA! -> add source]
+But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet \cite{RudmanRiaan2016DW3o}.
 Hence, the changing constraints and networking trends encourage us to re-evaluate past protocols.
 By using innovative solutions, we can continue improving the performance of the Internet. 
 One of such ideas is \texttt{QUIC} - the new transport layer protocol.
@@ -545,10 +544,12 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
  
 
 
-  \item % TODO
-  [TODO: state that QUIC is implemented in user space rather than kernel space.]
-  [TODO: state why companies like user space (https://www.snellman.net/blog/archive/2016-12-01-quic-tou/)]
-  
+  \item 
+  An interesting design choice of \texttt{QUIC} is that it is  \texttt{implemented in user space-rather than kernel-space} \cite{the-road-to-quic}, \cite{Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel}.
+  The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly deployed (e.g. by deploying protocol updates with the software updates) \cite{the-road-to-quic}.
+  In addition, as Snellman states, with several exceptions such as Google, Microsoft or Apple, operating systems are usually not controlled by the same companies as the ones that develop client-side software, such as browsers \cite{2016-12-01-quic-tou}.
+  Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user-space.
+  However, there is an associated cost of the user-space because data has to be copied from kernel-space to user-space \cite{benchmarking-quic}.
   
   
  
