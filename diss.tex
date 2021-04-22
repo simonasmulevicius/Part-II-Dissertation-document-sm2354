@@ -44,6 +44,45 @@ Homerton College \\[5mm]
 \today  % today's date
 \end{center}
 
+
+
+
+
+
+
+
+\newpage
+
+
+
+\section*{Declaration of originality}
+
+I, Simonas Mulevicius of Homerton College, being a candidate for Part II of the Computer
+Science Tripos, hereby declare
+that this dissertation and the work described in it are my own work,
+unaided except as may be specified below, and that the dissertation
+does not contain material that has already been used to any substantial
+extent for a comparable purpose. I am content for my dissertation to
+be made available to the students and staff of the University.
+
+\bigskip
+\leftline{Signed [signature]}
+
+\medskip
+\leftline{Date [date]}
+
+
+\newpage
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Proforma, table of contents and list of figures
 
@@ -86,32 +125,6 @@ Hence, to continue working on the project, I had to return to my college room, w
  
  
  
-\newpage
-
-
-
-
-
-
-
-
-
-
-\section*{Declaration}
-
-I, Simonas Mulevicius of Homerton College, being a candidate for Part II of the Computer
-Science Tripos, hereby declare
-that this dissertation and the work described in it are my own work,
-unaided except as may be specified below, and that the dissertation
-does not contain material that has already been used to any substantial
-extent for a comparable purpose. I am content for my dissertation to
-be made available to the students and staff of the University.
-
-\bigskip
-\leftline{Signed [signature]}
-
-\medskip
-\leftline{Date [date]}
 
 
 
@@ -265,7 +278,7 @@ However, back in 2018 \texttt{QUIC} was still in the early development stage as 
 Hence, in the Master project, Sanadhi focused on the correctness of \texttt{ngtcp2} and another implementation of \texttt{QUIC} called \texttt{gQUIC}.
 She or he inspected the correct order of packet exchange.
 In addition, no quantitative performance analysis of the protocol was performed for this Master project. 
-Nevertheless, in the \enquote{Future work} chapter the author suggests carrying out performance analysis of \texttt{QUIC} under different simulated network conditions.
+Nevertheless, in the \enquote{Future work} chapter the author suggests carrying out a performance analysis of \texttt{QUIC} under different simulated network conditions.
 As a result, my work could be viewed as the continuation of the previous analysis of \texttt{QUIC}.
 
 
@@ -528,6 +541,13 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
   
  
 
+
+  \item % TODO
+  [TODO: state that QUIC is implemented in user space rather than kernel space.]
+  [TODO: state why companies like user space (https://www.snellman.net/blog/archive/2016-12-01-quic-tou/)]
+  
+  
+  
  
   \item Another feature of \texttt{QUIC} is that it uses \textbf{encryption by default} \cite{the-road-to-quic}.
   % TODO
@@ -535,10 +555,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks \cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
   
   
-  \item % TODO
-  [TODO: state that QUIC is implemented in user space rather than kernel space.]
-  [TODO: state why companies like user space (https://www.snellman.net/blog/archive/2016-12-01-quic-tou/)]
-  
+
   
   \item TODO loss recovery
   
@@ -612,7 +629,7 @@ According to QUIC Working Group \cite{number_of_QUIC_implementations}, there is 
 
 \subsection{Why are there so many Implementations of QUIC?}
 
-As I have already mentioned in the previous sections, \texttt{QUIC} is implemented in the user-space.
+As I have already mentioned in the previous sections, \texttt{QUIC} is implemented in the user space.
 Hence, this flexibility simplifies the development and deployment of the new \texttt{QUIC} implementations.
 However, there is an associated cost of using protocol written in user space - as Adam Langley and his colleagues noted \cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}, \texttt{QUIC} server required 3.5 more \texttt{CPU} resources.
 
@@ -792,11 +809,18 @@ Hence, I was able to improve my null cryptographic operations in a systematic wa
 
 
 \section{Testing scripts}
-% TODO
-[TODO describe the structure and design of testing scripts (Python invokes bash scripts $>$ extracts data $>$ saves/aggregates data)]
 
-% TODO
-[TODO mention that machine A controls machine B via ssh]
+In order to measure the performance of the \texttt{QUIC} protocol, I am running several automated scripts on the testing computer (see Figure~\ref{fig:Physical_testing_environment}).
+In particular, I am using Python and/or Bash scripts to configure the testing environment and initiate the \texttt{QUIC} server-client pair.
+In addition, to control the networking conditions of the simulated network the scripts on the testing machine use \texttt{ssh} (abbreviation of Secure Shell Protocol) connection to control the intermediate machine.
+Later on, Python scripts save, aggregate and visualise the results of the experiments.
+The use of scripting languages, in this case, is acceptable because performance measurements require quick prototyping.
+Furthermore, code maintainability is not the major design goal of this project.
+
+
+
+
+
 
 \chapter{Evaluation}
 % ------------------------------------------------
@@ -1233,7 +1257,11 @@ In other words, measured maximum available throughput before and after experimen
 
 \section{Future Work}
 % TODO
+[TODO: suggest offloading crypto to hardware (as Gianni's team has already suggested)]
+
 [TODO: critique that offloading QUIC to hardware might stifle innovation in the long term. ]
+
+[TODO: for example, look into invariants of QUIC and check if such offloading would be acceptable]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the bibliography
