@@ -489,6 +489,22 @@ Similarly, the \texttt{UDP} layer is smaller than the \texttt{TCP} layer because
 In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
 
 
+The presence of the aforementioned network stack of \texttt{QUIC} (Figure~\ref{fig:QUIC_network_stack}) is visible in the structure of \texttt{IP} packets (see Figure~\ref{fig:IP_UDP_QUIC_packets}).
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/IP_UDP_QUIC packets.png}
+    \caption{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn according to the latest \texttt{IETF}'s description of \texttt{QUIC} \cite{ietf-quic-transport-34}}
+    \label{fig:IP_UDP_QUIC_packets}
+    \end{figure}
+
+
+% TODO: describe IP/UDP/QUIC packets
+% TODO: include field values of each 
+
+
+The example of the actual real-life \texttt{QUIC} packets, captured using \texttt{Wireshark} network analysis tool, is shown in Figure~\ref{fig:Wireshark_screenshot}.
+
+
 \subsection{List of QUIC Features}
 % https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
 % TODO: read https://tools.ietf.org/html/draft-ietf-quic-transport-32#section-1
@@ -518,7 +534,7 @@ In other words, \texttt{UDP} sends packets in \enquote{fire and forget} manner \
 
 \item \textbf{Fast \texttt{TLS1.3} handshake}
 
-As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the primary innovations of \texttt{QUIC} is that it combines transport and security layer handshakes.
+As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the primary innovations of \texttt{QUIC} is that it combines transport and security layer handshakes thus reducing latency of the first \texttt{HTTP} request.
 
 
      \begin{figure}[H]
@@ -567,6 +583,9 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 
   
   \item TODO loss recovery
+  % Loss detection: https://quicwg.org/base-drafts/draft-ietf-quic-recovery.html#name-loss-detection
+  % > packet-number based approach with a timer
+  
   
   \item TODO multiplexed streams
  
