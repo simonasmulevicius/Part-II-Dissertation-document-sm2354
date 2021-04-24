@@ -55,7 +55,7 @@ Homerton College \\[5mm]
 
 
 
-\section*{Declaration of originality}
+\section*{Declaration of Originality}
 
 I, Simonas Mulevicius of Homerton College, being a candidate for Part II of the Computer
 Science Tripos, hereby declare
@@ -120,19 +120,22 @@ Then, I measured \texttt{QUIC} throughput under different network conditions (e.
 
 \section*{Special Difficulties}
 
-For this project, I used two dedicated experimental machines for network testing. 
-However, I had accessibility issues during the winter vacation when I was abroad at home.
-In particular, I spent more than one month working on the remote set-up, but I could not configure two additional backup machines in the Computer Laboratory.
+The initial goal of the project was to offload packet reordering logic of \texttt{QUIC} packets to hardware.
+For this project, I used two dedicated experimental machines that had specialised hardware components - \texttt{NetFPGA SUME} network interface cards.
+However, it turned out that software and hardware stack of \texttt{NetFPGA} platform was relatively complex.
+For instance, it took me unexpectedly long to prepare, configure and test the correct functionality of  \texttt{NetFPGA SUME} boards.
+
+To simplify the development process I had a pair of the aforementioned machines in my college room.
+However, I faced accessibility issues during the winter vacation when I was abroad at home.
+In particular, the testing machines were expensive, heavy and fragile so I could not take them with me for the winter vacation.
+Hence, to overcome this issue I had to configure remote access of the testing environment.
+I spent more than one month working on the remote set-up of both the main pair of testing machines as well as the backup pair.
+Unfortunately, I could not configure two additional backup machines in the Computer Laboratory.
 A suspected issue was a possible hardware fault.
-Hence, to continue working on the project, I had to return to my college room, where I had physical access to another pair of specialised computers.
- 
- 
- 
-
-
-
-
-
+Hence, to continue working on the project, I had to return to my college room.
+This lengthy preparation phase substantially delayed the actual development of the project.
+As a result, it was decided to change the focus of the dissertation from hardware offloading to the software-oriented performance analysis of \texttt{QUIC}. 
+In conclusion, one could argue that in the pre-pandemic times, physical access to the pre-configured and tested hardware could have saved a lot of time.
 
 
 %Professional Practice and Presentation 14%
@@ -156,11 +159,12 @@ The following people helped with the project setup or provided useful insights o
     \item \textbf{Professor Andrew W. Moore} was my project supervisor and originator of the project idea;
     \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory during the winter vacation;
     \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \texttt{ngtcp2}\footnote{specific implementation of QUIC which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2};
+    \item \textbf{Mr Nick Banks}, software developer from \texttt{Microsoft}, is the co-author of \texttt{MsQuic}\footnote{another implementation of QUIC which is used in this project} and he helped with the setup of this particular implementation of \texttt{QUIC};
     \item Part II students \textbf{Ms Akvile Valentukonyte} and \textbf{Mr Justas Janickas} participated in our weekly meetings where we all shared our achieved progress;
 \end{itemize}
 
 Furthermore, this document is written using a default dissertation template provided by Martin Richards \cite{how_to_write_a_dissertation_in_LATEX}.
-However, some formatting ideas are taken from Alex Coplan's dissertation \cite{Alex_Coplan_dissertation}, which, according to \cite{Computer_Lab_dissertations}, is \enquote{highly commended by the examiners}.
+However, some formatting ideas are taken from Alex Coplan's dissertation \cite{Alex_Coplan_dissertation}, which is \enquote{highly commended by the examiners} \cite{Computer_Lab_dissertations}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % now for the chapters
@@ -195,7 +199,7 @@ In this chapter, I briefly introduce \texttt{QUIC}, then I give the project's mo
 % > details in other chapters
 
 
-\section{Motivation of the project}
+\section{Motivation of the Project}
 % TODO add reference to the ideas of this paragraph:
 Nowadays, more and more people have access to the Internet.
 As the scale of the web continues to grow, both companies and researchers look for ways to satisfy ever-increasing market demand to improve the user experience of Internet users.
@@ -243,7 +247,7 @@ On the one hand, \texttt{QUIC} breaks the separation of transport and security l
 On the other hand, \texttt{QUIC} protocol offers some performance benefits for modern-day traffic flows (see section~\ref{QUIC_advantages}).
 
 
-\subsection{Why are performance measurements of \texttt{QUIC} important?}
+\subsection{Importance of Performance Measurements of \texttt{QUIC}}
 
 \texttt{QUIC}, after being publicly launched by \texttt{Google} in 2013 \cite{Chromium_Blog_Experimenting_with_quic}, \texttt{QUIC} is still a relatively new protocol that is still in the development stage.
 Hence, any performance measurements of \texttt{QUIC} could guide the ongoing efforts to build this new high-performance transport layer protocol.
@@ -392,7 +396,7 @@ Finally, I finish this section by describing software engineering tools and tech
     Hence, it is worth studying previous attempts to improve the performance of HTTP.
 
 
-\subsection{\texttt{HTTP/1.0} Problems caused by \texttt{TCP}}
+\subsection{\texttt{HTTP/1.0} Problems Caused by \texttt{TCP}}
     As Charles M. Kozierok states in his book \cite{TCP_IP_Guide_Book},
     \texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
     A similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
@@ -556,7 +560,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
   
  
   \item Another feature of \texttt{QUIC} is that its packets are \textbf{encrypted by default} \cite{the-road-to-quic}.
-  % [MAYBE TODO: add a source saying that now ISPs don't support QUIC without embeded security layer].
+  % [MAYBE TODO: add a source saying that now there are no implementations that support QUIC without embeded security layer].
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks \cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
   
   
@@ -638,7 +642,7 @@ As I have already mentioned in the previous sections, \texttt{QUIC} is implement
 Hence, this flexibility simplifies the development and deployment of the new \texttt{QUIC} implementations.
 However, there is an associated cost of using protocol written in user space - as Adam Langley and his colleagues noted \cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}, \texttt{QUIC} server required 3.5 more \texttt{CPU} resources.
 
-\subsection{Why did I choose  \texttt{ngtcp2}?}
+\subsection{Selecting  \texttt{ngtcp2}}
 %TODO: fix style and grammar:
 There are many implementations of QUIC (see subsection \ref{List_of_QUIC_implementations}) written in different languages.
 I considered  \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic},  \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic},  \texttt{ngtcp2}\footnote{https://github.com/ngtcp2/ngtcp2},  \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{Quant}\footnote{https://github.com/NTAP/quant}.
@@ -766,7 +770,7 @@ In addition, I augmented \enquote{README} file of the primary repository with sp
 % TODO
 [TODO: mention that I forked part of networking stack required to run ngtcp2. In particular, I worked on a separate openssl(embeded security layer), ngtcp2 (transport layer), nghttp2 and nghttp3 (application layers) ]
 
-\section{Preparation scripts}
+\section{Preparation Scripts}
 As I have already mentioned, I wrote several scripts to prepare testing machines for performance analysis.
 These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see Appendix~\ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
 
@@ -819,7 +823,7 @@ Hence, I was able to improve my null cryptographic operations in a systematic wa
 
 
 
-\section{Testing scripts}
+\section{Testing Scripts}
 
 In order to measure the performance of the \texttt{QUIC} protocol, I am running several automated scripts on the testing computer (see Figure~\ref{fig:Physical_testing_environment}).
 In particular, I am using Python and/or Bash scripts to configure the testing environment and initiate the \texttt{QUIC} server-client pair.
@@ -1195,7 +1199,7 @@ One plausible explanation for this insignificant improvement could be that the t
 In other words, measured maximum available throughput before and after experiment was around 9.8Gbits/second while the maximum theoretical limit of the link was 10Gbits/second. 
 
 
-\subsection{Size of the buffers} 
+\subsection{Size of the Buffers} 
 
 % TODO
 [TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf]  
@@ -1239,15 +1243,15 @@ In other words, measured maximum available throughput before and after experimen
 
 
 
-\section{QUIC performance evaluation}
+\section{QUIC Performance Evaluation}
 
 
-\subsection{Impact of link delay}
+\subsection{Impact of Link Delay}
 % TODO check if delay or latency
 
 
 
-\subsection{Impact of packet loss}
+\subsection{Impact of Packet Loss}
 
 
 \chapter{Conclusion}
@@ -1265,6 +1269,9 @@ In other words, measured maximum available throughput before and after experimen
 \section{Summary}
 
 \section{Reflection}
+Before starting the project, prior expertise working with the \texttt{NetFPGA} platform would have substantially helped.
+In particular, hands-on experience with the reference hardware projects during the summer before Part II would have allowed me to start working on the implementation of the hardware offloading project during the Michaelmas term.
+
 
 \section{Future Work}
 % TODO
