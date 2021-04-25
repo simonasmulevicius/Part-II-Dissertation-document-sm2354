@@ -435,10 +435,8 @@ As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the pri
 For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
 Furthermore, as noted in the same source \cite[Chapter~12]{bib_grigorik2013}, 
 \texttt{HTTP/2.0} also improved multiplexing by sharing a single \texttt{TCP} connection over the varying number of streams.
-This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself \cite{bib_making_web_faster_with_http2}, \cite{bib_TCP_Head_of_line_blocking_stackoverflow},
-\cite{How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
-In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets, containing frames of other streams, can not be delivered to the application layer until the missing packet is not retransmitted \cite{bib_making_web_faster_with_http2}, \cite{bib_TCP_Head_of_line_blocking_stackoverflow}, 
-\cite{How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
+This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself \cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
+In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets, containing frames of other streams, can not be delivered to the application layer until the missing packet is not retransmitted \cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
 The reason for this is that \texttt{TCP} is a stream-oriented protocol.
 In addition, as Gaetano Carlucci and his colleagues state \cite{HTTP_over_UDP_An_Experimental_Investigation_of_QUIC}, the lost \texttt{TCP} packet would reduce the congestion window for all streams multiplexed over the same \texttt{TCP} connection.
 
@@ -452,13 +450,13 @@ In addition, as Gaetano Carlucci and his colleagues state \cite{HTTP_over_UDP_An
 
 \subsection{Roll-out Problems when Deploying Protocol Upgrades}
 As we have seen in the previous sections, there have already been several attempts to overcome the head-of-line blocking problem present in \texttt{TCP}.
-However, attempts to roll out new and experimental versions of \texttt{TCP} to yield benefits to the protocols in the application layer were mostly unsuccessful \cite{bib_Netdev_0x13_QUIC_Tutorial}, \cite{PollardBarry2019HiAP}.
+However, attempts to roll out new and experimental versions of \texttt{TCP} to yield benefits to the protocols in the application layer were mostly unsuccessful \cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
 [TODO mention whic TCP improvements were not successfully deployed].
 During the early 2000s, another architectural problem emerged.
 Around that time, the world faced an issue that the Internet was running out of IPv4 addresses.
-Hence, during that period, middleboxes (e.g. Network Address Translators or NATs for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses \cite{MurphyNiallRichard2005Ina}, \cite{bib_Netdev_0x13_QUIC_Tutorial}.
-However, newly introduced middleboxes started to interfere with the \texttt{TCP} traffic \cite{bib_Netdev_0x13_QUIC_Tutorial}, \cite{PollardBarry2019HiAP}.
-For instance, NATs made assumptions about the structure of \texttt{TCP} headers \cite{bib_Netdev_0x13_QUIC_Tutorial}, \cite{PollardBarry2019HiAP}.
+Hence, during that period, middleboxes (e.g. Network Address Translators or NATs for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses \cite{MurphyNiallRichard2005Ina, bib_Netdev_0x13_QUIC_Tutorial}.
+However, newly introduced middleboxes started to interfere with the \texttt{TCP} traffic \cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
+For instance, NATs made assumptions about the structure of \texttt{TCP} headers \cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
 [TODO rewrite below text with more references]
 As \texttt{TCP/IP} stack was and still is a predominant backbone of the Internet, some NATs offloaded some \texttt{TCP} processing to hardware or used some software optimisation techniques.
 Consequently, these premature optimisations interfered with \texttt{TCP} protocol's correctness -- NATs rejected connections that used experimental \texttt{TCP} packets \cite{PollardBarry2019HiAP}.
@@ -493,7 +491,7 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of \texttt{QUIC}.
     \end{figure}
 
 % [TODO: WHAT end-to-end LATENCY?]
-One of the key ideas of \texttt{QUIC} is that it aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}, \cite{HTTP_3_the_past_the_present_and_the_future}. Hence, for this reason \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the \texttt{QUIC} protocol. 
+One of the key ideas of \texttt{QUIC} is that it aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP, HTTP_3_the_past_the_present_and_the_future}. Hence, for this reason \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the \texttt{QUIC} protocol. 
 [TODO: fix this jump of ideas]
 As Mattias Geniar wrote in Chapter 12 \cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP},
 \texttt{HTTP over QUIC} layer (which is now called \texttt{HTTP/3} \cite{HTTP_3_the_past_the_present_and_the_future}) is smaller than analogous \texttt{HTTP/2} layer because stream multiplexing and connection management tasks are delegated to \texttt{QUIC} \cite{bib_grigorik2013}.
@@ -571,7 +569,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
   
 
   \item 
-  An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space-rather than kernel-space} \cite{the-road-to-quic}, \cite{Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel}.
+  An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space-rather than kernel-space} \cite{the-road-to-quic, Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel}.
   The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly deployed (e.g. by deploying protocol updates with the software updates) \cite{the-road-to-quic}.
   In addition, as Snellman states, with several exceptions such as Google, Microsoft or Apple, operating systems are usually not controlled by the same companies as the ones that develop client-side software, such as browsers \cite{2016-12-01-quic-tou}.
   Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user-space.
