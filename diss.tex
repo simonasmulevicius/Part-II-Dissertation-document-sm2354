@@ -97,8 +97,8 @@ College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
 Word Count:         & \bf 7996\footnotemark[1] \\
-Project Originator: & Dr Andrew W. Moore                \\
-Supervisor:         & Dr Andrew W. Moore                \\ 
+Project Originator: & Professor Andrew W. Moore                \\
+Supervisor:         & Professor Andrew W. Moore                \\ 
 \end{tabular}
 }
 \footnotetext[1]{This word count was computed
@@ -431,7 +431,7 @@ But, as Timothy Nolan points out \cite{bib_digital_ocean_http11_vs_http2}, the u
 However, servers also have to share some of the overheads.
 For instance, additional \texttt{TCP} connections may require additional memory to store the associated \texttt{TCP} parameters on the server-side \cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Finally, application layer \enquote{head-of-line blocking} problems of \texttt{HTTP/1.1} could be summarised in Figure~\ref{fig:Head_of_line_blocking_of_HTTP1_1}.
-This diagram demonstrates that \texttt{HTTP/1.1} fails to address the \enquote{head-of-line blocking} problem if server has to transfer more web objects than there are open \texttt{TCP} connections \cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+This diagram demonstrates that \texttt{HTTP/1.1} fails to address the \enquote{head-of-line blocking} problem if the server has to transfer more web objects than there are open \texttt{TCP} connections \cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 For example, the transfer of files 3 and 8 can not be started until the blocking resources (i.e. files 2 and 7) are sent. 
 
     \begin{figure}[H]
@@ -454,15 +454,28 @@ As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the pri
 For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
 However, the major innovation of \texttt{HTTP/2.0} over \texttt{HTTP/1.1} is that \texttt{HTTP/2.0} improved resource multiplexing \cite[Chapter~12]{bib_grigorik2013}.
 Instead of using six \texttt{TCP} connections to hide the problem of \enquote{head-of-line blocking}, \texttt{HTTP/2.0} uses a single \texttt{TCP} connection \cite{bib_grigorik2013, head-of-line-blocking-in-quic-and-http-3-the-details}.
-As stated in Chapter 12 of Ilya Grigorik's book, to solve the HOL problem in the application level, \texttt{HTTP/2.0} shares the aforementioned single \texttt{TCP} connection over the varying number of streams \cite{bib_grigorik2013}.
-In order to understand \texttt{HTTP/2.0} multiplexing, we need to look at the diagram X.
-% TODO:
-[TODO: add a diagram explaining HTTP/2 multiplexing]
+As stated in Chapter 12 of Ilya Grigorik's book \cite{bib_grigorik2013}, to solve the HOL problem in the application level, \texttt{HTTP/2.0} shares the aforementioned single \texttt{TCP} connection over the varying number of streams.
+Ideas of \texttt{HTTP/2.0} multiplexing are visualised in Figure~\ref{fig:Multiplexing_HTTP2}.
+This diagram demonstrates that logical streams are implemented using frames.
+In particular, a single \texttt{TCP} packet may contain several frame headers with their associated payloads \cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other on the client side.
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figs/Multiplexing_HTTP2.png}
+    \caption{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
+    \cite{overview_of_the_QUIC_protocol}
+    as well as the article written by Robin Marx \cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
+    \label{fig:Multiplexing_HTTP2}
+    \end{figure}
+    
+    
+    
+    
+    
 
 
-
-
-This solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself \cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
+\texttt{HTTP/2.0} solves the initial problem of \texttt{HTTP} head-of-line blocking, but \texttt{TCP} still suffers from the head-of-line blocking induced by the \texttt{TCP} itself \cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
 In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets, containing frames of other streams, can not be delivered to the application layer until the missing packet is not retransmitted \cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
 The reason for this is that \texttt{TCP} is a stream-oriented protocol.
 In addition, as Gaetano Carlucci and his colleagues state \cite{HTTP_over_UDP_An_Experimental_Investigation_of_QUIC}, the lost \texttt{TCP} packet would reduce the congestion window for all streams multiplexed over the same \texttt{TCP} connection.
