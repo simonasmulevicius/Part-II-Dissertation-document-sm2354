@@ -158,8 +158,8 @@ The following people helped with the project setup or provided useful insights o
     \item \textbf{Dr Marcin Wojcik} helped with general inquiries related to the setup of NetFPGA developing platform;
     \item \textbf{Professor Andrew W. Moore} was my project supervisor and originator of the project idea;
     \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory during the winter vacation;
-    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of \texttt{ngtcp2}\footnote{specific implementation of \texttt{QUIC} which is used in this project}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2};
-    \item \textbf{Mr Nick Banks}, software developer from \texttt{Microsoft}, is the co-author of \texttt{MsQuic}\footnote{another implementation of \texttt{QUIC} which is used in this project} and he helped with the setup of this particular implementation of \texttt{QUIC};
+    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of the \texttt{ngtcp2} implementation of \texttt{QUIC}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2};
+    \item \textbf{Mr Nick Banks}, software developer from \texttt{Microsoft}, is the co-author of the \texttt{MsQuic} implementation of \texttt{QUIC}, and he helped with the setup of this particular implementation of \texttt{QUIC};
     \item Part II students \textbf{Ms Akvile Valentukonyte} and \textbf{Mr Justas Janickas} participated in our weekly meetings where we all shared our achieved progress;
 \end{itemize}
 
@@ -437,7 +437,7 @@ For example, the transfer of files 3 and 8 can not be started until the blocking
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Head_of_line_blocking_of_HTTP1_1.png}
-    \caption{Head-of-line blocking of \texttt{HTTP/1.1}. This diagram visualises the ideas presented in Robin Marx's description of the \texttt{HTTP/1.1} HOL problem \cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
+    \caption[Head-of-line blocking of \texttt{HTTP/1.1}]{Head-of-line blocking of \texttt{HTTP/1.1}. This diagram visualises the ideas presented in Robin Marx's description of the \texttt{HTTP/1.1} HOL problem \cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
     \label{fig:Head_of_line_blocking_of_HTTP1_1}
     \end{figure}
 
@@ -463,7 +463,7 @@ These \texttt{HTTP/2.0} frame headers allow the protocol to identify different r
     \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figs/Multiplexing_HTTP2.png}
-    \caption{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
+    \caption[Multiplexing of \texttt{HTTP/2.0} using logical streams and frames]{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
     \cite{overview_of_the_QUIC_protocol}
     as well as the article written by Robin Marx \cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
     \label{fig:Multiplexing_HTTP2}
@@ -520,7 +520,7 @@ Finally, all these enhancements of \texttt{HTTP} can be summarised in the follow
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{figs/cf-secure-web-timeline-1.png}
-    \caption{Evolution timeline of the related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog \cite{http-3-from-root-to-tip}.}
+    \caption[Evolution timeline of the related network technologies]{Evolution timeline of the related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog \cite{http-3-from-root-to-tip}.}
     \label{fig:cf-secure-web-timeline}
     \end{figure}
 
@@ -535,7 +535,7 @@ Figure~\ref{fig:QUIC_network_stack} shows the network stack of \texttt{QUIC}.
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Layers_of_networking_stack.png}
-    \caption{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram is taken from Robin Marx's presentation about \texttt{QUIC} \cite{head-of-line-blocking-in-quic-and-http-3-the-details}.}
+    \caption[\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack]{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram is taken from Robin Marx's presentation about \texttt{QUIC} \cite{head-of-line-blocking-in-quic-and-http-3-the-details}.}
     \label{fig:QUIC_network_stack}
     \end{figure}
 
@@ -561,7 +561,7 @@ The presence of the aforementioned network stack of \texttt{QUIC} (Figure~\ref{f
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/IP_UDP_QUIC packets.png}
-    \caption{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn according to the latest \texttt{IETF}'s description of \texttt{QUIC} \cite{ietf-quic-transport-34}}
+    \caption[The relative packet structure of \texttt{IP/UDP/QUIC} network stack]{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn according to the latest \texttt{IETF}'s description of \texttt{QUIC} \cite{ietf-quic-transport-34}}
     \label{fig:IP_UDP_QUIC_packets}
     \end{figure}
 
@@ -608,7 +608,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
      \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
-    \caption{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of the similar diagram taken from \cite{the-road-to-quic}.}
+    \caption[Comparison of handshakes required to issue an \texttt{HTTP} request]{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of the similar diagram taken from \cite{the-road-to-quic}.}
     \label{fig:QUIC_handshake_vs_TCP-TLS_handshake}
     \end{figure}
  
@@ -717,7 +717,7 @@ Hence, this diagram only demonstrates that \texttt{QUIC} is still in the relativ
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Adoption_comparison_Between_http2_http3_quic.png}
-    \caption{Proportion of websites using \texttt{QUIC}, \texttt{HTTP/2} or \texttt{HTTP/3}. This diagram is taken from \cite{bib_Adoption_comparison_Between_http2_http3_quic}.}
+    \caption[Proportion of websites using \texttt{QUIC}, \texttt{HTTP/2}, or \texttt{HTTP/3}]{Proportion of websites using \texttt{QUIC}, \texttt{HTTP/2}, or \texttt{HTTP/3}. This diagram is taken from \cite{bib_Adoption_comparison_Between_http2_http3_quic}.}
     \label{fig:Adoption_comparison_Between_http2_http3_quic}
     \end{figure}
 
@@ -812,7 +812,7 @@ In addition, I did not end up using the high-speed network emulator called \text
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Setup map.png}
-    \caption{Contingency plan to work remotely}
+    \caption[Contingency plan to work remotely]{Contingency plan to work remotely}
     \label{fig:setup_map}
     \end{figure}
 
@@ -973,7 +973,7 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Physical_testing_environment.png}
-    \caption{Physical configuration of testing environment. This scheme is an adaptation of the configuration environment used in  \cite{Making_QUIC_Quicker}}
+    \caption[Physical configuration of testing environment]{Physical configuration of testing environment. This scheme is an adaptation of the configuration environment used in  \cite{Making_QUIC_Quicker}}
     \label{fig:Physical_testing_environment}
     \end{figure}
     
@@ -1057,7 +1057,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
-    \caption{\texttt{Wireshark} captured several \texttt{QUIC} packets whose numbers (abbreviated PKN) are decrypted and displayed on the right hand side.}
+    \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display packet headers of \texttt{QUIC}. In particular, packet numbers (abbreviated PKN) are and displayed on the right hand side.}
     \label{fig:Wireshark_screenshot}
     \end{figure}
     
@@ -1071,7 +1071,7 @@ In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did 
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
-    \caption{Testing was performed on a private network. Hence, \texttt{Wireshark} was not used to capture packets from the college network}
+    \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network and I did not use \texttt{Wireshark} to capture packets from the college network}
     \label{fig:Wireshark_separation}
     \end{figure}
 
@@ -1097,7 +1097,7 @@ To understand the \texttt{Flame Graphs} we should first look at the simple examp
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Flame_Graphs_explanation.png}
-    \caption{Schematic diagram of \texttt{Flame Graphs} adopted from Brendan Gregg's presentation \cite{USENIX_ATC2017_flamegraphs}}
+    \caption[Schematic diagram of \texttt{Flame Graphs}]{Schematic diagram of \texttt{Flame Graphs} adopted from Brendan Gregg's presentation \cite{USENIX_ATC2017_flamegraphs}}
     \label{fig:Flame_Graphs_explanation}
     \end{figure}
 
@@ -1126,7 +1126,7 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
-    \caption{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of the time, default \texttt{ngtcp2} version spends doing cryptographic operations} 
+    \caption[Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B)]{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of the time, default \texttt{ngtcp2} version spends doing cryptographic operations} 
     \label{fig:perf_results_of_h2load}
     \end{figure}
     
@@ -1162,7 +1162,7 @@ For instance, in this diagram core \enquote{L \#0} has two \enquote{processing u
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/topology_with_hyperthreading.png}
-    \caption{Memory topology of machine A when \texttt{hyper-threading} is turned on (Figure generated by \texttt{lstopo} command)}
+    \caption[Memory topology of machine A when \texttt{hyper-threading} is turned on]{Memory topology of machine A when \texttt{hyper-threading} is turned on (Figure generated by \texttt{lstopo} command)}
     \label{fig:topology_with_hyperthreading}
     \end{figure}
 
@@ -1186,7 +1186,7 @@ Robert Love refers to this technique of assigning particular processes to partic
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/memory_topology.png}
-    \caption{Memory topology of machine A  when \texttt{hyper-threading} is turned off (Figure generated by \texttt{lstopo} command)}
+    \caption[Memory topology of machine A  when \texttt{hyper-threading} is turned off]{Memory topology of machine A  when \texttt{hyper-threading} is turned off (Figure generated by \texttt{lstopo} command)}
     \label{fig:memory_topology}
     \end{figure}
 
