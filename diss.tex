@@ -110,20 +110,20 @@ by \texttt{DISS\_LENGTH=\$(detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' 
 \section*{Original Aims of the Project}
 
 The initial primary goal of the project was to offload packet reordering logic of \texttt{QUIC} to hardware.
-However, because of the unexpectedly long preparation phase and complexity of \texttt{NetFPGA SUME} boards, it was decided to readjust the primary focus of the project.
-Hence, the adjusted goals of this dissertation are to study the behaviour of \texttt{QUIC} under different network conditions and to measure the impact of network perturbations for the throughput of \texttt{QUIC}.
+However, because of the increased project complexity due to the COVID-19 leading to an unexpectedly long preparation phase, difficulties in system access, and challenges with the \texttt{NetFPGA SUME} boards, I changed the primary focus of the project.
+Hence, the adjusted goals of this dissertation are to study the behaviour of \texttt{QUIC} under different network conditions, to measure the impact of network perturbations for the throughput of \texttt{QUIC}, and identify bottleneck in \texttt{QUIC} implementations.
 
 \section*{Work Completed}
 
-A precise simulation and testing environment was configured to measure the performance of \texttt{QUIC}.
-Then, I measured \texttt{QUIC} throughput under different network conditions (e.g. when additional packet delay, packet loss and packet reordering was applied).
+I configured a network emulation  and testing environment allowing the performance measurements of \texttt{QUIC}.
+Then, I measured \texttt{QUIC} throughput under different network conditions, e.g., when I applied additional packet delay, packet loss, and packet reordering.
 
 \section*{Special Difficulties}
 
-The initial goal of the project was to offload packet reordering logic of \texttt{QUIC} packets to hardware.
-For this project, I used two dedicated experimental machines that had specialised hardware components -- \texttt{NetFPGA SUME} network interface cards.
-However, it turned out that software and hardware stack of \texttt{NetFPGA} platform was relatively complex.
-For instance, it took me unexpectedly long to prepare, configure and test the correct functionality of  \texttt{NetFPGA SUME} boards.
+The initial goal of the project was to write hardware components in \texttt{Verilog} that would offload packet reordering logic of \texttt{QUIC} packets to hardware.
+For this project, I had access to two dedicated experimental machines equipped with specialised hardware components -- \texttt{NetFPGA SUME} network interface cards.
+However, the software and hardware stack of \texttt{NetFPGA} platform was relatively complex.
+For instance, it took me unexpectedly long to prepare, configure and test the correct functionality of \texttt{NetFPGA SUME} boards because, as I have already mentioned, COVID-19 complicated the set-up process.
 
 To simplify the development process I had a pair of the aforementioned machines in my college room.
 However, I faced accessibility issues during the winter vacation when I was abroad at home.
@@ -134,8 +134,8 @@ Unfortunately, I could not configure two additional backup machines in the Compu
 A suspected issue was a possible hardware fault.
 Hence, to continue working on the project, I had to return to my college room.
 This lengthy preparation phase substantially delayed the actual development of the project.
-As a result, it was decided to change the focus of the dissertation from hardware offloading to the software-oriented performance analysis of \texttt{QUIC}. 
-In conclusion, one could argue that in the pre-pandemic times, physical access to the pre-configured and tested hardware could have saved a lot of time.
+As a result, after consultation with the project supervisor I decided to change the focus of the dissertation from hardware offloading to the software-oriented performance analysis of \texttt{QUIC}. 
+In conclusion, one could argue that in the pre-pandemic times, physical access to the pre-configured and tested hardware could have saved me a lot of time.
 
 
 %Professional Practice and Presentation 14%
@@ -678,7 +678,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 \begin{itemize}
   \item Reduced latency:
   According to [https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html]: "$<\ldots>$ \texttt{QUIC} outshines TCP under poor network conditions, shaving a full second off the Google Search page load time for the slowest 1\% of connections".
-  \item TODO mention combined handshakes of transport and security layer protocols 
+
   % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
   
   \item TODO include https://blog.cloudflare.com/http-3-vs-http-2/
@@ -1149,6 +1149,9 @@ Hence, analysis involving IPv4 is still relevant today.
 
 %TODO
 [TODO: Ubuntu 20.04 has different mechanism  to disable IPv6 -- check that it is still working ]
+
+%TODO
+[TODO: State that I had to revert this with MsQuic]
 
 \subsection{Hyper-threading}\label{Hyperthreading_Subsection_Tag}
 
