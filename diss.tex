@@ -740,16 +740,16 @@ Hence, this diagram only demonstrates that \texttt{QUIC} is still in the relativ
 
 
 
-\section{Implementations of QUIC}
-
-\subsection{List of QUIC's Implementations} \label{List_of_QUIC_implementations}
-According to \texttt{QUIC} Working Group~\cite{number_of_QUIC_implementations}, there is 31 different implementation of QUIC. Most of the implementations, 22 to be precise, are written using C/C\texttt{++} language family (e.g. \texttt{Chromium}\footnote{https://chromium.googlesource.com/chromium/src/net/+/master/quic/}) while remaining implementations use Rust (e.g. \texttt{quiche}\footnote{https://github.com/cloudflare/quiche}), Python (e.g. \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic}), Haskel (e.g. \texttt{Haskell quic}\footnote{https://github.com/kazu-yamamoto/quic}), Java (e.g. \texttt{kwik}\footnote{https://bitbucket.org/pjtr/kwik/src/master/}), Go (e.g. \texttt{quic-go}\footnote{https://github.com/lucas-clemente/quic-go}) or JavaScript (e.g. \texttt{Node.js QUIC}\footnote{https://github.com/nodejs/quic}).
+\section{Implementations of QUIC} \label{List_of_QUIC_implementations}
+According to \texttt{QUIC} Working Group~\cite{number_of_QUIC_implementations}, there is 31 different implementation of QUIC. Most of the implementations, 22 to be precise, are written using C/C\texttt{++} language family (e.g., \texttt{Chromium}\footnote{https://chromium.googlesource.com/chromium/src/net/+/master/quic/}) while the remaining implementations use Rust (e.g., \texttt{quiche}\footnote{https://github.com/cloudflare/quiche}), Python (e.g., \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic}), Haskel (e.g., \texttt{Haskell quic}\footnote{https://github.com/kazu-yamamoto/quic}), Java (e.g., \texttt{kwik}\footnote{https://bitbucket.org/pjtr/kwik/src/master/}), Go (e.g., \texttt{quic-go}\footnote{https://github.com/lucas-clemente/quic-go}) or JavaScript (e.g., \texttt{Node.js QUIC}\footnote{https://github.com/nodejs/quic}).
 
 
 \subsection{Why are there so many Implementations of QUIC?}
 
-As I have already mentioned in the previous sections, \texttt{QUIC} is implemented in the user space.
+\texttt{QUIC} is implemented in the user space.
 Hence, this flexibility simplifies the development and deployment of the new \texttt{QUIC} implementations.
+In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in C language family.
+There are numerous bootstrapping compilers written in C, meaning that any user level program, potentially written in different programming language, can be compiled and run.
 However, there is an associated cost of using protocol written in user space -- as Langley et al.~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}, \texttt{QUIC} server required 3.5 more \texttt{CPU} resources.
 
 \subsection{Selecting  \texttt{ngtcp2}}
@@ -775,7 +775,7 @@ Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author o
 \section{Starting Point}
 As mentioned in the previous sections, this project builds on top of \texttt{ngtcp2} implementation of \texttt{QUIC}.
 In other words, relevant networking stack tools such as cryptographic library (e.g. \texttt{OpenSSL}), benchmarking tool (e.g. \texttt{h2load}), custom \texttt{HTTP} layers (e.g. \texttt{nghttp2} and \texttt{ngtcp3}) have already been built and integrated. 
-Moreover, in this project I extensively used the ideas from Yang et al.~\cite{Making_QUIC_Quicker} when configuring the testing environment of \texttt{QUIC}.
+Moreover, in this project I used inspiration from Yang et al.~\cite{Making_QUIC_Quicker} when configuring the testing environment of \texttt{QUIC}.
 In particular, I replicated their physical and architectural layout of components required to simulate different conditions of the network (see section \ref{physical_setup_subsection}).
 
 The concepts of \texttt{QUIC} were introduced in the Part IB \enquote{Computer Networking} and Part II \enquote{Principles of Communications} courses.
@@ -790,7 +790,7 @@ In addition, I did not end up using the high-speed network emulator called \text
 \section{Software Engineering Techniques and Tools}
     To track the code changes, I used \texttt{Git} source control tool.
     In particular, I used \texttt{GitHub} to store forked repositories of \texttt{ngtcp2}, \texttt{openssl}, \texttt{nghttp2} and \texttt{nghttp3}.
-    In addition, the dissertation document was written using online \LaTeX  editor called Overleaf\footnote{\url{https://www.overleaf.com/}} and changes were also committed to a separate repository on \texttt{GitHub}.
+    In addition, the dissertation document was written using the online \LaTeX\  editor Overleaf\footnote{\url{https://www.overleaf.com/}} and changes were also committed to a separate repository on \texttt{GitHub}.
     Furthermore, I used different coding environments.
     At first, I worked with \texttt{NetBeans} IDE.
     But as I was extensively analysing existing code written by other programmers (i.e. \texttt{ngtcp2} and its related components), I needed an effective tool to search through the codebase.
