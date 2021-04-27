@@ -38,7 +38,7 @@
 \vspace*{60mm}
 \begin{center}
 \Huge
-\textbf{\texttt{QUIC} offloading using NetFPGA smart NICs} \\[5mm]
+\textbf{Examining \texttt{QUIC}} \\[5mm]
 Computer Science Tripos -- Part II \\[5mm]
 Homerton College \\[5mm]
 \today  % today's date
@@ -172,7 +172,6 @@ However, some formatting ideas are taken from Alex Coplan's dissertation \cite{A
 \pagestyle{headings}
 
 \chapter{Introduction}
-In this chapter, I briefly introduce \texttt{QUIC}, then I give the project's motivation, and I finish the chapter with an overview of \texttt{QUIC} performance measurements performed by other scientists.
 
 % ------------------------------------------------
 % TODO
@@ -199,13 +198,13 @@ In this chapter, I briefly introduce \texttt{QUIC}, then I give the project's mo
 % > details in other chapters
 
 
-\section{Motivation of the Project}
+
 % TODO add reference to the ideas of this paragraph:
 Nowadays, more and more people have access to the Internet.
 As the scale of the web continues to grow, both companies and researchers look for ways to satisfy ever-increasing market demand to improve the user experience of Internet users.
 Customers expect cheap, high-throughput and low latency Internet connections.
 However, in the last decade, several trends have emerged.
-For example, in recent years, we observed a proliferation of mobile devices -- according to \cite{bib_number_of_mobile_users}, at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet.
+For example, in recent years, we observed a proliferation of mobile devices -- at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet \cite{bib_number_of_mobile_users}.
 Furthermore, we see the changing patterns of web development.
 In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g. from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
 But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet \cite{RudmanRiaan2016DW3o}.
@@ -213,27 +212,43 @@ Hence, the changing constraints and networking trends encourage us to re-evaluat
 By using innovative solutions, we can continue improving the performance of the Internet. 
 One of such ideas is \texttt{QUIC} -- the new transport layer protocol.
 
+\section{Motivation of the Project}
+
+The purpose of this dissertation is to understand \texttt{QUIC}.
+As I describe in the later chapters, this innovative transport layer protocol offers both performance and privacy improvements.
+However, \texttt{QUIC} has many new features that are either not present in \texttt{TCP} or that are used in different ways.
+Hence, because of this novelty, performance behaviour of \texttt{QUIC} is usually not well understood.
+Thus, in this project I seek to understand several key features of \texttt{QUIC} that determine its performance.
+Then, I analyse existing implementations of \texttt{QUIC} aiming to identify their performance bottlenecks.
+Finally, this analysis could provide guidance for further \texttt{QUIC} improvements that could lead to the most immediate effects.
 
 
-This project tries to understand the bottlenecks of \texttt{QUIC} and its performance behaviour.
-\texttt{QUIC} transport layer protocol is still in the early development stage.
-However, we already need to start thinking about its performance.
+\section{Objectives of the Project}
+
+The primary primary goal of this project is to identify the bottlenecks of \texttt{QUIC} and characterise its performance behaviour.
+\texttt{QUIC} transport layer protocol is a new protocol.
+However, it is already necessary to start thinking about its performance.
 Otherwise, the low throughput of \texttt{QUIC} may prevent it from being widely adopted (as happened with earlier attempts to improve \texttt{TCP}). 
 % TODO: add a reference to the source proving this claim
 
 
-The introduction of \texttt{QUIC} would be especially beneficial for countries that do not have access to the low latency Internet connection.
-% TODO: give a reason why and add a reference to the author of this idea 
-% TODO:
-[TODO: talk more about the project]
-The most interesting part of this project is that  \texttt{QUIC} is a relatively new network technology and, as far as I am aware, there have not been any similar projects which tried to measure \texttt{QUIC}’s performance by \enquote{breaking} it (i.e. using \texttt{QUIC} without encryption).
+% ----------------------------------------------
+% Removed according to Andrew's recommendations:
+% ----------------------------------------------
+% <START_OF_REMOVAL>
+%The most interesting part of this project is that  \texttt{QUIC} is a relatively new network technology and, as far as I am aware, there have not been any similar projects which tried to measure \texttt{QUIC}’s performance by \enquote{breaking} it (i.e. using \texttt{QUIC} without encryption).
 % TODO
-[TODO: incorrect - Mr  Nick  Banks proposed null-crypto option already in autumn of 2020 but I was not aware of that]
+%[TODO: incorrect - Mr  Nick  Banks proposed null-crypto option already in autumn of 2020 but I was not aware of that]
 
-This analysis could be useful in the future when \texttt{QUIC}’s cryptographic operations would be offloaded to hardware. Nevertheless, these experiments could also have some tangible value for current times. 
-For instance, an experimental \texttt{QUIC} with null encryption could be used in secure networks controlled by a single entity (e.g. within a data centre).
-Alternatively, as Mr Nick Banks suggests, unencrypted \texttt{QUIC} traffic could be used to isolate expensive cryptographic operations from the performance analysis of \texttt{QUIC} \cite{banks-quic-disable-encryption-00}.
-Furthermore, N. Banks states that plaintext \texttt{QUIC} packets could be also transferred via secure tunnels \cite{banks-quic-disable-encryption-00}.
+% This analysis could be useful in the future when \texttt{QUIC}’s cryptographic operations would be offloaded to hardware. Nevertheless, these experiments could also have some tangible value for current times. 
+% For instance, an experimental \texttt{QUIC} with null encryption could be used in secure networks controlled by a single entity (e.g. within a data centre).
+% Alternatively, unencrypted \texttt{QUIC} traffic could be used to isolate expensive cryptographic operations from the performance analysis of \texttt{QUIC}, as suggested in \cite{banks-quic-disable-encryption-00}.
+% <END_OF_REMOVAL>
+% ----------------------------------------------
+
+
+
+
 
 %-------IDEAS to add to this section:-------
 
@@ -246,15 +261,15 @@ Furthermore, N. Banks states that plaintext \texttt{QUIC} packets could be also 
  
 
 \subsection{High-Level Overview of \texttt{QUIC}}
-I delve into more detail about \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but, briefly speaking, \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (which is also described in the later sections -- see \ref{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}).
+I detail \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but, briefly speaking, \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (which is also briefly mentioned in the later sections -- see \ref{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}).
 On the one hand, \texttt{QUIC} breaks the separation of transport and security layer protocols. 
 On the other hand, \texttt{QUIC} protocol offers some performance benefits for modern-day traffic flows (see section~\ref{QUIC_advantages}).
 
 
 \subsection{Importance of Performance Measurements of \texttt{QUIC}}
 
-\texttt{QUIC}, after being publicly launched by \texttt{Google} in 2013 \cite{Chromium_Blog_Experimenting_with_quic},  is still a relatively new protocol that is still in the development stage.
-Hence, any performance measurements of \texttt{QUIC} could guide the ongoing efforts to build this new high-performance transport layer protocol.
+\texttt{QUIC}, after being publicly launched in 2013 \cite{Chromium_Blog_Experimenting_with_quic},  is still a relatively new protocol that is still in the development stage.
+Hence, any performance measurements of \texttt{QUIC} guide the ongoing efforts to improve this new transport layer protocol.
 Furthermore, there are strong indications showing that \texttt{QUIC} could be widely adopted in the future.
 For instance, \texttt{Google}, one of the major advocates for \texttt{QUIC}, operates both on the server side (e.g. search engine or video streaming service \texttt{YouTube}) and the client side (e.g. \texttt{Google Chrome} browser for desktop and mobile devices) \cite{A_QUICk_Introduction_to_HTTP3}.
 Hence, using its existing market presence \texttt{Google} could potentially encourage the faster adoption of \texttt{QUIC}.
@@ -488,9 +503,8 @@ As Gaetano Carlucci and his colleagues state \cite{HTTP_over_UDP_An_Experimental
 
 
 % TODO
-[MAYBE TODO: mention Server push functionality]
-
-[TODO: what is the difference between \texttt{SPDY} and HTTP/2?]
+%[MAYBE TODO: mention Server push functionality]
+%[TODO: what is the difference between \texttt{SPDY} and HTTP/2?]
 
 
 \subsection{Roll-out Problems when Deploying Protocol Upgrades}
@@ -1203,6 +1217,8 @@ As far as testing conditions are concerned, the intermediate machine was not con
     \caption{Impact of core pinning for \texttt{QUIC} throughput}
     \label{fig:Throughput_via_A-to-B-to-A_MTU=1500}
     \end{figure}
+% TODO
+[TODO: Am I talking here about iperf3 client-server pair or is it ngtcp2 pair?]
 
 % TODO
 [TODO add a chart showing lower performance variability when using different cores for testing ]
@@ -1313,6 +1329,16 @@ In other words, measured maximum available throughput before and after experimen
 \end{itemize}
 
 
+\subsection{Throughput of parallel \texttt{UDP} streams}
+
+\subsection{Throughput of parallel \texttt{TCP} streams}
+
+\subsection{Throughput of parallel \texttt{QUIC} streams}
+
+
+% TODO
+[TODO: use encrypted ngtcp2-h2load version]
+
 
 
 
@@ -1334,6 +1360,8 @@ In other words, measured maximum available throughput before and after experimen
 
 [TODO: also, mention the selection of sampling frequencies]
 
+% TODO
+[TODO: use unencrypted ngtcp2-h2load version to measure throughput of parallel streams]
 
 \section{Comparison with UDP}
 [TODO: add a comparison of QUIC's throughput vs UDP's throughput]
