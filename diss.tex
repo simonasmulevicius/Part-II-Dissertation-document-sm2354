@@ -1326,11 +1326,60 @@ In other words, measured maximum available throughput before and after experimen
 \end{itemize}
 
 
+\section{Baseline measurements}
+
+\subsection{\texttt{ping} measurements}
+
+
 \subsection{Throughput of parallel \texttt{UDP} streams}
+Number of tests for each experiment: 10
+No added packet delay
+No added packet loss
+A1-B-A2
+
+
+\begin{table}[H]
+\begin{tabular}{|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number\\ of parallel\\ streams\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average \\ total throughput \\ measured \\ on the receiver's \\ side (MBytes/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the sample\end{tabular}} \\ \hline
+1                                                                                                & 1                                                                                           & 401.45                                                                                                                                       & 31.83                                                                                               \\ \hline
+1                                                                                                & 10                                                                                          & 418.09                                                                                                                                       & 44.73                                                                                               \\ \hline
+10                                                                                               & 1                                                                                           & 546.40                                                                                                                                       & 12.16                                                                                               \\ \hline
+10                                                                                               & 10                                                                                          & 560.09                                                                                                                                       & 15.61                                                                                               \\ \hline
+100                                                                                              & 1                                                                                           & 570.69                                                                                                                                       & 5.93                                                                                                \\ \hline
+100                                                                                              & 10                                                                                          & 539.56                                                                                                                                       & 14.81                                                                                               \\ \hline
+1000                                                                                             & 1                                                                                           & 571.63                                                                                                                                       & 2.79                                                                                                \\ \hline
+1000                                                                                             & 10                                                                                          & 487.08                                                                                                                                       & 5.00                                                                                                \\ \hline
+\end{tabular}
+\end{table}
+
+
 
 \subsection{Throughput of parallel \texttt{TCP} streams}
+Number of tests for each experiment: 10
+
+No added packet loss
 
 \subsection{Throughput of parallel \texttt{QUIC} streams}
+Number of tests for each experiment: 10
+No added packet delay
+No added packet loss
+A1-B-A2
+
+\begin{table}[H]
+\begin{tabular}{|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number\\ of parallel\\ streams\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average \\ total throughput \\ measured \\ on the receiver's \\ side (MBytes/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the sample\end{tabular}} \\ \hline
+1000000                                                                                          & 1                                                                                           & 349.64                                                                                                                                       & 98.04                                                                                               \\ \hline
+1000000                                                                                          & 10                                                                                          & 643.17                                                                                                                                       & 75.07                                                                                               \\ \hline
+10000000                                                                                         & 1                                                                                           & 751.49                                                                                                                                       & 137.89                                                                                              \\ \hline
+10000000                                                                                         & 10                                                                                          & 874.83                                                                                                                                       & 72.56                                                                                               \\ \hline
+100000000                                                                                        & 1                                                                                           & 909.46                                                                                                                                       & 187.65                                                                                              \\ \hline
+100000000                                                                                        & 10                                                                                          & 1,167.43                                                                                                                                     & 14.93                                                                                               \\ \hline
+1000000000                                                                                       & 1                                                                                           & 1,199.10                                                                                                                                     & 42.52                                                                                               \\ \hline
+1000000000                                                                                       & 10                                                                                          & 1,214.27                                                                                                                                     & 34.93                                                                                               \\ \hline
+\end{tabular}
+\end{table}
 
 
 % TODO
