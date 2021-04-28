@@ -1292,7 +1292,7 @@ As far as testing conditions are concerned, the intermediate machine was not con
 
 
     \centering
-    \caption{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} Completion time required to transfer specified files. In particular, this experiment measures \texttt{QUIC} throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
+    \caption[Impact of Jumbo frames on the throughput of \texttt{ngtcp2} Completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} Completion time required to transfer specified files. In particular, this experiment measures \texttt{QUIC} throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
     Furthermore, a server uses a single thread, only a single stream is used, and a single file transfer is performed for each experiment.
     }
     \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
@@ -1332,16 +1332,21 @@ In other words, measured maximum available throughput before and after experimen
 
 
 \subsection{Throughput of parallel \texttt{UDP} streams}
-Number of tests for each experiment: 10
-No added packet delay
-No added packet loss
-A1-B-A2
+
+As illustrated in Figure~\ref{fig:QUIC_network_stack}, \texttt{QUIC} is built on top of \texttt{UDP}.
+I measured throughput of \texttt{UDP} because the performance of \texttt{QUIC} is limited by this underlying protocol (see Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}).
+In particular, I used testing topology similar to the one shown in  Figure~\ref{fig:Physical_testing_environment}.
+However, in this experiment I replaced the \texttt{QUIC} client and the server with the corresponding \texttt{iperf3} client-server pair.
+In addition, I did not add any additional packet delay or packet loss on the intermediate machine.
+Furthermore, I repeated each individual test ten times and measured both the mean and standard deviation of these samples.
+Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
+As a side note, Large Receive Offload is disable on both the testing and intermediate machines.
 
 
 \begin{table}[H]
 \begin{tabular}{|l|l|l|l|}
 \hline
-\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number\\ of parallel\\ streams\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average \\ total throughput \\ measured \\ on the receiver's \\ side (MBytes/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the sample\end{tabular}} \\ \hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Transferred \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number\\ of parallel\\ streams\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average \\ total throughput \\ measured \\ on the receiver's \\ side (MBytes/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the sample\end{tabular}} \\ \hline
 1                                                                                                & 1                                                                                           & 401.45                                                                                                                                       & 31.83                                                                                               \\ \hline
 1                                                                                                & 10                                                                                          & 418.09                                                                                                                                       & 44.73                                                                                               \\ \hline
 10                                                                                               & 1                                                                                           & 546.40                                                                                                                                       & 12.16                                                                                               \\ \hline
@@ -1351,20 +1356,32 @@ A1-B-A2
 1000                                                                                             & 1                                                                                           & 571.63                                                                                                                                       & 2.79                                                                                                \\ \hline
 1000                                                                                             & 10                                                                                          & 487.08                                                                                                                                       & 5.00                                                                                                \\ \hline
 \end{tabular}
+    \centering
+    \caption{Impact of parallel streams for \texttt{UDP} throughput. Here packets travel via an intermediate machine}
+    \label{fig:UDP_throughput_via_B_using_parallel_streams}
 \end{table}
 
+These experiments aimed to determine the impact of parallel \texttt{UDP} streams for the aggregated throughput of \texttt{UDP}.
+As demonstrated in Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}, adding concurrent \texttt{UDP} clients increased the aggregated goodput when transferring small files, e.g. 1 or 10 MBytes in size.
 
+However, for large files this effect is inverted -- additional concurrent \texttt{iperf3} clients decreased \texttt{UDP} throughput measured on the server-side.
+
+This interesting effect could be explained by the fact that there is an associated overhead of maintaining additional \texttt{iperf3} clients.
+
+%In other words, 
+% TODO
+[TODO: explain these effects]
+[TODO: context/queue switches? for concurrent streams penalise the transfer of large concurrent files, but with small files, these switches are more frequent.
+With large number of clients we can offer server a variety of packets it can process]
+
+In addition, single flow \texttt{UDP} throughput reaches a plateau as transferred file size increases.
+This can be explained by the fact that there is a single \texttt{iperf3} server that processes all the packets.
+Hence, the server and its associated stack could form the performance bottleneck.
 
 \subsection{Throughput of parallel \texttt{TCP} streams}
 Number of tests for each experiment: 10
 
 No added packet loss
-
-\subsection{Throughput of parallel \texttt{QUIC} streams}
-Number of tests for each experiment: 10
-No added packet delay
-No added packet loss
-A1-B-A2
 
 \begin{table}[H]
 \begin{tabular}{|l|l|l|l|}
@@ -1381,6 +1398,13 @@ A1-B-A2
 \end{tabular}
 \end{table}
 
+
+
+\subsection{Throughput of parallel \texttt{QUIC} streams}
+Number of tests for each experiment: 10
+No added packet delay
+No added packet loss
+A1-B-A2
 
 % TODO
 [TODO: use encrypted ngtcp2-h2load version]
