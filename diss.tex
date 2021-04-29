@@ -13,6 +13,59 @@
 \usepackage{float}
 \usepackage{textcomp}
  
+% Conditionals (for draft mode)
+\usepackage{ifthen}
+
+% Color
+\usepackage{color}
+
+% Date/time stuff
+\usepackage{datetime}
+
+\usepackage{xspace}
+
+%    THIS IS THE BIG DRAFT SWITCH
+% FLICK THIS AND the todo notes and watermark disappear/appear
+
+
+\newboolean{draft}
+\setboolean{draft}{true}
+
+\newboolean{comments}
+
+\ifdraft
+  \setboolean{comments}{true}
+\else
+  \setboolean{comments}{false}
+\fi
+
+\newcommand\todo[1]{\ifcomments{\color{cyan}{\bf ToDo: #1}}\fi}
+
+\newcommand\note[2]{{\color{#1}\bf #2}}
+\newcommand\awm[1]{\ifcomments{\note{blue}{AM: #1}}\fi}
+\newcommand\simon[1]{\ifcomments{\note{cyan}{SM: #1}}\fi}
+% Watermark in draft mode
+% Draft watermark
+\ifdraft
+\usepackage{calc} 
+\usepackage{ifthen} 
+\newcounter{hours}\newcounter{minutes} 
+\newcommand\printtime{% 
+  \setcounter{hours}{\time/60}% 
+  \setcounter{minutes}{\time-\value{hours}*60}% 
+  \ifthenelse{\value{hours}<10}{0\thehours}{\thehours}:\hspace{-0.33em} 
+  \ifthenelse{\value{minutes}<10}{0\theminutes}{\theminutes} 
+} 
+
+ \usepackage{draftwatermark}
+ \SetWatermarkScale{1.1}
+ \SetWatermarkLightness{0.9}
+ \SetWatermarkText{\shortstack{DRAFT  \\[0.5cm] {\fontsize{38}{12}\selectfont 
+         %\selectlanguage{<language>}
+         \today, {\currenttime}}%, \printtime
+     }}
+  \fi
+
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -974,6 +1027,10 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
     \end{figure}
 
 \subsection{Physical Setup} \label{physical_setup_subsection}
+
+\simon{Specify software and hardware parameters of the testing environment as shown in \url{https://github.com/Shenggan/quic_vs_tcp} }
+
+
     In the ideal scenario, we might want to use three dedicated machines for performance measurements, as shown in the previous section.
     However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
     In this environment, one machine (A) hosts client-server pair, while another computer (B) acts as a network emulator.
@@ -1321,18 +1378,18 @@ In other words, measured maximum available throughput before and after experimen
 
 [TODO: 2. State that adjusted buffers reduce UDP packet loss rate] 
  
- 
+ \awm{ what are you writing here? make clear you mean txqueue and rxqueue as appropriate and not the "buffers" normally thought of as resident in the intermediate network devices}
   
 \end{itemize}
 
 
-\section{Baseline measurements}
+\section{Baseline Measurements}
 
-\subsection{\texttt{ping} measurements}
+\subsection{\texttt{ping} Measurements}
 
 [MAYBE TODO: Move ping measurements from "Physical Setup" section to here]
 
-\subsection{Throughput of parallel \texttt{UDP} streams}
+\subsection{Throughput of Parallel \texttt{UDP} Streams}
 
 As illustrated in Figure~\ref{fig:QUIC_network_stack}, \texttt{QUIC} is built on top of \texttt{UDP}.
 I measured throughput of \texttt{UDP} because the performance of \texttt{QUIC} is limited by this underlying protocol (see Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}).
@@ -1402,7 +1459,7 @@ Hence, the server and its associated stack could form the performance bottleneck
     \label{fig:UDP_throughput_in_time}
     \end{figure}
 
-\subsection{Throughput of parallel \texttt{TCP} streams}
+\subsection{Throughput of Parallel \texttt{TCP} Streams}
 % TODO
 [TODO: describe testing conditions in prose]
 
@@ -1446,8 +1503,25 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
     
     
     
+    
+    
+    
 
-\subsection{Throughput of parallel \texttt{QUIC} streams}
+\subsection{Throughput of Parallel \texttt{TCP} Streams that use \texttt{TLS}}
+ 
+Throughput measurements of \texttt{TCP} with \texttt{TLS} are relevant because these values form an equal comparison with \texttt{QUIC} throughput.
+In other words, as I have already mentioned in Section \ref{QUIC_details_section}, \texttt{QUIC} uses cryptographic handshakes by default meaning that for a fair comparison with \texttt{QUIC}, \texttt{TCP} also has to include \texttt{Transport Layer Security} layer.
+
+Unfortunately, I could not measure the throughput of parallel \texttt{TCP} streams that use \texttt{TLS}.
+It turns out that \texttt{iperf3}, the aforementioned throughput measurement tool, currently does not generate combined \texttt{TCP} and \texttt{TLS} throughput.
+However, I found one extension of \texttt{iperf3} that claims to provide support for \texttt{TLS} \footnote{\url{https://github.com/Mic92/iperf-3.7}} but it had build errors so I did not use this extension.
+In addition, I tried using \texttt{MsQuic} performance analysis tools that have explicit options to perform measurements with \texttt{TCP} rather than \texttt{QUIC}. 
+But this functionality is not supported on Linux.
+Unfortunately, I used \texttt{Ubuntu 20.04 LTS (Focal Fossa)} operating system on both machines in the testing environment (shown in Figure~\ref{fig:Physical_testing_environment}).
+In the future, \texttt{MsQuic} tools may provide better support for the family of Unix operating systems meaning that subsequent studies could take throughput of \texttt{TCP} with \texttt{TLS} into account.
+
+
+\subsection{Throughput of Parallel \texttt{QUIC} Streams}
 % TODO
 [TODO: describe testing conditions in prose]
 
@@ -1487,6 +1561,9 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
     
     [TODO: IDEA: behaves like UDP]
 \end{table}
+
+
+
 
 
 
@@ -1581,6 +1658,8 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 % ------------------------------------------------
 
 \section{Summary}
+
+\awm{Don't forget - make a CONCLUSION too}
 
 \section{Reflection}
 Before starting the project, prior expertise working with the \texttt{NetFPGA} platform would have substantially helped.
