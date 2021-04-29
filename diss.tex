@@ -1330,6 +1330,7 @@ In other words, measured maximum available throughput before and after experimen
 
 \subsection{\texttt{ping} measurements}
 
+[MAYBE TODO: Move ping measurements from "Physical Setup" section to here]
 
 \subsection{Throughput of parallel \texttt{UDP} streams}
 
@@ -1390,12 +1391,30 @@ In addition, single flow \texttt{UDP} throughput reaches a plateau as transferre
 This can be explained by the fact that there is a single \texttt{iperf3} server that processes all the packets.
 Hence, the server and its associated stack could form the performance bottleneck.
 
+
+% TODO
+[TODO: function of UDP throughput in time]
+[TODO: see Figure~\ref{fig:UDP_throughput_in_time}]
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/UDP_throughput_in_time.png}
+    \caption[Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine. Here throughput is measured at the granularity of 0.1 s}
+    \label{fig:UDP_throughput_in_time}
+    \end{figure}
+
 \subsection{Throughput of parallel \texttt{TCP} streams}
+% TODO
+[TODO: describe testing conditions in prose]
+
 Number of tests for each experiment: 10
+
+No added packet delay
 
 No added packet loss
 
+Packets travel A1-B-A2
 
+Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 
 \begin{table}[H]
 \begin{tabular}{|r|r|r|r|}
@@ -1414,14 +1433,60 @@ No added packet loss
 
 
 
-\subsection{Throughput of parallel \texttt{QUIC} streams}
-Number of tests for each experiment: 10
-No added packet delay
-No added packet loss
-A1-B-A2
 
 % TODO
-[TODO: use encrypted ngtcp2-h2load version]
+[TODO: function of TCP throughput in time]
+[TODO: see Figure~\ref{fig:TCP_throughput_in_time}]
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/TCP_throughput_in_time.png}
+    \caption[Change of \texttt{TCP} throughput in time when a single \texttt{iperf3} client sends \texttt{TCP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{TCP} throughput in time when a single \texttt{iperf3} client sends \texttt{TCP} traffic to the \texttt{iperf3} server via an intermediate machine. Here throughput is measured at the granularity of 0.1 s}
+    \label{fig:TCP_throughput_in_time}
+    \end{figure}
+    
+    
+    
+
+\subsection{Throughput of parallel \texttt{QUIC} streams}
+% TODO
+[TODO: describe testing conditions in prose]
+
+Number of tests for each experiment: 10
+
+No added packet delay
+
+No added packet loss
+
+A1-B-A2
+
+Uses encrypted ngtcp2-h2load version
+
+GSO enabled
+
+
+Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
+
+\begin{table}[H]
+\begin{tabular}{|r|r|r|r|}
+\hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of \\ parallel clients \\ (1 request per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average total throughput \\ measured \\ on the receiver's side (MBytes/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the sample\end{tabular}} \\ \hline
+1                                                                                          & 1                                                                                                                    & 44.30                                                                                                                                  & 6.17                                                                                                \\ \hline
+1                                                                                          & 10                                                                                                                   & 73.41                                                                                                                                  & 2.30                                                                                                \\ \hline
+10                                                                                         & 1                                                                                                                    & 87.72                                                                                                                                  & 1.52                                                                                                \\ \hline
+10                                                                                         & 10                                                                                                                   & 93.86                                                                                                                                  & 0.47                                                                                                \\ \hline
+100                                                                                        & 1                                                                                                                    & 97.11                                                                                                                                  & 0.40                                                                                                \\ \hline
+100                                                                                        & 10                                                                                                                   & 97.29                                                                                                                                  & 0.22                                                                                                \\ \hline
+1000                                                                                       & 1                                                                                                                    & 98.70                                                                                                                                  & 0.16                                                                                                \\ \hline
+1000                                                                                       & 10                                                                                                                   & 93.07                                                                                                                                  & 1.98                                                                                                \\ \hline
+\end{tabular}
+
+    \centering
+    \caption{Impact of parallel requests for \texttt{QUIC} throughput. Here packets travel via an intermediate machine}
+    \label{fig:QUIC_throughput_via_B_using_parallel_requests}
+    
+    
+    [TODO: IDEA: behaves like UDP]
+\end{table}
 
 
 
@@ -1449,6 +1514,27 @@ A1-B-A2
 
 
 
+
+
+% TODO
+[TODO: comparison of TCP vs UDP]
+[According to https://support.cumulusnetworks.com/hc/en-us/articles/216509388-Throughput-Testing-and-Troubleshooting, TCP might have better offloading support than UDP meaning that their throughouts may not be comparable]
+
+
+\begin{table}[H]
+\begin{tabular}{|r|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number\\ of parallel\\ streams\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average total throughput \\ measured \\ on the receiver's side (MBytes/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the sample\end{tabular}} \\ \hline
+1                                                                                                & 1                                                                                           & 82.77                                                                                                                                  & 4.08                                                                                                \\ \hline
+1                                                                                                & 10                                                                                          & 155.28                                                                                                                                 & 3.97                                                                                                \\ \hline
+10                                                                                               & 1                                                                                           & 236.61                                                                                                                                 & 7.11                                                                                                \\ \hline
+10                                                                                               & 10                                                                                          & 276.56                                                                                                                                 & 2.48                                                                                                \\ \hline
+100                                                                                              & 1                                                                                           & 289.01                                                                                                                                 & 12.59                                                                                               \\ \hline
+100                                                                                              & 10                                                                                          & 301.05                                                                                                                                 & 1.64                                                                                                \\ \hline
+1000                                                                                             & 1                                                                                           & 299.64                                                                                                                                 & 1.00                                                                                                \\ \hline
+1000                                                                                             & 10                                                                                          & 304.14                                                                                                                                 & 1.65                                                                                                \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Performance Comparison of \enquote{Null encryption} in \texttt{MsQuic} and \texttt{ngtcp2}}
 
