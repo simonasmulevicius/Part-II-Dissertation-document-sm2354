@@ -824,6 +824,7 @@ Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author o
 \section{Requirements Analysis}
 % TODO what is the purpose of this section?
 
+\simon{TODO}
 
 \section{Starting Point}
 As mentioned in the previous sections, this project builds on top of \texttt{ngtcp2} implementation of \texttt{QUIC}.
@@ -1422,6 +1423,42 @@ As a side note, Large Receive Offload is disable on both the testing and interme
 \end{table}
 
 
+\simon{Add completion times with their stdev}
+
+
+\simon{Convert from MBytes/s - > MBits/s (! Make sure stdev is also changed!)}
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{table}[H]
+\begin{tabular}{|r|r|r|r|r|r|}
+\hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of \\ parallel clients \\ (1 request per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total throughput \\ measured \\ on the \\ receiver's side \\ (MBit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the \\ throughput \\ sample\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average total \\ completion time (s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of thecompletion \\ time sample\end{tabular}} \\ \hline
+1                                                                                                & 1                                                                                                                    & 3248.07                                                                                                                                      & 284.23                                                                                                               & *0.01\textgreater{}                                                                               & 0.00                                                                                                                  \\ \hline
+1                                                                                                & 10                                                                                                                   & 2921.11                                                                                                                                      & 907.16                                                                                                               & *0.01\textgreater{}                                                                               & 0.00                                                                                                                  \\ \hline
+10                                                                                               & 1                                                                                                                    & 4410.93                                                                                                                                      & 75.89                                                                                                                & 0.02                                                                                              & 0.00                                                                                                                  \\ \hline
+10                                                                                               & 10                                                                                                                   & 4434.55                                                                                                                                      & 181.87                                                                                                               & 0.02                                                                                              & 0.00                                                                                                                  \\ \hline
+100                                                                                              & 1                                                                                                                    & 4561.26                                                                                                                                      & 56.09                                                                                                                & 0.19                                                                                              & 0.00                                                                                                                  \\ \hline
+100                                                                                              & 10                                                                                                                   & 4442.07                                                                                                                                      & 212.95                                                                                                               & 0.19                                                                                              & 0.01                                                                                                                  \\ \hline
+1000                                                                                             & 1                                                                                                                    & 4579.51                                                                                                                                      & 36.24                                                                                                                & 1.88                                                                                              & 0.02                                                                                                                  \\ \hline
+1000                                                                                             & 10                                                                                                                   & 4123.17                                                                                                                                      & 179.81                                                                                                               & 2.09                                                                                              & 0.09                                                                                                                  \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+
+
+
 
 
 
@@ -1443,6 +1480,8 @@ This interesting effect could be explained by the fact that there is an associat
 [TODO: explain these effects]
 [TODO: context/queue switches? for concurrent streams penalise the transfer of large concurrent files, but with small files, these switches are more frequent.
 With large number of clients we can offer server a variety of packets it can process]
+
+\simon{According to \url{https://fasterdata.es.net/performance-testing/network-troubleshooting-tools/iperf/multi-stream-iperf3/}, \texttt{iperf3} is a single threaded application so this might be a limiting testing factor}
 
 In addition, single flow \texttt{UDP} throughput reaches a plateau as transferred file size increases.
 This can be explained by the fact that there is a single \texttt{iperf3} server that processes all the packets.
@@ -1489,6 +1528,10 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 \end{table}
 
 
+\simon{Add completion times with their stdev}
+
+\simon{Convert from MBytes/s - > MBits/s (! Make sure stdev is also changed!)}
+
 
 
 % TODO
@@ -1504,8 +1547,10 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
     
     
     
+\simon{Why did iperf3 report lower throughput for UDP? According to \url{https://fuchsia.googlesource.com/third_party/iperf/+/3.0.2/README.md}, iperf3 might not be the best tool for high UDP throughput measurements. The source recommends using another tool nuttcp instead }
     
-    
+% SERVER: ip netns exec mr_server nuttcp -S
+% CLIENT: taskset -c 1 ip netns exec mr_client nuttcp  -l1448 -T30 -u -w40m -Ru -i1 10.2.2.101
 
 \subsection{Throughput of Parallel \texttt{TCP} Streams that use \texttt{TLS}}
  
@@ -1522,6 +1567,9 @@ In the future, \texttt{MsQuic} tools may provide better support for the family o
 
 
 \subsection{Throughput of Parallel \texttt{QUIC} Streams}
+
+\simon{Make sure that ENCRYPTED version of ngtcp2 is used here}
+
 % TODO
 [TODO: describe testing conditions in prose]
 
@@ -1613,6 +1661,18 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 \end{tabular}
 \end{table}
 
+\subsection{Performance Comparison of encrypted and unencrypted versions of \texttt{ngtcp2}}
+
+
+\simon{0. Add throughput measurements of both encrypted and unencrypted versions}
+
+\simon{1. Add a flame chart of ENCRYPTED ngtcp2 behaviour over some standard link and sufficiently large requested file size}
+
+\simon{2. Add a flame chart of UNENCRYPTED ngtcp2 behaviour over the same link and sufficiently large requested file size}
+
+
+
+
 \subsection{Performance Comparison of \enquote{Null encryption} in \texttt{MsQuic} and \texttt{ngtcp2}}
 
 As I have already mentioned, \texttt{MsQuic}, \texttt{Microsoft's} implementation of \texttt{QUIC}, has the pre-built option to disable cryptography.
@@ -1623,26 +1683,25 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 
 
-\section{Comparison with UDP}
-[TODO: add a comparison of QUIC's throughput vs UDP's throughput]
-
-
-\section{Comparison with TCP}
-[TODO: add a comparison of \texttt{QUIC} vs TCP]
-
-
-
-
 
 \section{\texttt{QUIC} Performance Evaluation}
 
 
 \subsection{Impact of Link Delay}
-% TODO check if delay or latency
 
+\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet DELAY. No packet loss should be added. Probably I should use similar delays as the ones that were used in other papers (e.g. +10ms, +50ms, +100ms).}
 
+\simon{What requested file size should I use for these measurements?}
 
 \subsection{Impact of Packet Loss}
+
+\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet LOSS. }
+
+\simon{Use packet loss: 1\%, 0.1\%, 0.01\%, 0.001\%}
+
+\simon{In addition, these loss values should be equal to the ones used in MsQuic performance dashboard}
+
+\simon{What requested file size should I use for these measurements?}
 
 
 \chapter{Conclusion}
