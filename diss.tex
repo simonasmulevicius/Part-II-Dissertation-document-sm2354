@@ -87,6 +87,7 @@
 \pagestyle{empty}
 
 \rightline{\LARGE \textbf{Simonas Mulevicius}}
+% Blind Grading Number == 2439D
 
 \vspace*{60mm}
 \begin{center}
@@ -145,7 +146,7 @@ be made available to the students and staff of the University.
 
 {\large
 \begin{tabular}{ll}
-Name:               & \bf Simonas Mulevicius                       \\
+Candidate Number:               & \bf 2439D                      \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
@@ -455,8 +456,8 @@ My results are consistent with previous studies that identified cryptographic fu
 
 In this chapter, I first provide essential background knowledge about the networking landscape before \texttt{QUIC}. 
 Then I analyse \texttt{QUIC} protocol in more detail.
-After that, I present the requirements analysis.
-Finally, I finish this section by describing software engineering tools and techniques used during this project.
+Secondly, I present my requirements analysis.
+Finally, I describe software engineering tools and techniques used during this project.
 
 
 \section{Networking Landscape Before \texttt{QUIC}}
@@ -1517,6 +1518,10 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 
 \simon{describe function of TCP throughput in time (see Figure~\ref{fig:TCP_throughput_in_time})}
 
+% TODO
+\simon{TODO: comparison of TCP vs UDP}
+\simon{According to https://support.cumulusnetworks.com/hc/en-us/articles/216509388-Throughput-Testing-and-Troubleshooting, TCP might have better offloading support than UDP meaning that their throughouts may not be comparable}
+
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/TCP_throughput_in_time.png}
@@ -1619,22 +1624,23 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 
 
 
-\simon{This paragraph+diagram can be rewritten and moved into the subsequent subsection}
-
-[TODO: add a chart showing the performance of h2load-ngtcp2 pair with null encryption and without it (i.e. use -P option)]
-
-[TODO: also, mention the selection of sampling frequencies]
-
-% TODO
-[TODO: use unencrypted ngtcp2-h2load version to measure throughput of parallel streams]
+\subsection{Performance Comparison of encrypted and unencrypted versions of \texttt{ngtcp2}}
 
 
+\simon{3. Compile the code}
+
+\simon{4. Commit changes}
+
+\simon{5. Report completion time in ms}
+
+\simon{6. Report throughbout in MBits/s}
+
+\simon{ TODO: add a chart showing the performance of h2load-ngtcp2 pair with null encryption and without it (i.e. use -P option) and measure throughput of parallel streams}
 
 
 
-% TODO
-[TODO: comparison of TCP vs UDP]
-[According to https://support.cumulusnetworks.com/hc/en-us/articles/216509388-Throughput-Testing-and-Troubleshooting, TCP might have better offloading support than UDP meaning that their throughouts may not be comparable]
+
+
 
 
 \begin{table}[H]
@@ -1652,7 +1658,7 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 \end{tabular}
 \end{table}
 
-\subsection{Performance Comparison of encrypted and unencrypted versions of \texttt{ngtcp2}}
+
 
 
 \simon{0. Add throughput measurements of both encrypted and unencrypted versions}
