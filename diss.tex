@@ -823,9 +823,54 @@ Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author o
 
 
 \section{Requirements Analysis}
-% TODO what is the purpose of this section?
 
-\simon{TODO}
+% TODO
+\simon{
+1. Which techniques and tools could I use?
+\begin{itemize}
+  \item Network simulation tools:
+      \begin{itemize}
+      \item I could have used localhost (adv: simple, disadv: artificial and cant use NICs that add extra pecularities (No offloading))
+        
+     \item I could have excluded the intermediate machine - meaning that I could have forced packets to leave the testing machine but send them via loopback to the same machine on different interface. (adv/disadv: more complex than the previous approach, but still relatively, adv: can inspect behaviour of NICs; disadv: traffic perturbations are added on the testing machine - extra burden; disadv: Network Emulation could have interfered with the analysis of QUIC. For instance, what packet arrival time should be used when packet enters an interface? - netem adds extra complexity here and these measurements might not be very accurate)
+        
+     \item Use a separate dedicated machine to introduce traffic perturbations
+        \begin{itemize}
+        \item Adv: replicate similar conditions as the ones used in Gianni's paper
+        
+        
+        \item Adv: Leave network emulation tasks to the intermediate machine - now intermediate machine can be optimised for responsiveness and the testing machine could be optimised for generating and receiving QUIC traffic
+        
+        \item Disadv: the most complex, requires additional computer, forwarding and separate subnets
+        \end{itemize}
+      \end{itemize}
+  
+\end{itemize}
+}
+
+
+\simon{
+2. What did I actually decide to use?
+
+I used localhost connection for quick prototyping.
+
+Then, I used loopback cables to quickly test whether or not packets leave the machine (I ran experiments on the testing machine and check if unplugging network cable would stop the data transfer)
+
+However, my major testing configuration used the configuration with an intermediate machine - I used this configuration because I managed to configure different subnets and enabled packet forwarding.
+}
+
+\simon{3. Which factors led me to these decisions?
+
+
+The main reason for deciding on this architecture was correct configuration of netem - using a separate machine for Network emulation I was sure that packet arrival and departure times don't interfere with Netem - (e.g. don't want to say that the packet has arrived before it is droped/delayed in the Netem).
+
+
+
+In addition, this experiment setup would not be possible without the prio possession of the required hardware (i.e., additional machine). 
+}
+
+\simon{TodO: also, mention that I measured an overhead of NetEm and intermediate machine and it was negligible [TODO: bring those numbers here]}
+
 
 \section{Starting Point}
 As mentioned in the previous sections, this project builds on top of \texttt{ngtcp2} implementation of \texttt{QUIC}.
