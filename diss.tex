@@ -12,6 +12,8 @@
 \usepackage{csquotes}
 \usepackage{float}
 \usepackage{textcomp}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
  
 % Conditionals (for draft mode)
 \usepackage{ifthen}
@@ -467,20 +469,18 @@ Finally, I describe software engineering tools and techniques used during this p
 
 
 \subsection{\texttt{HTTP/1.0} Problems Caused by \texttt{TCP}}
-    As Charles M. Kozierok states in his book~\cite{TCP_IP_Guide_Book},
-    \texttt{HTTP/1.0} suffers from the fact that it uses one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair. 
-    A similar idea is expressed in the article written by Alessandro Ghedini and Rustam Lalkaka
-   ~\cite{HTTP_3_the_past_the_present_and_the_future}.
-    Opening a new \texttt{TCP} connection for every small web object causes \texttt{TCP} to be constantly in the \enquote{slow start} phase, meaning that small files usually are not sent at the peak throughput~\cite{HTTP_3_the_past_the_present_and_the_future}.
-    Furthermore, \texttt{HTTP/1.0} suffers from the fact that for every request, it needs to complete \texttt{TCP} and \texttt{TLS} handshakes, which in turn can take several round-trip times to complete~\cite{HTTP_3_the_past_the_present_and_the_future}.
-    Even though, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained~\cite{TCP_IP_Guide_Book_2}, nowadays it is no longer efficient to open and close a new TCP connection for all the multiple embedded web objects associated with standard websites.
+    \texttt{HTTP/1.0} suffers from using one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair \cite{TCP_IP_Guide_Book, HTTP_3_the_past_the_present_and_the_future} --
+    opening a new \texttt{TCP} connection for every web object causes \texttt{TCP} to remain in its \enquote{slow start} phase, thus small files are rarely sent at peak throughput~\cite{HTTP_3_the_past_the_present_and_the_future}.
+    Furthermore, \texttt{HTTPS} suffers from every request needing to complete both \texttt{TCP} and \texttt{TLS} handshakes that take several round-trip times to complete~\cite{HTTP_3_the_past_the_present_and_the_future}.
+    Even though, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained~\cite{TCP_IP_Guide_Book_2}, it is not efficient to open and close a new \texttt{TCP} connection for each of the multiple embedded web objects associated with standard websites.
 
 \subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{HTTP/1.1}}
 
-According to the initial draft of \texttt{HTTP/1.1}~\cite{RFC2068}, \texttt{HTTP/1.1} mitigates some of the \texttt{HTTP/1.0} problems by introducing persistent connections, which in turn allow multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
-Besides being beneficial for small objects, advantage of using a shared \texttt{TCP} connection is that by sending packets over a single \texttt{TCP} connection, we can make better estimates of the actual round-trip time (\texttt{RTT}) between the server and the client~\cite{bib_Computer_Networking_L6}.
-More precise \texttt{RTT} measurements allow us to utilise networking resources more consistently.
-For example, by evaluating \texttt{TCP} parameters, such as retransmission-timeout, more accurately, we can reduce the number of unnecessary pre-emptive \texttt{TCP} timeouts~\cite{bib_rtt_tcp_Retransmissions}.
+According to the initial draft of \texttt{HTTP/1.1}~\cite{RFC2068}, \texttt{HTTP/1.1} was proposed to mitigate some of the \texttt{HTTP/1.0} problems by introducing persistent connections.
+This in turn allows multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
+Besides being beneficial for small objects, advantage of using a shared \texttt{TCP} connection is that\texttt{TCP} can make better estimates of the actual round-trip time (\texttt{RTT}) between the server and the client~\cite{bib_Computer_Networking_L6}.
+More precise \texttt{RTT} measurements allow more consistent utilisation of networking resources.
+For example, by evaluating \texttt{TCP} parameters, such as retransmission-timeout, more accurately, the number of unnecessary pre-emptive \texttt{TCP} timeouts can be reduced~\cite{bib_rtt_tcp_Retransmissions}.
 
 Furthermore, \texttt{HTTP/1.1} enables pipelining of multiple \texttt{HTTP} requests over the same \texttt{TCP} connection.
 Hence, as stated in~\cite{bib_digital_ocean_http11_vs_http2}, the client does not need to wait for an \texttt{HTTP} reply from the server before sending consecutive \texttt{HTTP} requests.
@@ -558,9 +558,9 @@ As Gaetano Carlucci et al.~\cite{HTTP_over_UDP_An_Experimental_Investigation_of_
 %[TODO: what is the difference between \texttt{SPDY} and HTTP/2?]
 
 
-\subsection{Roll-out Problems when Deploying Protocol Upgrades}
-As we have seen in the previous sections, there have already been several attempts to overcome the Head-of-line blocking problems present in \texttt{HTTP}.
-In order to finally resolve the HOL blocking problem of \texttt{TCP}, we would need to upgrade this protocol so that \texttt{TCP} could separate frames associated with different logical \texttt{HTTP} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+\subsection{Historical Reasons for Invention of \texttt{QUIC}}
+As demonstrated in the previous sections, there have already been several attempts to overcome the Head-of-line blocking problems present in \texttt{HTTP}.
+In order to finally resolve the HOL blocking problem of \texttt{TCP}, one would need to upgrade this protocol so that \texttt{TCP} could separate frames associated with different logical \texttt{HTTP} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Hence, new version of \texttt{TCP} algorithm would be required. 
 However, attempts to roll out experimental versions of \texttt{TCP} to yield benefits to the protocols in the application layer were mostly unsuccessful~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
 For instance, as Craig Andrews states in his article~\cite{the-sad-story-of-tcp-fast-open}, there was a largely unsuccessful proposal called \texttt{TCP Fast Open} to reduce the number of handshakes (and thus round-trip times) required to open \texttt{TCP} connections.
@@ -570,26 +570,133 @@ Around that time, the world faced an issue that the Internet was running out of 
 Hence, during that period, middleboxes (e.g. Network Address Translators or NATs for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses~\cite{MurphyNiallRichard2005Ina, bib_Netdev_0x13_QUIC_Tutorial}.
 However, newly introduced middleboxes started to interfere with the \texttt{TCP} traffic~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
 For instance, NATs made assumptions about the structure of \texttt{TCP} headers~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
-[TODO rewrite below text with more references]
-As \texttt{TCP/IP} stack was and still is a predominant backbone of the Internet, some NATs offloaded some \texttt{TCP} processing to hardware or used some software optimisation techniques.
+As \texttt{TCP/IP} stack was and still is a predominant backbone of the Internet~\cite{tcp-ip-stack_shtml}, some NATs offloaded some \texttt{TCP} processing to hardware or used some software optimisation techniques.
 Consequently, these premature optimisations interfered with \texttt{TCP} protocol's correctness -- NATs rejected connections that used experimental \texttt{TCP} packets~\cite{PollardBarry2019HiAP}.
-Another reason for the slow roll-out of \texttt{TCP} improvements was that \texttt{TCP's} functionality is implemented in the OS kernel, meaning that in order to add changes to \texttt{TCP}, one would need to change a large number of different operating systems ~\cite{PollardBarry2019HiAP}.
+One reason for the slow roll-out of \texttt{TCP} improvements was that \texttt{TCP's} functionality is implemented in the OS kernel.
+To add changes to \texttt{TCP}, one would need to change a large number of different operating systems ~\cite{PollardBarry2019HiAP}.
 Hence, it was decided that it would be relatively difficult to deploy upgrades for the \texttt{TCP} transport layer protocol~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 
-Architects of \texttt{QUIC} learned these mistakes and attempted to prevent the ossification of \texttt{QUIC} in the future by using two interesting techniques.
-To simplify the deployment, \texttt{QUIC's} code operates in user space.
+Architects of \texttt{QUIC} learned these mistakes and attempted to prevent the ossification of \texttt{QUIC} in the future by using several interesting techniques.
+To simplify the deployment, \texttt{QUIC's} code operates in user space~\cite{quic-and-http-3-too-big-to-fail}.
 In addition, to prevent NATs from interfering with \texttt{QUIC}, \texttt{QUIC's} packet headers are partially encrypted (see subsection \ref{subsection_QUIC_header_format})~\cite{bib_Netdev_0x13_QUIC_Tutorial}.
+Finally, instead of upgrading \texttt{TCP} or building a completely new transport layer on top of \texttt{IP}, \texttt{QUIC} builds on top of \texttt{UDP}.
+The main reason for this is \texttt{UDP} is an already deployed, supported and recognised transport protocol of the Internet~\cite{the-road-to-quic}.
 
-Finally, all these enhancements of \texttt{HTTP} can be summarised in the following historical timeline (see Figure~\ref{fig:cf-secure-web-timeline}).
+In conclusion, all these enhancements of \texttt{HTTP} can be summarised in the following historical timeline (see Figure~\ref{fig:cf-secure-web-timeline}).
 % TODO: reduce the size of this diagram and take only the most important developments
     \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{figs/cf-secure-web-timeline-1.png}
-    \caption[Evolution timeline of the related network technologies]{Evolution timeline of the related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog~\cite{http-3-from-root-to-tip}.}
+    % \includegraphics[width=0.7\textwidth]{figs/cf-secure-web-timeline-1.png}
+    
+
+
+
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=red!60, fill=red!5, very thick, minimum size=1mm},
+squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+orangeroundnode/.style={circle, draw=orange!60, fill=orange!5, very thick, minimum size=1mm},
+orangesquarednode/.style={rectangle, draw=orange!60, fill=orange!5, very thick, minimum size=5mm},
+]
+%Nodes
+\node[roundnode]    at (0,16)      (start_http09)              [] {};
+\node[squarednode]  at (14,16)     (end_http09)                [] {HTTP/0.9};
+
+\node[roundnode]    at (1,15)      (start_http10)              [] {};
+\node[squarednode]  at (14,15)     (end_http10)                [] {HTTP/1.0};
+
+\node[roundnode]    at (2,14)      (start_http11)              [] {};
+\node[squarednode]  at (14,14)     (end_http11)                [] {HTTP/1.1};
+
+\node[roundnode]    at (3,13)      (start_spdyv1)              [] {};
+\node[squarednode]  at (14,13)     (end_spdyv1)                [] {SPDY v1};
+
+\node[roundnode]    at (4,12)      (start_spdyv2)              [] {};
+\node[squarednode]  at (14,12)     (end_spdyv2)                [] {SPDY v2};
+
+\node[roundnode]    at (5,11)      (start_quicrypto)              [] {};
+\node[squarednode]  at (14,11)     (end_quicrypto)                [] {QUIC crypto};
+
+\node[roundnode]    at (6,10)      (start_gquic)              [] {};
+\node[squarednode]  at (14,10)     (end_gquic)                [] {gQUIC};
+
+\node[roundnode]    at (7,9)      (start_ietfquic)              [] {};
+\node[squarednode]  at (14,9)     (end_ietfquic)                [] {QUIC IETF};
+
+\node[roundnode]    at (8,8)      (start_http3)              [] {};
+\node[squarednode]  at (14,8)     (end_http3)                [] {HTTP/3};
+
+\node[roundnode]    at (9,7)      (start_spdyv3)              [] {};
+\node[squarednode]  at (14,7)     (end_spdyv3)                [] {SPDY v3};
+
+\node[roundnode]    at (10,6)     (start_spdyv31)              [] {};
+\node[squarednode]  at (14,6)     (end_spdyv31)                [] {SPDY v3.1};
+
+\node[orangeroundnode]    at (0,5)      (start_ssl20)              [] {};
+\node[orangesquarednode]  at (14,5)     (end_ssl20)                [] {SSL 2.0 (unsecure \cite{tls-external-facing-services})};
+
+\node[orangeroundnode]    at (1,4)      (start_ssl30)              [] {};
+\node[orangesquarednode]  at (14,4)     (end_ssl30)                [] {SSL 3.0 (unsecure \cite{tls-external-facing-services})};
+
+\node[orangeroundnode]    at (2,3)      (start_tls11)              [] {};
+\node[orangesquarednode]  at (14,3)     (end_tls11)                [] {TLS 1.1};
+
+\node[orangeroundnode]    at (3,2)      (start_tls12)              [] {};
+\node[orangesquarednode]  at (14,2)     (end_tls12)                [] {TLS 1.2};
+
+\node[orangeroundnode]    at (4,1)      (start_tls13)              [] {};
+\node[orangesquarednode]  at (14,1)     (end_tls13)                [] {TLS 1.3};
+
+
+
+% \node[squarednode]      (http09_start)                              {HTTP/0.9};
+% \node[squarednode]      (http09_end)        [right=of http09_start] {HTTP/0.9};
+% \node[roundnode]        (lowercircle)       [below=of http09_start] {4};
+
+% %Lines
+\draw[->] (start_http09.east) -- (end_http09.west);
+\draw[->] (start_http10.east) -- (end_http10.west);
+\draw[->] (start_http11.east) -- (end_http11.west);
+\draw[->] (start_spdyv1.east) -- (end_spdyv1.west);
+\draw[->] (start_spdyv2.east) -- (end_spdyv2.west);
+\draw[->] (start_quicrypto.east) -- (end_quicrypto.west);
+\draw[->] (start_gquic.east) -- (end_gquic.west);
+\draw[->] (start_ietfquic.east) -- (end_ietfquic.west);
+\draw[->] (start_http3.east) -- (end_http3.west);
+\draw[->] (start_spdyv3.east) -- (end_spdyv3.west);
+\draw[->] (start_spdyv31.east) -- (end_spdyv31.west);
+
+\draw[->] (start_ssl20.east) -- (end_ssl20.west);
+\draw[->] (start_ssl30.east) -- (end_ssl30.west);
+\draw[->] (start_tls11.east) -- (end_tls11.west);
+\draw[->] (start_tls12.east) -- (end_tls12.west);
+\draw[->] (start_tls13.east) -- (end_tls13.west);
+
+
+\draw[->] (start_http09.east) .. controls +(right:5mm) and +(up:5mm) .. (start_http10.north);
+\draw[->] (start_http10.east) .. controls +(right:5mm) and +(up:5mm) .. (start_http11.north);
+\draw[->] (start_http11.east) .. controls +(right:5mm) and +(up:5mm) .. (start_spdyv1.north);
+\draw[->] (start_spdyv1.east) .. controls +(right:5mm) and +(up:5mm) .. (start_spdyv2.north);
+\draw[->] (start_spdyv2.east) .. controls +(right:5mm) and +(up:5mm) .. (start_quicrypto.north);
+\draw[->] (start_quicrypto.east) .. controls +(right:5mm) and +(up:5mm) .. (start_gquic.north);
+\draw[->] (start_gquic.east) .. controls +(right:5mm) and +(up:5mm) .. (start_ietfquic.north);
+\draw[->] (start_ietfquic.east) .. controls +(right:5mm) and +(up:5mm) .. (start_http3.north);
+\draw[->] (start_http3.east) .. controls +(right:5mm) and +(up:5mm) .. (start_http3.north);
+\draw[->] (start_http3.east) .. controls +(right:5mm) and +(up:5mm) .. (start_spdyv3.north);
+\draw[->] (start_spdyv3.east) .. controls +(right:5mm) and +(up:5mm) .. (start_spdyv31.north);
+
+
+\draw[->] (start_ssl20.east) .. controls +(right:5mm) and +(up:5mm) .. (start_ssl30.north);
+\draw[->] (start_ssl30.east) .. controls +(right:5mm) and +(up:5mm) .. (start_tls11.north);
+\draw[->] (start_tls11.east) .. controls +(right:5mm) and +(up:5mm) .. (start_tls12.north);
+\draw[->] (start_tls12.east) .. controls +(right:5mm) and +(up:5mm) .. (start_tls13.north);
+
+    \draw [-stealth](0,0)  -- (15,0) node[midway, above] {Time};
+    
+\end{tikzpicture}
+
+\caption[Evolution timeline of the related network technologies]{Evolution timeline of the related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog~\cite{http-3-from-root-to-tip}.}
     \label{fig:cf-secure-web-timeline}
     \end{figure}
-
-
 
 
 \section{\texttt{QUIC} Details} \label{QUIC_details_section}
@@ -845,6 +952,8 @@ Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author o
         \end{itemize}
       \end{itemize}
   
+  
+    \item Could have used Mininet and a pair of Virtual machines (but I already had required hardware and I wanted to make comparable tests with Gianni's paper)
 \end{itemize}
 }
 
@@ -1774,6 +1883,8 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 % ------------------------------------------------
 
 \section{Summary}
+
+\simon{Read about energy efficiency and application of QUIC for IoT https://calendar.perfplanet.com/2018/quic-and-http-3-too-big-to-fail/}
 
 \awm{Don't forget - make a CONCLUSION too}
 
