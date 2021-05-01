@@ -927,13 +927,13 @@ In this chapter I first give an overview of the repository structure.
 
 \section{Repository Overview} 
 % TODO
-[TODO add reference to the original page of ngtcp2]
+\simon{TODO add reference to the original page of ngtcp2}
 First of all, I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
 
 In addition, I augmented \enquote{README} file of the primary repository with specific instructions on how to compile and run the software stack required for this project.
 
 % TODO
-[TODO: mention that I forked part of networking stack required to run ngtcp2. In particular, I worked on a separate openssl(embeded security layer), ngtcp2 (transport layer), nghttp2 and nghttp3 (application layers) ]
+\simon{TODO: mention that I forked part of networking stack required to run ngtcp2. In particular, I worked on a separate openssl(embeded security layer), ngtcp2 (transport layer), nghttp2 and nghttp3 (application layers) }
 
 \section{Preparation Scripts}
 As I have already mentioned, I wrote several scripts to prepare testing machines for performance analysis.
@@ -951,7 +951,7 @@ Furthermore, the setup of the testing environment became more predictable, meani
 
 \section{Using Null Encryption}
 % TODO
-[TODO add reference saying that encryption of \texttt{QUIC} is turned on by default]
+\simon{TODO add reference saying that encryption of \texttt{QUIC} is turned on by default}
 
 By design, \texttt{QUIC} uses encryption by default.
 It encrypts both the payloads of the packets and some fields in the packet headers.
@@ -959,36 +959,40 @@ It encrypts both the payloads of the packets and some fields in the packet heade
 
 However, encryption and decryption operations were found to be computationally expensive.
 % TODO
-[TODO add a reference showing that \texttt{QUIC} crypto functions are expensive]
+\simon{TODO add a reference showing that \texttt{QUIC} crypto functions are expensive}
 
 These intensive operations could have become a performance bottleneck of QUIC.
 To validate this claim, I had to measure the impact of cryptographic operations on QUIC's performance by comparing the throughput between the two server-client pairs.
 One pair had to use standard encryption and decryption procedures, while another had to exchange unencrypted packets.
 I achieved this by implementing logic that can turn on null encryption on \texttt{ngtcp2}.
 % TODO
-[TODO add a link to null encryption]
+\simon{TODO add a link to null encryption}
 
 In essence, null encryption is a technique that effectively turns off encryption by encrypting/decrypting the data by ``XOR"ing the data with a key made entirely of zeroes (which leaves the data unchanged). 
 
 % TODO
-[TODO -- say which cryptographic operations are performed and which ones are omitted when using my implementation of null-crypto]
+\simon{TODO -- say which cryptographic operations are performed and which ones are omitted when using my implementation of null-crypto}
 
 
 % TODO
-[TODO: mention improved null encryption]
+\simon{TODO: mention improved null encryption}
 
 % TODO
-[TODO: mention that I later on found existing null encryption and decryption mechanisms in the unit tests of \texttt{ngtcp2}. 
+\simon{TODO: mention that I later on found existing null encryption and decryption mechanisms in the unit tests of \texttt{ngtcp2}. 
 However, my implementation was developed independently and without knowledge about the existence of these functions.
 This can be proven by my commit history and communication history on the \texttt{Slack} messaging platform.
 Furthermore, the performance analysis I described before allowed me to identify potential bottlenecks of my implementation.
-Hence, I was able to improve my null cryptographic operations in a systematic way.]
+Hence, I was able to improve my null cryptographic operations in a systematic way.}
 
 
 
 
 
-\simon{Critique my implementation that my null-encryption does not completely use additional 16 bytes per packet that were used for encryption before hand. I am not sure, but I guess MsQuic reuses these bytes}
+My implementation of null encryption has room for improvements.
+For instance, every encrypted \texttt{ngtcp2} packet uses additional 16 bytes to store the encryption header.
+However, in the null-encryption scenario, these additional fields are not required, but my implementation of disabling encryption does not use them, meaning that 16 unused bytes are transferred in a single \texttt{QUIC} packet.
+In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{QUIC} packets to re-use these additional 16 bytes for data transfer.
+
 
 
 \section{Testing Scripts}
@@ -1086,7 +1090,7 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
     (Here each result was obtained after running ten \texttt{ping} experiments).
     
     % TODO
-    [TODO: add a table of results showing that lower RTT of looback cables increased throughput of ngtcp-h2load by about 10\%]
+    \simon{TODO: add a table of results showing that lower RTT of looback cables increased throughput of ngtcp-h2load by about 10\%}
     % https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_unencrypted-ngtcp2-throughput_via-loopback_delay-0ms_uncorrelated-loss-0_0_percent_improved-null-encryption_with-command-line-option/result.ods
     
 
@@ -1156,11 +1160,11 @@ In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did 
 \texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack.
 
 % TODO
-[TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]]
+\simon{TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]}
 
-[TODO: limitations and overheads of sampling]
+\simon{TODO: limitations and overheads of sampling}
 
-[TODO: describe the selection process of frequencies (why 997 and not 1000)]
+\simon{TODO: describe the selection process of frequencies (why 997 and not 1000)}
 
 
 
@@ -1189,7 +1193,7 @@ However, in this project, I am also using \texttt{Differential Flame Graphs} tha
 The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph} but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs}.
 
 % TODO
-[TODO: add an example of \texttt{Differential Flame Graph}]
+\simon{TODO: add an example of \texttt{Differential Flame Graph}}
 
 
 % sampling based method
@@ -1207,10 +1211,11 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
     
 \subsection{qlog and qvis}
 % TODO
-[TODO give a high-level overview of qlog format]
+\simon{TODO give a high-level overview of qlog format}
 
-[TODO: why is it hard to visualise QUIC's behaviour?]
+\simon{TODO: why is it hard to visualise QUIC's behaviour?}
 
+\simon{Finally, add an example of qvis chart}
 
 
 \section{Parameter Tuning}
@@ -1223,10 +1228,10 @@ Fortunately, at the time of writing, according to Google's IPv6 adoption tracker
 Hence, analysis involving IPv4 is still relevant today.
 
 %TODO
-[TODO: Ubuntu 20.04 has different mechanism  to disable IPv6 -- check that it is still working ]
+\simon{TODO: Ubuntu 20.04 has different mechanism  to disable IPv6 -- check that it is still working}
 
 %TODO
-[TODO: State that I had to revert this with MsQuic]
+\simon{TODO: State that I had to revert this with MsQuic}
 
 \subsection{Hyper-threading}\label{Hyperthreading_Subsection_Tag}
 
@@ -1279,13 +1284,13 @@ As far as testing conditions are concerned, the intermediate machine was not con
     \label{fig:Throughput_via_A-to-B-to-A_MTU=1500}
     \end{figure}
 % TODO
-[TODO: Am I talking here about iperf3 client-server pair or is it ngtcp2 pair?]
+\simon{TODO: Am I talking here about iperf3 client-server pair or is it ngtcp2 pair?}
 
 % TODO
-[TODO add a chart showing lower performance variability when using different cores for testing ]
+\simon{TODO add a chart showing lower performance variability when using different cores for testing }
 
 % TODO
-[TODO according to https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf, "CPU affinity" reduces cache misses]
+\simon{TODO according to https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf, "CPU affinity" reduces cache misses}
 
 \subsection{GSO}
 \begin{itemize}
@@ -1363,7 +1368,8 @@ As far as testing conditions are concerned, the intermediate machine was not con
 \end{table}
 
   
-  \item TODO show that Jumbo frames are not accepted in the wild Internet / TODO state that MTUs above 1500 bytes are not prevalent in the Internet
+  \item 
+  \simon{TODO show that Jumbo frames are not accepted in the wild Internet / TODO state that MTUs above 1500 bytes are not prevalent in the Internet}
   
   
   See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
@@ -1381,9 +1387,9 @@ In other words, measured maximum available throughput before and after experimen
 \subsection{Size of the Buffers} 
 
 % TODO
-[TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf]  
+\simon{TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf}
 
-[TODO: 2. State that adjusted buffers reduce UDP packet loss rate] 
+\simon{TODO: 2. State that adjusted buffers reduce UDP packet loss rate}
  
  \awm{ what are you writing here? make clear you mean txqueue and rxqueue as appropriate and not the "buffers" normally thought of as resident in the intermediate network devices}
   
@@ -1394,7 +1400,7 @@ In other words, measured maximum available throughput before and after experimen
 
 \subsection{\texttt{ping} Measurements}
 
-[MAYBE TODO: Move ping measurements from "Physical Setup" section to here]
+\simon{MAYBE TODO: Move ping measurements from "Physical Setup" section to here}
 
 \subsection{Throughput of Parallel \texttt{UDP} Streams} \label{section_Throughput_of_Parallel_UDP_Streams}
 
@@ -1460,9 +1466,10 @@ This interesting effect could be explained by the fact that there is an associat
 
 %In other words, 
 % TODO
-[TODO: explain these effects]
-[TODO: context/queue switches? for concurrent streams penalise the transfer of large concurrent files, but with small files, these switches are more frequent.
-With large number of clients we can offer server a variety of packets it can process]
+\simon{TODO: explain these effects}
+
+\simon{TODO: context/queue switches? for concurrent streams penalise the transfer of large concurrent files, but with small files, these switches are more frequent.
+With large number of clients we can offer server a variety of packets it can process}
 
 \simon{According to \url{https://fasterdata.es.net/performance-testing/network-troubleshooting-tools/iperf/multi-stream-iperf3/}, \texttt{iperf3} is a single threaded application so this might be a limiting testing factor}
 
@@ -1560,7 +1567,7 @@ In the future, \texttt{MsQuic} tools may provide better support for the family o
 \subsection{Throughput of Parallel \texttt{QUIC} Streams}
 
 % TODO
-[TODO: describe testing conditions in prose]
+\simon{TODO: describe testing conditions in prose}
 
 Number of tests for each experiment: 10
 
@@ -1598,7 +1605,7 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
     \label{fig:QUIC_throughput_via_B_using_parallel_requests}
     
     
-    [TODO: IDEA: behaves like UDP]
+    \simon{TODO: IDEA: behaves like UDP}
 \end{table}
 
 
@@ -1732,11 +1739,11 @@ In particular, hands-on experience with the reference hardware projects during t
 
 \section{Future Work}
 % TODO
-[TODO: suggest offloading crypto to hardware (as Gianni's team has already suggested)]
+\simon{TODO: suggest offloading crypto to hardware (as Gianni's team has already suggested)}
 
-[TODO: critique that offloading \texttt{QUIC} to hardware might stifle innovation in the long term. ]
+\simon{TODO: critique that offloading \texttt{QUIC} to hardware might stifle innovation in the long term. }
 
-[TODO: for example, look into invariants of \texttt{QUIC} and check if such offloading would be acceptable]
+\simon{TODO: for example, look into invariants of \texttt{QUIC} and check if such offloading would be acceptable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the bibliography
