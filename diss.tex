@@ -1035,6 +1035,8 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
 
 \simon{Specify software and hardware parameters of the testing environment as shown in \url{https://github.com/Shenggan/quic_vs_tcp} }
 
+\simon{TODO: add information about the capacities of Ethernet links}
+
 
     In the ideal scenario, we might want to use three dedicated machines for performance measurements, as shown in the previous section.
     However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
@@ -1394,7 +1396,7 @@ In other words, measured maximum available throughput before and after experimen
 
 [MAYBE TODO: Move ping measurements from "Physical Setup" section to here]
 
-\subsection{Throughput of Parallel \texttt{UDP} Streams}
+\subsection{Throughput of Parallel \texttt{UDP} Streams} \label{section_Throughput_of_Parallel_UDP_Streams}
 
 As illustrated in Figure~\ref{fig:QUIC_network_stack}, \texttt{QUIC} is built on top of \texttt{UDP}.
 I measured throughput of \texttt{UDP} because the performance of \texttt{QUIC} is limited by this underlying protocol (see Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}).
@@ -1480,19 +1482,10 @@ Hence, the server and its associated stack could form the performance bottleneck
     \end{figure}
 
 \subsection{Throughput of Parallel \texttt{TCP} Streams}
-% TODO
-[TODO: describe testing conditions in prose]
 
-Number of tests for each experiment: 10
-
-No added packet delay
-
-No added packet loss
-
-Packets travel A1-B-A2
-
-Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
-
+Similarly, Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} demonstrates \texttt{TCP} throughput measurements using the same testing environment as described in the previous subsection (see \S~\ref{section_Throughput_of_Parallel_UDP_Streams}).
+In other words, I repeated each individual experiment ten times, packets traveled via the intermediate machine that was configured not to add any additional packet delay or packet loss.
+In addition, here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes and 1~Gbit = 1000~Mbits = 1~000~000~Kbits = 1~000~000~000~bits.
 
 
 
@@ -1515,14 +1508,24 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 \end{table}
 
 
+Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} shows the effect of increased transferred file size for the throughput of \texttt{TCP}.
+Naturally, it takes less time to transfer small file than the large one.
+However, this means that \texttt{TCP} spends most of the time in the \enquote{slow start} phase when sending small files because their transfer time is shorter than the duration of the \enquote{slow start}.
+As a result, \texttt{TCP}'s throughput when sending small files is low.
+In contrast, transferring larger files allows \texttt{TCP} to discover the maximum sustainable network capacity.
+Thus, the \texttt{TCP} throughput is noticeably larger when sending larger files. 
+In addition, transfer of large files allows \texttt{TCP} to amortise the overhead of initial \texttt{TCP} handshake.
+Hence, when sending 1GByte of data, \texttt{TCP} was able to approach the maximum link capacity that was 10~Gbits/s.
 
-% TODO
-\simon{describe Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams}}
 
 \simon{describe function of TCP throughput in time (see Figure~\ref{fig:TCP_throughput_in_time})}
 
+
+\simon{First 4 rows of the table - there are 4 different experiments with different throughputs (differ by at least the factor of 2) and the average completion time of all of them was around 10ms. Hence, this example demonstrates that iperf3 does not have sufficient resolution to capture and visualise the effect of slow start. }
+
 % TODO
 \simon{TODO: comparison of TCP vs UDP}
+
 \simon{According to https://support.cumulusnetworks.com/hc/en-us/articles/216509388-Throughput-Testing-and-Troubleshooting, TCP might have better offloading support than UDP meaning that their throughouts may not be comparable}
 
     \begin{figure}[H]
@@ -1628,20 +1631,6 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 
 
 \subsection{Performance Comparison of encrypted and unencrypted versions of \texttt{ngtcp2}}
-
-
-\simon{3. Compile the code}
-
-\simon{4. Commit changes}
-
-\simon{5. Report completion time in ms}
-
-\simon{6. Report throughbout in MBits/s}
-
-\simon{ TODO: add a chart showing the performance of h2load-ngtcp2 pair with null encryption and without it (i.e. use -P option) and measure throughput of parallel streams}
-
-
-
 
 
 
