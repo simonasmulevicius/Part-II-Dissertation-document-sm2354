@@ -253,7 +253,16 @@ However, some formatting ideas are taken from Alex Coplan's dissertation~\cite{A
 % > how does my work solve the problem (high-level overview)?
 % > details in other chapters
 
-
+\awm{(this paragraph is the abstract\\
+\textit{What is the PROBLEM?}\\
+new http protocols need to be well understood for performance and behaviour - the newest of these is QUIC...\\
+\textit{Why do people care?}\\
+the web is the Internet, yet earlier http do not have the rich features people now desire (you might enumerate a sshort list of things the http and tcp protocols don't do); QUIC provbides many features but as a new protocol is far from the high-performance transport we have come to need and expect in the Internet \\
+\textit{What are you doing / did you do?}\\
+Experimental studty of a QUIC implementation comparing the behaviour of two implementations, and identifying core contributors for future improvement and optimization 
+\textit{why is it awesome?}\\
+I show that while cryptographic functions are a significant overhead in the current QUIC implementations and hardware offload can make a significant improvement; even using a null-cryptographic routine the performance of QUIC falls far below its potential and significantly below comparable TCP performance.
+}
 
 % TODO add reference to the ideas of this paragraph:
 Nowadays, more and more people have access to the Internet.
@@ -319,7 +328,7 @@ Otherwise, the low throughput of \texttt{QUIC} may prevent it from being widely 
 \subsection{High-Level Overview of \texttt{QUIC}}
 I detail \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but, briefly speaking, \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (which is also briefly mentioned in the later sections -- see \ref{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}).
 On the one hand, \texttt{QUIC} breaks the separation of transport and security layer protocols. 
-On the other hand, \texttt{QUIC} protocol offers some performance benefits for modern-day traffic flows (see section~\ref{QUIC_advantages}).
+On the other hand, \texttt{QUIC} protocol offers some performance benefits for modern-day traffic flows (see section~\ref{QUIC_features}).
 
 
 \subsection{Importance of Performance Measurements of \texttt{QUIC}}
@@ -369,7 +378,7 @@ As a result, my work could be viewed as the continuation of the previous analysi
 
 \section{Completed Work}
 My analysis shows that a \texttt{QUIC} client can spend around 70\% of CPU time performing cryptographic operations. 
-My results are consistent with previous studies that identified cryptographic functions as the current bottleneck of \texttt{QUIC}, e.g.,~\cite{Making_QUIC_Quicker}.
+My results are consistent with previous studies that identified cryptographic functions as the current bottleneck of \texttt{QUIC}~\cite{Making_QUIC_Quicker}.
 
 
 
@@ -680,7 +689,6 @@ orangesquarednode/.style={rectangle, draw=orange!60, fill=orange!5, very thick, 
 \draw[->] (start_quicrypto.east) .. controls +(right:5mm) and +(up:5mm) .. (start_gquic.north);
 \draw[->] (start_gquic.east) .. controls +(right:5mm) and +(up:5mm) .. (start_ietfquic.north);
 \draw[->] (start_ietfquic.east) .. controls +(right:5mm) and +(up:5mm) .. (start_http3.north);
-\draw[->] (start_http3.east) .. controls +(right:5mm) and +(up:5mm) .. (start_http3.north);
 \draw[->] (start_http3.east) .. controls +(right:5mm) and +(up:5mm) .. (start_spdyv3.north);
 \draw[->] (start_spdyv3.east) .. controls +(right:5mm) and +(up:5mm) .. (start_spdyv31.north);
 
@@ -694,7 +702,7 @@ orangesquarednode/.style={rectangle, draw=orange!60, fill=orange!5, very thick, 
     
 \end{tikzpicture}
 
-\caption[Evolution timeline of the related network technologies]{Evolution timeline of the related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog~\cite{http-3-from-root-to-tip}.}
+\caption[Evolution timeline of the related network technologies]{Evolution timeline of the related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog~\cite{http-3-from-root-to-tip}.\simon{UNIMPORTANT TODO: add dates on the timeline axis}}
     \label{fig:cf-secure-web-timeline}
     \end{figure}
 
@@ -706,9 +714,6 @@ orangesquarednode/.style={rectangle, draw=orange!60, fill=orange!5, very thick, 
 Hence, \texttt{UDP} does not guarantee reliable packet delivery, and it does not provide congestion control~\cite[Chapter 5.1]{PetersonLarryL2007CNAS}.
 However, \texttt{UDP} checksum adds a mechanism to verify that \texttt{UDP} packets are valid and arrive at the intended recipients
 \cite[Chapter 5.1]{PetersonLarryL2007CNAS}, \cite{how-is-tcp-and-udp-checksum-calculated, udp-user-datagram-protocol}.
-
-\simon{Isn't UDP checksum used for a partial error detection?
-If that is NOT the case, then remove the previous sentence.}
 
 % [TODO: WHAT end-to-end LATENCY?]
 \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the \texttt{QUIC} protocol because, as I have already mentioned in \S~\ref{Networking_Landscape_Before_QUIC},  \texttt{QUIC} aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers~\cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP, HTTP_3_the_past_the_present_and_the_future}.
@@ -759,7 +764,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 \simon{MAYBE TODO: describe UDP/QUIC packets and their field values}
 
 
-\subsection{\texttt{QUIC} Features}
+\subsection{\texttt{QUIC} Features} \label{QUIC_features}
 % https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
 % TODO: read https://tools.ietf.org/html/draft-ietf-quic-transport-32#section-1
 % TODO: read https://arxiv.org/pdf/1801.05168.pdf
@@ -806,6 +811,17 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
  % MAYBE TODO: mention possible amplification attacks of \texttt{QUIC} (https://blog.cloudflare.com/the-road-to-quic/) 
  
 
+  The effect of the reduced latency of \texttt{QUIC} is apparent.
+  For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low quality Internet links~\cite{chromium_blog_about_quic}.
+  In particular, the study revealed that in some cases the time required to download contents of Google's website was reduced by one second~\cite{chromium_blog_about_quic}.
+ 
+  
+ 
+
+    \simon{If I remember correctly, (as someone said) the problem with TCP is that it confuses network congestion with unreliable links}
+
+  % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
+
 
 
   \item 
@@ -838,49 +854,42 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   
   In order to understand subsequent features of \texttt{QUIC} we need some background knowledge about its flow control.
   % TODO
-  [TODO: add information about streams]
+  \simon{TODO: add information about streams}
   %  Multiple streams & frames
   
   
   % ----------------------
   
   
-  \item TODO loss recovery
+  \item \simon{TODO READ and INCLUDE https://blog.cloudflare.com/http-3-vs-http-2/}
+    
+    
+  
+  \item  \simon{TODO loss recovery}
   % Loss detection: https://quicwg.org/base-drafts/draft-ietf-quic-recovery.html#name-loss-detection
   % > packet-number based approach with a timer
 
-  \item TODO multiplexed streams
+  \item \simon{TODO multiplexed streams}
  
-  \item TODO loss detection with signaling (using new seq number)
+  \item \simon{TODO loss detection with signaling (using new seq number)}
   
   
   
   
   
 \end{itemize}
-
-
-\subsection{Advantages of \texttt{QUIC}} \label{QUIC_advantages}
-
-\begin{itemize}
-  \item Reduced latency:
-  According to [https://blog.chromium.org/2015/04/a-quic-update-on-googles-experimental.html]: "$<\ldots>$ \texttt{QUIC} outshines TCP under poor network conditions, shaving a full second off the Google Search page load time for the slowest 1\% of connections".
-
-  % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
-  
-  \item TODO include https://blog.cloudflare.com/http-3-vs-http-2/
-\end{itemize}
-
 
 
 
 \subsection{\texttt{QUIC}'s Header Format} \label{subsection_QUIC_header_format}
 
 \begin{itemize}
-  \item TODO mention that the packet header encryption is separate from payload encryption
-  \item TODO explain why do we need this separation
-  \item TODO present long and short headers give a list of fields
-  \item TODO mention that packet numbers are encrypted, but connection ID is not
+  \item  \simon{TODO mention that the packet header encryption is separate from payload encryption}
+  \item  \simon{TODO explain why do we need this separation}
+  
+ \item  \simon{TODO present long and short headers give a list of fields (maybe to Appendix)}
+  
+  \item  \simon{ TODO mention that packet numbers are encrypted, but connection ID is not}
 \end{itemize}
 
 \subsection{\texttt{QUIC}'s Adoption}
@@ -921,6 +930,142 @@ Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, wri
 I identified the experimental \texttt{QUIC} benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
 Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (a co-author of \texttt{ngtcp2}).
 Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning that I could deploy software updates to both programs with minimal effort.
+
+
+
+
+
+\section{Benchmarking tools}
+% Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
+\subsection{iperf3}
+\texttt{Iperf3} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
+\texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
+We can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
+However, \texttt{UDP} does not provide a similar set of guarantees as \texttt{QUIC} does.
+For example, \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver could see different throughput values.
+Hence, to put \texttt{QUIC} into the perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
+An important aspect of \texttt{TCP} is that its congestion control mechanism allows sender to discover an appropriate sending bitrate.
+In contrast, \texttt{UDP} does not take into account the state of the network.
+Consequently, if unlimited \texttt{UDP} throughput is allowed, then one could flood the network by running \texttt{iperf3} to measure \texttt{UDP} throughput.
+However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network so no damage was done to the public network.
+
+
+% TODO
+[TODO: mention that one can adjust UDP send or receive (TODO check which one) buffer size]
+
+
+
+\subsection{ping}
+\texttt{Ping} is a network analysis tool used to measure the round trip time between the two communicating parties.
+As mentioned in~\cite{internet-control-message-protocol-icmp}, \texttt{ping} uses Internet Control Message Protocol (or \texttt{ICMP} for short) to issue a request-reply pair.
+Round trip time measurements were used to test the correctness of the testing environment (e.g. to measure additional network delay induced by the intermediate machine).
+However, on \texttt{ping} could not be used to measure one-way delay because network delays can be asymmetric.
+
+
+\subsection{Wireshark}
+
+\texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
+\texttt{Wireshark} visualises key information about the packets -- source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
+    \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display packet headers of \texttt{QUIC}. In particular, packet numbers (abbreviated PKN) are and displayed on the right hand side.}
+    \label{fig:Wireshark_screenshot}
+    \end{figure}
+    
+When required, I ran \texttt{Wireshark} on the intermediate machine to inspect size of the packets transferred between the \texttt{QUIC} client and server.
+It is worth mentioning that \texttt{QUIC} packets are encrypted.
+Hence, I had to share server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g. packet number) of observed \texttt{QUIC} packets.
+
+I used \texttt{Wireshark} in an ethical manner meaning that I only used it to analyse traffic between the dedicated network interfaces.
+In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because testing environment used separate network interfaces. 
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
+    \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network and I did not use \texttt{Wireshark} to capture packets from the college network}
+    \label{fig:Wireshark_separation}
+    \end{figure}
+
+
+
+\subsection{perf}
+\texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack.
+
+% TODO
+\simon{TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]}
+
+\simon{TODO: limitations and overheads of sampling}
+
+\simon{TODO: describe the selection process of frequencies (why 997 and not 1000)}
+
+
+
+\subsection{Flame Graphs}
+\texttt{Flame Graphs} \footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool which is used to visualise the performance of the program.
+In this project I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous samples (see Figure~\ref{fig:perf_results_of_h2load}).
+To understand the \texttt{Flame Graphs} we should first look at the simple example diagram (see Figure~\ref{fig:Flame_Graphs_explanation}).
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/Flame_Graphs_explanation.png}
+    \caption[Schematic diagram of \texttt{Flame Graphs}]{Schematic diagram of \texttt{Flame Graphs} adopted from Brendan Gregg's presentation~\cite{USENIX_ATC2017_flamegraphs}}
+    \label{fig:Flame_Graphs_explanation}
+    \end{figure}
+
+Here y-axis of \texttt{Flame Graphs} represents the depth and frames of the call stack~\cite{CPU_Flame_graphs}.
+For instance, we can see in Figure~\ref{fig:Flame_Graphs_explanation} that \textbf{function\_a()} invoked function calls \textbf{function\_b()} and \textbf{function\_g()}. 
+However, an important point to mention is that x-axis of \texttt{Flame Graphs} does not represent time~\cite{CPU_Flame_graphs}.
+Instead, function names are sorted alphabetically along the x-axis and it represents the approximate percentage of stack frames which were in the call stack~\cite{CPU_Flame_graphs}.
+Hence, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can tell that \textbf{function\_b()} and its \enquote{children} functions spent more time on CPU than \textbf{function\_g()} and its corresponding functions but we can not tell the relative order in which these functions were called.
+Furthermore, in order to better identify the most frequent function calls, stack frames sampled at different times can be merged if they have a shared ancestor~\cite{CPU_Flame_graphs}.
+As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
+
+In the standard \texttt{Flame Graph}, different frames are coloured differently in order to increase visual contrast between the neighbouring cells in the diagram~\cite{CPU_Flame_graphs} (see yellow, orange and red rows in Figure~\ref{fig:perf_results_of_h2load}).
+However, in this project, I am also using \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
+The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph} but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs}.
+
+% TODO
+\simon{TODO: add an example of \texttt{Differential Flame Graph}}
+
+
+% sampling based method
+
+
+
+\simon{[MAYBE TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames -- before that they were optimised by compiler and some stacks were partially anonymous  -- add a reason why this problem occurred -- compiler optimised one register?]}
+
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
+    \caption[Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B)]{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of the time, default \texttt{ngtcp2} version spends doing cryptographic operations} 
+    \label{fig:perf_results_of_h2load}
+    \end{figure}
+    
+\subsection{qlog and qvis}
+% TODO
+\simon{TODO give a high-level overview of qlog format}
+
+\simon{TODO: why is it hard to visualise QUIC's behaviour?}
+
+\simon{Finally, add an example of qvis chart}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Requirements Analysis}
 
@@ -1069,7 +1214,7 @@ In addition, I did not end up using the high-speed network emulator called \text
 % ------------------------------------------------
 
 
-In this chapter I first give an overview of the repository structure.
+In this chapter I describe the actual software engineering tasks I completed to measure \texttt{QUIC} performance consistently and correctly.
 
 
 \section{Repository Overview} 
@@ -1097,10 +1242,8 @@ Furthermore, the setup of the testing environment became more predictable, meani
 
 
 \section{Using Null Encryption}
-% TODO
-\simon{TODO add reference saying that encryption of \texttt{QUIC} is turned on by default}
 
-By design, \texttt{QUIC} uses encryption by default.
+As I have already mentioned in \S~\ref{QUIC_details_section}, \texttt{QUIC} uses encryption by default.
 It encrypts both the payloads of the packets and some fields in the packet headers.
 
 
@@ -1142,7 +1285,7 @@ In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{
 
 
 
-\section{Testing Scripts}
+\section{Performance Analysis Scripts}
 
 In order to measure the performance of the \texttt{QUIC} protocol, I am running several automated scripts on the testing computer (see Figure~\ref{fig:Physical_testing_environment}).
 In particular, I am using Python and/or Bash scripts to configure the testing environment and initiate the \texttt{QUIC} server-client pair.
@@ -1153,7 +1296,12 @@ Furthermore, code maintainability is not the major design goal of this project.
 
 
 
+\section{Testing Scripts}
 
+To check the correctness of disabled \texttt{QUIC} encryption, I added both unit and integration tests.
+Unit tests ensure that the original text is equal to the encrypted and then decrypted text.
+Integration tests transfer large \texttt{HTML} file between the \texttt{QUIC} client and server via the intermediate machine (see Figure~\ref{fig:Physical_testing_environment}).
+After that, sender's and receiver's file contents are compared.
 
 
 \chapter{Evaluation}
@@ -1246,123 +1394,7 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
 
 
     Large segmentation offload and \texttt{TCP} segmentation offload mechanisms were in place on the machine A. 
-
-
-\section{Benchmarking tools}
-% Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
-\subsection{iperf3}
-\texttt{Iperf3} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
-\texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
-We can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
-However, \texttt{UDP} does not provide a similar set of guarantees as \texttt{QUIC} does.
-For example, \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver could see different throughput values.
-Hence, to put \texttt{QUIC} into the perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
-An important aspect of \texttt{TCP} is that its congestion control mechanism allows sender to discover an appropriate sending bitrate.
-In contrast, \texttt{UDP} does not take into account the state of the network.
-Consequently, if unlimited \texttt{UDP} throughput is allowed, then one could flood the network by running \texttt{iperf3} to measure \texttt{UDP} throughput.
-However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network so no damage was done to the public network.
-
-
-% TODO
-[TODO: mention that one can adjust UDP send or receive (TODO check which one) buffer size]
-
-
-
-\subsection{ping}
-\texttt{Ping} is a network analysis tool used to measure the round trip time between the two communicating parties.
-As mentioned in~\cite{internet-control-message-protocol-icmp}, \texttt{ping} uses Internet Control Message Protocol (or \texttt{ICMP} for short) to issue a request-reply pair.
-Round trip time measurements were used to test the correctness of the testing environment (e.g. to measure additional network delay induced by the intermediate machine).
-However, on \texttt{ping} could not be used to measure one-way delay because network delays can be asymmetric.
-
-
-\subsection{Wireshark}
-
-\texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
-\texttt{Wireshark} visualises key information about the packets -- source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
-
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
-    \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display packet headers of \texttt{QUIC}. In particular, packet numbers (abbreviated PKN) are and displayed on the right hand side.}
-    \label{fig:Wireshark_screenshot}
-    \end{figure}
-    
-When required, I ran \texttt{Wireshark} on the intermediate machine to inspect size of the packets transferred between the \texttt{QUIC} client and server.
-It is worth mentioning that \texttt{QUIC} packets are encrypted.
-Hence, I had to share server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g. packet number) of observed \texttt{QUIC} packets.
-
-I used \texttt{Wireshark} in an ethical manner meaning that I only used it to analyse traffic between the dedicated network interfaces.
-In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because testing environment used separate network interfaces. 
-
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
-    \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network and I did not use \texttt{Wireshark} to capture packets from the college network}
-    \label{fig:Wireshark_separation}
-    \end{figure}
-
-
-
-\subsection{perf}
-\texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack.
-
-% TODO
-\simon{TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]}
-
-\simon{TODO: limitations and overheads of sampling}
-
-\simon{TODO: describe the selection process of frequencies (why 997 and not 1000)}
-
-
-
-\subsection{Flame Graphs}
-\texttt{Flame Graphs} \footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool which is used to visualise the performance of the program.
-In this project I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous samples (see Figure~\ref{fig:perf_results_of_h2load}).
-To understand the \texttt{Flame Graphs} we should first look at the simple example diagram (see Figure~\ref{fig:Flame_Graphs_explanation}).
-
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/Flame_Graphs_explanation.png}
-    \caption[Schematic diagram of \texttt{Flame Graphs}]{Schematic diagram of \texttt{Flame Graphs} adopted from Brendan Gregg's presentation~\cite{USENIX_ATC2017_flamegraphs}}
-    \label{fig:Flame_Graphs_explanation}
-    \end{figure}
-
-Here y-axis of \texttt{Flame Graphs} represents the depth and frames of the call stack~\cite{CPU_Flame_graphs}.
-For instance, we can see in Figure~\ref{fig:Flame_Graphs_explanation} that \textbf{function\_a()} invoked function calls \textbf{function\_b()} and \textbf{function\_g()}. 
-However, an important point to mention is that x-axis of \texttt{Flame Graphs} does not represent time~\cite{CPU_Flame_graphs}.
-Instead, function names are sorted alphabetically along the x-axis and it represents the approximate percentage of stack frames which were in the call stack~\cite{CPU_Flame_graphs}.
-Hence, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can tell that \textbf{function\_b()} and its \enquote{children} functions spent more time on CPU than \textbf{function\_g()} and its corresponding functions but we can not tell the relative order in which these functions were called.
-Furthermore, in order to better identify the most frequent function calls, stack frames sampled at different times can be merged if they have a shared ancestor~\cite{CPU_Flame_graphs}.
-As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
-
-In the standard \texttt{Flame Graph}, different frames are coloured differently in order to increase visual contrast between the neighbouring cells in the diagram~\cite{CPU_Flame_graphs} (see yellow, orange and red rows in Figure~\ref{fig:perf_results_of_h2load}).
-However, in this project, I am also using \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
-The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph} but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs}.
-
-% TODO
-\simon{TODO: add an example of \texttt{Differential Flame Graph}}
-
-
-% sampling based method
-
-
-
-[MAYBE TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames -- before that they were optimised by compiler and some stacks were partially anonymous  -- add a reason why this problem occurred -- compiler optimised one register?]
-
-    \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
-    \caption[Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B)]{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of the time, default \texttt{ngtcp2} version spends doing cryptographic operations} 
-    \label{fig:perf_results_of_h2load}
-    \end{figure}
-    
-\subsection{qlog and qvis}
-% TODO
-\simon{TODO give a high-level overview of qlog format}
-
-\simon{TODO: why is it hard to visualise QUIC's behaviour?}
-
-\simon{Finally, add an example of qvis chart}
+    \simon{TODO: check which ones, because I disabled LRO}
 
 
 \section{Parameter Tuning}
@@ -1605,9 +1637,11 @@ As a side note, Large Receive Offload is disable on both the testing and interme
 
 
 These experiments aimed to determine the impact of parallel \texttt{UDP} streams for the aggregated throughput of \texttt{UDP}.
-As demonstrated in Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}, adding concurrent \texttt{UDP} clients increased the aggregated goodput when transferring small files, e.g. 1 or 10 MBytes in size.
 
-However, for large files this effect is inverted -- additional concurrent \texttt{iperf3} clients decreased \texttt{UDP} throughput measured on the server-side.
+As demonstrated in Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}, adding concurrent \texttt{UDP} clients increased the aggregated goodput when transferring small files, e.g. 1 or 10 MBytes in size.
+\simon{Wait a minute, with the new tests, these results don't hold any more!}
+
+However, for very large files this effect is inverted -- additional concurrent \texttt{iperf3} clients decreased \texttt{UDP} throughput measured on the server-side.
 
 This interesting effect could be explained by the fact that there is an associated overhead of maintaining additional \texttt{iperf3} clients.
 
@@ -1631,7 +1665,7 @@ Hence, the server and its associated stack could form the performance bottleneck
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/UDP_throughput_in_time.png}
-    \caption[Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine. Here throughput is measured at the granularity of 0.1 s}
+    \caption[Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine. Here throughput is measured at the granularity of 0.1 s. \simon{Still using MBytes/second. It should be MBits/second!}}
     \label{fig:UDP_throughput_in_time}
     \end{figure}
 
@@ -1660,6 +1694,8 @@ In addition, here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes
     \caption[Impact of parallel streams for \texttt{TCP} throughput]{Impact of parallel streams for \texttt{TCP} throughput. Here packets travel via an intermediate machine. Here (*) refers to the same problem described in Figure~\ref{fig:UDP_throughput_via_B_using_parallel_streams}.}
     \label{fig:TCP_throughput_via_B_using_parallel_streams}
 \end{table}
+
+
 
 
 Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} shows the effect of increased transferred file size for the throughput of \texttt{TCP}.
@@ -1748,13 +1784,14 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 1000                                                                                             & 10                                                                                                                         & 685.84                                                                                                                                          & 7.55                                                                                                                             & 116694.00                                                                                                & 1258.09                                                                                                                          \\ \hline
 \end{tabular}
     \centering
-    \caption{Impact of parallel requests for encrypted \texttt{QUIC} throughput. Here packets travel via an intermediate machine}
+    \caption{Impact of parallel requests for encrypted \texttt{QUIC} throughput. Here packets travel via an intermediate machine. 
+    \simon{Still using MBytes/second. It should be MBits/second!}.
+    \simon{TODO: IDEA: behaves like UDP}
+    \simon{h2load experiment is probably sending 1 or 10 separate "files" while iperf3 is probably sending just a single "file" over 1 or 10 connections}}
     \label{fig:QUIC_throughput_via_B_using_parallel_requests}
     
     
-    \simon{TODO: IDEA: behaves like UDP}
-    
-    \simon{h2load experiment is probably sending 1 or 10 separate "files" while iperf3 is probably sending just a single "file" over 1 or 10 connections}
+
 \end{table}
 
 
@@ -1804,6 +1841,9 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 1000                                                                                             & 1                                                                                                                          & 2661.93                                                                                                                                         & 7.01                                                                                                                             & 3006.00                                                                                                  & 8.43                                                                                                                             \\ \hline
 1000                                                                                             & 10                                                                                                                         & 2557.58                                                                                                                                         & 73.76                                                                                                                            & 31312.00                                                                                                 & 891.61                                                                                                                           \\ \hline
 \end{tabular}
+    \centering
+    \caption[Impact of parallel requests for unencrypted \texttt{QUIC} throughput]{Impact of parallel requests for unencrypted \texttt{QUIC} throughput. Here packets travel via an intermediate machine}
+    \label{fig:unencrypted_QUIC_throughput_via_B_using_parallel_requests}
 \end{table}
 
 
@@ -1879,9 +1919,10 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 \section{Summary}
 
-\simon{Read about energy efficiency and application of QUIC for IoT https://calendar.perfplanet.com/2018/quic-and-http-3-too-big-to-fail/}
+In this project I simulated offloading of cryptographic \texttt{QUIC} functions and I measured impact of this improvement.
+My dissertation reiterates the idea that, if implemented correctly, hardware offloading of \texttt{QUIC} could offer substantial performance improvements.
 
-\awm{Don't forget - make a CONCLUSION too}
+\simon{Mention energy efficiency and application of QUIC for IoT https://calendar.perfplanet.com/2018/quic-and-http-3-too-big-to-fail/}
 
 \section{Reflection}
 Before starting the project, prior expertise working with the \texttt{NetFPGA} platform would have substantially helped.
@@ -1889,6 +1930,11 @@ In particular, hands-on experience with the reference hardware projects during t
 
 
 \section{Future Work}
+
+Certain innovative network analysis tools, such as the aforementioned \texttt{MsQuic} performance analysis programs, were not adopted for \texttt{Ubuntu 20.04 LTS (Focal Fossa)} operating system.
+Hence, I could not compare performance of disabled encryption of \texttt{MsQuic} with the corresponding \texttt{TCP/TLS} stack.
+However, I hope that in the future such experiments would be possible.
+
 % TODO
 \simon{TODO: suggest offloading crypto to hardware (as Gianni's team has already suggested)}
 
