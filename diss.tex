@@ -759,7 +759,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 \simon{MAYBE TODO: describe UDP/QUIC packets and their field values}
 
 
-\subsection{List of \texttt{QUIC} Features}
+\subsection{\texttt{QUIC} Features}
 % https://archive.nanog.org/sites/default/files/meetings/NANOG64/1051/20150603_Rogan_Quic_Next_Generation_v1.pdf
 % TODO: read https://tools.ietf.org/html/draft-ietf-quic-transport-32#section-1
 % TODO: read https://arxiv.org/pdf/1801.05168.pdf
@@ -769,15 +769,17 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
  \item \textbf{Connection migration} 
  % (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
  
-    As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Web~\cite{bib_number_of_mobile_users}.
-    An important aspect of portable devices is that their location, and thus Internet access point, can change frequently~\cite{PollardBarry2019HiAP}.
+    % As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
+    Nowadays ubiquitous mobile devices~\cite{bib_number_of_mobile_users} can change their location, and thus their Internet access can change frequently too~\cite{PollardBarry2019HiAP}.
     This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address~\cite{PollardBarry2019HiAP}.
-    As a result, \texttt{TCP} needs to establish a new connection every time the network access point is changed~\cite{PollardBarry2019HiAP}.
+    As a result, \texttt{TCP} needs to establish a new connection every time the network Wi-Fi network is changed~\cite{PollardBarry2019HiAP}.
     This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the \enquote{slow-start} phase and perform additional handshakes.
-    This example demonstrates that \texttt{TCP} protocol is old as it assumed that \texttt{IP} address would not frequently change~\cite{PollardBarry2019HiAP}.
+    In addition, because of the different signal paths, other access points may have distinct round-trip times.
+    Hence, after changing its access point, the mobile device may incorrectly use RTT estimates from the previous Wi-Fi connection for the congestion control over the new access point.
+    These example demonstrates that \texttt{TCP} protocol assumes that \texttt{IP} address would not frequently change~\cite{PollardBarry2019HiAP}.
     In contrast, \texttt{QUIC} is more suitable to handle connections via mobile devices.
     In particular, \texttt{QUIC} has an explicit connection ID that does not depend on the IP address~\cite{PollardBarry2019HiAP}.
-    Hence, \texttt{QUIC} clients can migrate between multiple networks without having to re-establish a \texttt{QUIC} connection.
+    Hence, \texttt{QUIC} clients can migrate between multiple different \texttt{IP} networks without having to re-establish a \texttt{QUIC} connection.
     
     
     
@@ -788,7 +790,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 \item \textbf{Fast \texttt{TLS1.3} handshake}
 
-As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the primary innovations of \texttt{QUIC} is that it combines transport and security layer handshakes thus reducing latency of the first \texttt{HTTP} request.
+As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the core innovations of \texttt{QUIC} is to combine the transport and security layer handshakes thus reducing latency of the first \texttt{HTTP} request.
 
 
      \begin{figure}[H]
@@ -815,22 +817,21 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
   \item 
   An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space rather than kernel space}~\cite{the-road-to-quic, Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel}.
   The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly deployed (e.g. by deploying protocol updates with the software updates)~\cite{the-road-to-quic}.
-  In addition, as Snellman states, with several exceptions such as Google, Microsoft or Apple, operating systems are usually not controlled by the same companies as the ones that develop client-side software, such as browsers~\cite{2016-12-01-quic-tou}.
+  In addition, despite several exceptions such as Google, Microsoft, and Apple, operating systems may not be controlled by the same companies as the ones that develop client-side software, such as browsers~\cite{2016-12-01-quic-tou}.
   Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user space.
   However, there is an associated cost of the user space because data has to be copied from kernel space to user space~\cite{benchmarking-quic}.
   
   
  
-  \item Another feature of \texttt{QUIC} is that its packets are \textbf{encrypted by default}~\cite{the-road-to-quic}.
+  \item \texttt{QUIC} features include packet \enquote{\textbf{encryption by default}}~\cite{the-road-to-quic}.
   Moreover, there are no implementations of \texttt{QUIC} without embedded security layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks~\cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
-  
+  The concern is that conventional wirewalls would not be able to reject suspicious \texttt{QUIC} packets.
   
 
 
   \item 
-    According to the aforementioned \texttt{IETF QUIC} draft, Section 7~\cite{ietf-quic-transport-draft} and 
-    the article written by Robin Marx~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}, \texttt{QUIC} also provides \textbf{reliable in-order data delivery}.
+    \texttt{QUIC} also provides \textbf{reliable in-order data delivery}~\cite[Section 7]{ietf-quic-transport-draft}, ~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} .
     The main purpose of this is to replace \texttt{TCP} by offering identical or better guarantees. 
     Similarly, \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
   
@@ -884,34 +885,8 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the pri
 
 \subsection{\texttt{QUIC}'s Adoption}
 
-At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt{QUIC} and $14.5\%$ used \texttt{HTTP/3}~\cite{bib_Adoption_comparison_Between_http2_http3_quic}
-(see Figure~\ref{fig:Adoption_comparison_Between_http2_http3_quic}).
-% TODO
-[TODO: why there is a difference between \texttt{QUIC} and HTTP/3 usage?]
-
-
-However, as Matt Joras, Software Engineer from \texttt{Facebook}, said on the \texttt{Slack} chat of \texttt{QUIC} developers, the number of websites using \texttt{HTTP/3} does not correctly represent the protocol usage in terms of traffic. 
-% TODO
-[TODO: add his reasoning - e.g. one can create numerous ghost websites]
-
-Hence, this diagram only demonstrates that \texttt{QUIC} is still in the relatively early deployment phase.
-
-[TODO: add another analysis which calculates \texttt{QUIC} traffic]
-[TODO: include https://radar.cloudflare.com/]
-
-
-    \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/Adoption_comparison_Between_http2_http3_quic.png}
-    \caption[Proportion of websites using \texttt{QUIC}, \texttt{HTTP/2}, or \texttt{HTTP/3}]{Proportion of websites using \texttt{QUIC}, \texttt{HTTP/2}, or \texttt{HTTP/3}. This diagram is taken from~\cite{bib_Adoption_comparison_Between_http2_http3_quic}.}
-    \label{fig:Adoption_comparison_Between_http2_http3_quic}
-    \end{figure}
-
-
-
-
-
-
+At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt{QUIC} and $14.5\%$ used \texttt{HTTP/3}~\cite{bib_Adoption_comparison_Between_http2_http3_quic}.
+Similarly, according to Cloudflare\footnote{https://radar.cloudflare.com/}, at the same time 11\% of traffic used \texttt{HTTP/3}.
 
 
 
@@ -921,11 +896,13 @@ According to \texttt{QUIC} Working Group~\cite{number_of_QUIC_implementations}, 
 
 \subsection{Why are there so many Implementations of QUIC?}
 
-\texttt{QUIC} is implemented in the user space.
+\texttt{QUIC} is implemented in the user space~\cite{quic-and-http-3-too-big-to-fail}.
 Hence, this flexibility simplifies the development and deployment of the new \texttt{QUIC} implementations.
 In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in C language family.
 There are numerous bootstrapping compilers written in C, meaning that any user level program, potentially written in different programming language, can be compiled and run.
-However, there is an associated cost of using protocol written in user space -- as Langley et al.~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}, \texttt{QUIC} server required 3.5 more \texttt{CPU} resources.
+However, there is an associated cost of using protocol in user space. 
+\simon{Finish rephrasing}
+As Langley et al.~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}, \texttt{QUIC} server required 3.5 more \texttt{CPU} resources.
 
 \subsection{Selecting  \texttt{ngtcp2}}
 %TODO: fix style and grammar:
