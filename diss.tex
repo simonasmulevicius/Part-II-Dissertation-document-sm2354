@@ -901,8 +901,10 @@ Hence, this flexibility simplifies the development and deployment of the new \te
 In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in C language family.
 There are numerous bootstrapping compilers written in C, meaning that any user level program, potentially written in different programming language, can be compiled and run.
 However, there is an associated cost of using protocol in user space. 
-\simon{Finish rephrasing}
-As Langley et al.~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}, \texttt{QUIC} server required 3.5 more \texttt{CPU} resources.
+Langley et. al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}.
+In addition, by deploying \texttt{QUIC} changes in the user space, companies can also patch proprietary extensions.
+Firms can even use their market dominance (e.g., in the browser industry) to enforce these protocol updates.
+However, there is no guarantee that proprietary extensions would improve network connections for the general public. 
 
 \subsection{Selecting  \texttt{ngtcp2}}
 %TODO: fix style and grammar:
