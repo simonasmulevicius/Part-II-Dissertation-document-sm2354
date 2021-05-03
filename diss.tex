@@ -914,13 +914,13 @@ Before changing the direction of the dissertation, one of the primary goals of t
 Hence, I performed a survey to find \texttt{QUIC} implementation, which had an API to control encryption. 
 \texttt{Aioquic}, \texttt{MsQuic} and \texttt{ngtcp2} seemed to be the most promising.
 However, despite being a simple and well-documented implementation of \texttt{QUIC}, \texttt{aioquic} did not have an active development team that could answer technical questions.
-Similarly, \texttt{MsQuic} seemed promising, but some of the performance measurement tools used by the \texttt{MsQuic} team were proprietary and not yet released to the public.
-As this project is based on a paper written by Yang et al.~\cite{Making_QUIC_Quicker}, I thought that it would be wise to use similar testing conditions in this dissertation too.
-In particular, Gianni and his team evaluated several \texttt{QUIC} implementations, which were written in C or C\texttt{++}.
-Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, which is also written in C.
-Later on, I figured out that there is an experimental \texttt{QUIC} benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
-Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (the co-author of \texttt{ngtcp2}).
-
+Similarly, \texttt{MsQuic} seemed promising, but some of the performance measurement tools used by the \texttt{MsQuic} team were proprietary and not yet released to the public. 
+I thought that in this dissertation it would be wise to use similar testing conditions as the ones used in the previous similar paper (Yang et al.~\cite{Making_QUIC_Quicker}).
+In particular, the authors of this paper evaluated several  or C\texttt{++} \texttt{QUIC} implementations.
+Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, written in C.
+I identified the experimental \texttt{QUIC} benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
+Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (a co-author of \texttt{ngtcp2}).
+Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning that I could deploy software updates to both programs with minimal effort.
 
 \section{Requirements Analysis}
 
