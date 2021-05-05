@@ -501,8 +501,8 @@ As Robin Marx wrote, HOL could have a detrimental effect on user experience when
 
 
 One possible workaround to hide the effect of Head-of-line blocking is to use several shared \texttt{TCP} connections~\cite{bib_digital_ocean_http11_vs_http2}.
-In particular, according to Javier Garza~\cite{bib_will-http2-make-my-site-faster}, \texttt{HTTP/1.1} uses six \texttt{TCP} connections.
-But, as Timothy Nolan points out~\cite{bib_digital_ocean_http11_vs_http2}, the use of large number of \texttt{TCP} connections is not practical because there is an associated performance overhead of opening and using them.
+In particular, \texttt{HTTP/1.1} uses six \texttt{TCP} connections ~\cite{bib_will-http2-make-my-site-faster, head-of-line-blocking-in-quic-and-http-3-the-details}.
+But, the use of large number of \texttt{TCP} connections is not practical because there is an associated performance overhead of opening and using them ~\cite{bib_digital_ocean_http11_vs_http2, head-of-line-blocking-in-quic-and-http-3-the-details}.
 However, servers also have to share some of the overheads.
 For instance, additional \texttt{TCP} connections may require additional memory to store the associated \texttt{TCP} parameters on the server-side~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Finally, application layer Head-of-line blocking problems of \texttt{HTTP/1.1} could be summarised in Figure~\ref{fig:Head_of_line_blocking_of_HTTP1_1}.
@@ -572,7 +572,7 @@ As demonstrated in the previous sections, there have already been several attemp
 In order to finally resolve the HOL blocking problem of \texttt{TCP}, one would need to upgrade this protocol so that \texttt{TCP} could separate frames associated with different logical \texttt{HTTP} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Hence, new version of \texttt{TCP} algorithm would be required. 
 However, attempts to roll out experimental versions of \texttt{TCP} to yield benefits to the protocols in the application layer were mostly unsuccessful~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
-For instance, as Craig Andrews states in his article~\cite{the-sad-story-of-tcp-fast-open}, there was a largely unsuccessful proposal called \texttt{TCP Fast Open} to reduce the number of handshakes (and thus round-trip times) required to open \texttt{TCP} connections.
+For instance, there was a largely unsuccessful proposal called \texttt{TCP Fast Open} to reduce the number of handshakes (and thus round-trip times) required to open \texttt{TCP} connections~\cite{the-sad-story-of-tcp-fast-open}.
 One of the failure factors was related to middleboxes~\cite{the-sad-story-of-tcp-fast-open}.
 During the early 2000s, specific architectural problem emerged.
 Around that time, the world faced an issue that the Internet was running out of \texttt{IPv4} addresses.
@@ -584,6 +584,7 @@ Consequently, these premature optimisations interfered with \texttt{TCP} protoco
 One reason for the slow roll-out of \texttt{TCP} improvements was that \texttt{TCP's} functionality is implemented in the OS kernel.
 To add changes to \texttt{TCP}, one would need to change a large number of different operating systems ~\cite{PollardBarry2019HiAP}.
 Hence, it was decided that it would be relatively difficult to deploy upgrades for the \texttt{TCP} transport layer protocol~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+However, \texttt{TLS 1.3} was another protocol that suffered from the middlebox interference~\cite{why-tls-1-3-isnt-in-browsers-yet}.
 
 Architects of \texttt{QUIC} learned these mistakes and attempted to prevent the ossification of \texttt{QUIC} in the future by using several interesting techniques.
 To simplify the deployment, \texttt{QUIC's} code operates in user space~\cite{quic-and-http-3-too-big-to-fail}.
