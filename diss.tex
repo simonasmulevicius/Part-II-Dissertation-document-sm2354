@@ -777,7 +777,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
     % As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
     Nowadays ubiquitous mobile devices~\cite{bib_number_of_mobile_users} can change their location, and thus their Internet access can change frequently too~\cite{PollardBarry2019HiAP}.
     This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address~\cite{PollardBarry2019HiAP}.
-    As a result, \texttt{TCP} needs to establish a new connection every time the network Wi-Fi network is changed~\cite{PollardBarry2019HiAP}.
+    As a result, \texttt{TCP} needs to establish a new connection every time the Wi-Fi network is changed~\cite{PollardBarry2019HiAP}.
     This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the \enquote{slow-start} phase and perform additional handshakes.
     In addition, because of the different signal paths, other access points may have distinct round-trip times.
     Hence, after changing its access point, the mobile device may incorrectly use RTT estimates from the previous Wi-Fi connection for the congestion control over the new access point.
@@ -818,19 +818,32 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   
 
   \item 
-  An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space rather than kernel space}~\cite{the-road-to-quic, Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel}.
-  The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly deployed (e.g. by deploying protocol updates with the software updates)~\cite{the-road-to-quic}.
+  An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space rather than kernel space}~\cite{the-road-to-quic, Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel, quic-and-http-3-too-big-to-fail}.
+  The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly developed and deployed (e.g., by deploying protocol updates with the software updates)~\cite{the-road-to-quic}.
+  This explains why there are numerous different implementation of \texttt{QUIC} (see \S~\ref{List_of_QUIC_implementations}).
+  In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in C language family.
+  There are numerous bootstrapping compilers written in C, meaning that any user level program, potentially written in different programming language, can be compiled and run.
   In addition, despite several exceptions such as Google, Microsoft, and Apple, operating systems may not be controlled by the same companies as the ones that develop client-side software, such as browsers~\cite{2016-12-01-quic-tou}.
   Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user space.
+  
   However, there is an associated cost of the user space because data has to be copied from kernel space to user space~\cite{benchmarking-quic}.
-  
-  
+  Furthermore, Langley et. al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}.
+  In addition, by deploying \texttt{QUIC} changes in the user space, companies can also patch proprietary extensions.
+  Firms can even use their market dominance (e.g., in the browser industry) to enforce these protocol updates.
+  However, there is no guarantee that proprietary extensions would improve network quality for the general public. 
+
+
+
+
+
+
+
  
   \item \texttt{QUIC} features include packet \enquote{\textbf{encryption by default}}~\cite{the-road-to-quic}.
   Moreover, there are no implementations of \texttt{QUIC} without embedded security layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks~\cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
   The concern is that conventional wirewalls would not be able to reject suspicious \texttt{QUIC} packets.
-  In addition, encrypted \texttt{QUIC} headers do not provide scientific information for network engineers about the traffic patterns~\cite{2017-12-18-transport-header-encryption}.
+  In addition, network engineers may find it more difficult to analyse encrypted \texttt{QUIC} headers to understand traffic patterns~\cite{2017-12-18-transport-header-encryption}.
 
 
   \item 
@@ -867,7 +880,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   
     The effect of the reduced latency of \texttt{QUIC} is apparent.
   For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low quality Internet links~\cite{chromium_blog_about_quic}.
-  In particular, the study revealed that in some cases the time required to download contents of Google's website was reduced by one second~\cite{chromium_blog_about_quic}.
+  In particular, the study revealed that in some cases the time required to download contents of Google's main website was reduced by one second~\cite{chromium_blog_about_quic}.
 
     \simon{If I remember correctly, (as someone said) the problem with TCP is that it confuses network congestion with unreliable links}
 
@@ -910,17 +923,7 @@ Similarly, according to Cloudflare\footnote{https://radar.cloudflare.com/}, at t
 According to \texttt{QUIC} Working Group~\cite{number_of_QUIC_implementations}, there is 31 different implementation of QUIC. Most of the implementations, 22 to be precise, are written using C/C\texttt{++} language family (e.g., \texttt{Chromium}\footnote{https://chromium.googlesource.com/chromium/src/net/+/master/quic/}) while the remaining implementations use Rust (e.g., \texttt{quiche}\footnote{https://github.com/cloudflare/quiche}), Python (e.g., \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic}), Haskel (e.g., \texttt{Haskell quic}\footnote{https://github.com/kazu-yamamoto/quic}), Java (e.g., \texttt{kwik}\footnote{https://bitbucket.org/pjtr/kwik/src/master/}), Go (e.g., \texttt{quic-go}\footnote{https://github.com/lucas-clemente/quic-go}) or JavaScript (e.g., \texttt{Node.js QUIC}\footnote{https://github.com/nodejs/quic}).
 
 
-\subsection{Why are there so many Implementations of QUIC?}
 
-\texttt{QUIC} is implemented in the user space~\cite{quic-and-http-3-too-big-to-fail}.
-Hence, this flexibility simplifies the development and deployment of the new \texttt{QUIC} implementations.
-In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in C language family.
-There are numerous bootstrapping compilers written in C, meaning that any user level program, potentially written in different programming language, can be compiled and run.
-However, there is an associated cost of using protocol in user space. 
-Langley et. al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}.
-In addition, by deploying \texttt{QUIC} changes in the user space, companies can also patch proprietary extensions.
-Firms can even use their market dominance (e.g., in the browser industry) to enforce these protocol updates.
-However, there is no guarantee that proprietary extensions would improve network connections for the general public. 
 
 \subsection{Selecting  \texttt{ngtcp2}}
 %TODO: fix style and grammar:
