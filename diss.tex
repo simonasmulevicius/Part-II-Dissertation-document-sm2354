@@ -822,7 +822,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     According to the \texttt{IETF QUIC} draft, Section 1~\cite{ietf-quic-transport-draft-32}, \texttt{QUIC} offers \textbf{zero round-trip-time connections} (abbreviated \texttt{0-RTT}) provided that the server and client had an established connection in the recent past~\cite{introducing-0-rtt}.
     In other words, under the aforementioned circumstances, \texttt{QUIC} server and client can start exchanging data without having to wait for the completion of the new handshake~\cite{ietf-quic-transport-draft-32}.
   
-  \simon{If needed, add more details from: \url{https://qlog.edm.uhasselt.be/epiq/files/QUICImplementationDiversity_Marx_final_11jun2020.pd}}
+  % \simon{If needed, add more details from: \url{https://qlog.edm.uhasselt.be/epiq/files/QUICImplementationDiversity_Marx_final_11jun2020.pd}}
   
 
   \item 
@@ -835,7 +835,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user space.
   
   However, there is an associated cost of the user space because data has to be copied from kernel space to user space~\cite{benchmarking-quic}.
-  Furthermore, Langley et. al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{QUIC_SERVER_REQUIRES_3-5_more_CPU_resources}.
+  Furthermore, Langley et. al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment}.
   In addition, by deploying \texttt{QUIC} changes in the user space, companies can also patch proprietary extensions.
   Firms can even use their market dominance (e.g., in the browser industry) to enforce these protocol updates.
   However, there is no guarantee that proprietary extensions would improve network quality for the general public. 
@@ -863,6 +863,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   The logical implementation of streams is similar to the one used for \texttt{HTTP/2.0} (see Figure~\ref{fig:Multiplexing_HTTP2}).
   However, instead of using a shared \texttt{TCP} connection, \texttt{QUIC} uses a logical \texttt{QUIC} connection.
   Every \texttt{QUIC} stream is separated into frames~\cite{UnderstandQUIC},~\cite[Chapter~2.1]{ ietf-quic-transport-draft-32} and there may be several \texttt{QUIC} frames in a single \texttt{QUIC} packet ~\cite[Chapter~1]{ ietf-quic-transport-draft-32}.
+  Furthermore, each frame stores information about the stream it belongs to as well as the range of the application layer data bytes it transfers~\cite{UnderstandQUIC}.
   \begin{itemize}
   
   
@@ -888,14 +889,16 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     
     % ----------------------
     
-    It is important to mention that \texttt{QUIC} uses unique monotonically increasing packet sequence numbers~\cite{UnderstandQUIC},~\cite[Chapter~4.2]{ietf-quic-recovery-32}.
-    As a result, lost \texttt{QUIC} frames are retransmitted over \texttt{QUIC} packets with different sequence numbers~\cite[Chapter~4]{ietf-quic-recovery-32}.
-    In contrast, \texttt{TCP} reuses packet numbers for retransmissions~\cite[Chapter~4]{ietf-quic-recovery-32}.
+    It is important to mention that \texttt{QUIC} uses unique monotonically increasing packet sequence numbers~\cite{UnderstandQUIC, The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment},~\cite[Section~4.2]{ietf-quic-recovery-32}.
+    As a result, lost \texttt{QUIC} frames are retransmitted over \texttt{QUIC} packets with different sequence numbers~\cite[Section~4]{ietf-quic-recovery-32},~\cite{UnderstandQUIC}.
+    In contrast, \texttt{TCP} reuses packet numbers for retransmissions~\cite[Section~4]{ietf-quic-recovery-32}.
     Hence, \texttt{QUIC's} approach is superior because it can determine the exact number of packets in transit more accurately~\cite{UnderstandQUIC}.
-    This concept is visualised in Figure X.
-    This diagram demonstrates that \texttt{QUIC} can cope better with repeated packet loss than \texttt{TCP}~\cite{UnderstandQUIC}.
-    
-    % TODO add the diagram
+    This concept is visualised in Figure~\ref{fig:Impact_of_increasing_pkt_numbers}.
+    This diagram demonstrates that \texttt{QUIC} can cope with repeated packet loss better than \texttt{TCP}~\cite{UnderstandQUIC}.
+    Furthermore, \texttt{QUIC}, as opposed to \texttt{TCP}, can identify whether or not a received packet contains retransmitted frames~\cite{UnderstandQUIC}.
+    This in turn allows \texttt{QUIC} to estimate round-trip time more accurately.
+    Figure~\ref{fig:Impact_of_increasing_pkt_numbers} also demonstrates that \texttt{QUIC} uses frame byte ranges to identify missing frames and provide reliable delivery~\cite{UnderstandQUIC}.
+    In subsequent paragraphs I describe how \texttt{QUIC} packet numbers are used to avoid network congestion~\cite{UnderstandQUIC}.
     
     \begin{figure}[H]
     \centering
@@ -905,51 +908,43 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     \end{figure}
     
     
-    % ----------------------
     
-    
-    
-    
-      \item  \simon{TODO loss recovery}
-  % Loss detection: https://quicwg.org/base-drafts/draft-ietf-quic-recovery.html#name-loss-detection
-  % > packet-number based approach with a timer
-
-  In case of the packet loss, \texttt{QUIC} passes other successfully received packets to the application layer provided that a missing packet is from another stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-  
-
-
-  \simon{TODO loss detection with signaling (using new seq number)????}
-  
-    % ----------------------
-    
-    
-    
+    \item  \texttt{QUIC} has \textbf{loss recovery} mechanism.
+    \texttt{QUIC} uses two ways to detect packet loss - by tracking unacknowledged packet numbers and using timeouts~\cite{UnderstandQUIC},~\cite[Section~6]{ietf-quic-recovery-32}.
+    An important point to mention is that a \texttt{QUIC} packet may be declared as lost if it gets reordered and some number of subsequent packets are acknowledged before the reordered packet,~\cite[Section~6]{ietf-quic-recovery-32}.
+    In case of the packet loss, \texttt{QUIC} passes other successfully received packets to the application layer above provided that a missing packet is from another stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+   
    \item \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
-   The same \texttt{QUIC} congestion control algorithm is applied over all \texttt{QUIC} streams, meaning that a single lost packet on one stream would likely have an impact on the throughput of all streams, but a lost packet of one stream would not block the other streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
-   Similarly, round-trip time estimations are also shared among different streams~\cite[Chapter~4.2]{ietf-quic-recovery-32}.
+   The same \texttt{QUIC} congestion control algorithm is applied over all \texttt{QUIC} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
+   Similarly, round-trip time estimations are also shared among different streams~\cite[Section~4.2]{ietf-quic-recovery-32}.
+   As a result, a single lost packet on one stream would likely have an impact on the throughput of all streams, but a lost packet of one stream would not block the other streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
+   Actually, \texttt{QUIC} has to observe multiple systematic packet losses for a noticeable period of time in order to declare that there is a persistent congestion in the network ~\cite[Section~4]{ietf-quic-recovery-32},~\cite{UnderstandQUIC}.
+   Then, the sender can reduce its congestion window~\cite{UnderstandQUIC}.
    As a side note, \texttt{ngtcp2}, the primary \texttt{QUIC} implementation that I am studying, uses \texttt{CUBIC} as the default congestion control mechanism (according to the private correspondence with the \texttt{ngtcp2} co-author).
   
   
-  
 
-
-  
-  
+ 
 
   
   
-
-  
-  
-  \item
-  
-    The effect of the reduced latency of \texttt{QUIC} is apparent.
-  For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low quality Internet links~\cite{chromium_blog_about_quic}.
+  \item The effect of the \textbf{reduced latency} of \texttt{QUIC} is apparent.
+  For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low quality Internet links, e.g. wireless links~\cite{chromium_blog_about_quic, quic-vs-tcptls-and-why-quic-is-not-the-next-big-thing}.
   In particular, the study revealed that in some cases the time required to download contents of Google's main website was reduced by one second~\cite{chromium_blog_about_quic}.
+  One possible explanation of this effect could be that any packet loss decreases the effective \texttt{TCP} throughput (See Equation~\ref{eq:gass_stuff}).
+  
+  Steady state throughput formula, as defined by Jitendra Padhye et.al.~\cite{TCP_throughput_formula}: 
+    \begin{equation}
+    \textrm{TCP throughput} (p) \approx \frac{1}{\textrm{RTT}}\sqrt{\frac{1}{2bp}} 
+    \label{eq:gass_stuff}
+    \end{equation}
+     where $p$ is the packet loss rate, $b$ is the number of packets acknowledged with a single acknowledgment message, and $RTT$ being the round-trip time.
+  
+  
+  However, under substantial but tolerable packet loss rate, \texttt{QUIC} can avoid decreasing its congestion window if it does not detect persistent congestion.
+  
+ %\simon{If I remember correctly, (as someone said) the problem with TCP is that it confuses network congestion with unreliable links}
 
-    \simon{If I remember correctly, (as someone said) the problem with TCP is that it confuses network congestion with unreliable links}
-
-  % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
 
 
 
@@ -1832,6 +1827,11 @@ But this functionality is not supported on Linux.
 Unfortunately, I used \texttt{Ubuntu 20.04 LTS (Focal Fossa)} operating system on both machines in the testing environment (shown in Figure~\ref{fig:Physical_testing_environment}).
 In the future, \texttt{MsQuic} tools may provide better support for the family of Unix operating systems meaning that subsequent studies could take throughput of \texttt{TCP} with \texttt{TLS} into account.
 
+To evaluate \texttt{TCP with TLS} performance, I connected two laptops running on \texttt{Windows 10} OS with 1 Gigabit-per-second Ethernet link.
+However, initially, firewalls on both machines prevented the successful packet exchange.
+After turning firewalls off, I managed to exchange \texttt{ping} packets between the two computers.
+However, because of the suspected, additional antivirus rules, I could not run \texttt{MsQuic} performance analysis tools and measure \texttt{TCP with TLS} performance on Windows.
+Actually, it was speculated that firewalls could be a noticeable \texttt{QUIC} deployment issue~\cite{The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment}.
 
 \subsection{Throughput of Parallel \texttt{QUIC} Streams}
 
