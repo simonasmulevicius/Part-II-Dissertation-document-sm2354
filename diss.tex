@@ -813,9 +813,10 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
  
 
   \item 
-    According to the \texttt{IETF QUIC} draft, Section 1~\cite{ietf-quic-transport-draft}, \texttt{QUIC} offers \textbf{zero round-trip-time connections} (abbreviated \texttt{0-RTT}) provided that the server and client had an established connection in the recent past~\cite{introducing-0-rtt}.
-    In other words, under the aforementioned circumstances, \texttt{QUIC} server and client can start exchanging data without having to wait for the completion of the new handshake~\cite{ietf-quic-transport-draft}.
+    According to the \texttt{IETF QUIC} draft, Section 1~\cite{ietf-quic-transport-draft-32}, \texttt{QUIC} offers \textbf{zero round-trip-time connections} (abbreviated \texttt{0-RTT}) provided that the server and client had an established connection in the recent past~\cite{introducing-0-rtt}.
+    In other words, under the aforementioned circumstances, \texttt{QUIC} server and client can start exchanging data without having to wait for the completion of the new handshake~\cite{ietf-quic-transport-draft-32}.
   
+  \simon{If needed, add more details from: \url{https://qlog.edm.uhasselt.be/epiq/files/QUICImplementationDiversity_Marx_final_11jun2020.pd}}
   
 
   \item 
@@ -836,45 +837,94 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
 
 
 
-
-
-
  
   \item \texttt{QUIC} features include packet \enquote{\textbf{encryption by default}}~\cite{the-road-to-quic}.
-  Moreover, there are no implementations of \texttt{QUIC} without embedded security layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+  Moreover, there are no implementations of \texttt{QUIC} without embedded security layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}
+  (just a side note, \texttt{MsQuic}, one implementation of \texttt{QUIC}, does provide a mechanism to turn off packet encryption after finishing a cryptographically secure handshake).
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks~\cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
   The concern is that conventional wirewalls would not be able to reject suspicious \texttt{QUIC} packets.
   In addition, network engineers may find it more difficult to analyse encrypted \texttt{QUIC} headers to understand traffic patterns~\cite{2017-12-18-transport-header-encryption}.
+  
+  Each \texttt{QUIC} packet is encrypted and decrypted individually in order to avoid the \texttt{TLS} Head-of-line blocking~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+  In contrast, an alternative approach would be to group packets for decryption, hoping to amortise the cost of cryptographic function calls~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, optimizing-tls-record-size-and-buffering-latency}.
+  However, one missing packet from the group would prevent other packets from being decrypted (and thus transferred to the application layer)~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 
 
-  \item 
-    \texttt{QUIC} also provides \textbf{reliable in-order data delivery}~\cite[Section 7]{ietf-quic-transport-draft}, ~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} .
-    The main purpose of this is to replace \texttt{TCP} by offering identical or better guarantees. 
-    Similarly, \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
+
+
+
+  
+    \item  
+    Besides that, \texttt{QUIC} provides \textbf{flow control} that is implemented using streams.
+    
+    
+    
+  % -------QUIC STREAMS---------------
+  
+  Some background knowledge about \texttt{QUIC's} streams is required to understand subsequent \texttt{QUIC} features.
   
   
-  In order to understand subsequent features of \texttt{QUIC} we need some background knowledge about its flow control.
-  % TODO
+    % TODO CONTINUE
   \simon{TODO: add information about streams}
+  
   %  Multiple streams & frames
+   \simon{TODO multiplexed streams}
+  
+    \simon{MAYBE TODO: describe several different multiplexing technique (sequential, round-robin, priority based)~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
+  
+  % ---------Fairness---------------
   
   
-  % ----------------------
+  \texttt{QUIC} provides both per-stream and per-connection flow control fairness \cite{ietf-quic-transport-draft-32}.
+  In other words, there are limits associated with each connection that specify the number of bytes that the sender is allowed to transfer via a particular stream.
+  The purpose of per-stream limits is to prevent streams from consuming all the available bandwidth available to the connection.
+  In addition, there is the maximum number of bytes that sender can transfer to the receiver over the given connection at any single point in time~\cite{ietf-quic-transport-draft-32}.
+  This is a conventional mechanism also seen in \texttt{TCP} that prevents the slower receiver from being flooded with the sender's messages~\cite{ietf-quic-transport-draft-32}.
   
   
-  \item \simon{TODO READ and INCLUDE https://blog.cloudflare.com/http-3-vs-http-2/}
+  
+  % -------Reliability---------------
+  
+  
+  
+     \texttt{QUIC} also provides \textbf{reliable in-order data delivery}~\cite[Section 7]{ietf-quic-transport-draft-32}, ~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} .
+    The primary purpose of this is to replace \texttt{TCP} by offering almost identical guarantees. 
+    However, there is an important point to mention that actually the delivery order is preserved within a single \texttt{QUIC} stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details},~\cite[Section 2]{ietf-quic-transport-draft-32}.
+    Otherwise, because of the multiplexed streams, data transferred via different \texttt{QUIC} streams could be re-ordered on the receiver's side between different streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details},~\cite[Section 2]{ietf-quic-transport-draft-32}.
+    On the one hand, the change in the total receive order is not important if separate files are transferred via different \texttt{QUIC} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}, which is usually the case with modern websites that send multiple embedded objects.
+    But on the other hand, unguaranteed packet ordering between \texttt{QUIC} streams changed \texttt{HTTP} semantics.
+    As a result, the new custom application layer, called \texttt{HTTP/3}, had to be build for \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+    In other words, to avoid transport layer head of line problem, \texttt{QUIC} was made aware of the different streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+    Hence, for this reason \texttt{QUIC} in Figure~\ref{fig:QUIC_network_stack} is shown as also being part of the application layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
     
     
+    
+    
+    
+   \item \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
+   The same \texttt{QUIC} congestion control algorithm is applied over all \texttt{QUIC} streams, meaning that a single lost packet on one stream would likely have an impact on the throughput of all streams, but a lost packet of one stream would not block the other streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+   As a side note, \texttt{ngtcp2}, the primary \texttt{QUIC} implementation that I am studying, uses \texttt{CUBIC} as the default congestion control mechanism (according to the private correspondence with the \texttt{ngtcp2} co-author).
+  
+  
+  
+
+
+  
+  
+
+  
   
   \item  \simon{TODO loss recovery}
   % Loss detection: https://quicwg.org/base-drafts/draft-ietf-quic-recovery.html#name-loss-detection
   % > packet-number based approach with a timer
 
-  \item \simon{TODO multiplexed streams}
- 
-  \item \simon{TODO loss detection with signaling (using new seq number)}
+  In case of the packet loss, \texttt{QUIC} passes other successfully received packets to the application layer provided that a missing packet is from another stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
   
+
+
+  \simon{TODO loss detection with signaling (using new seq number)????}
   
+    % ----------------------
   
   
   \item
@@ -886,7 +936,6 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     \simon{If I remember correctly, (as someone said) the problem with TCP is that it confuses network congestion with unreliable links}
 
   % TODO: read https://blog.cloudflare.com/introducing-0-rtt/
-
 
 
 
