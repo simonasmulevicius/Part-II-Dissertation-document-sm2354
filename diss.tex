@@ -1061,13 +1061,10 @@ In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did 
 
 \subsection{perf}
 \texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack.
-
-% TODO
-\simon{TODO: differentiate between sampling based mechanisms and another family of perf analysis tools[TODO what is the name of that group?]}
-
-\simon{TODO: limitations and overheads of sampling}
-
-\simon{TODO: describe the selection process of frequencies (why 997 and not 1000)}
+However, sampling-based performance analysers add lower overhead than event-based analysers because the performance measurement code is not executed for almost every instruction.
+Instead, \texttt{perf} inspects the CPU stack almost one thousand times a second to identify the most problematic functions.
+In particular, I used sampling frequency of 997 samples per second in order to avoid introducing bias of sampling \enquote{round numbers}~\cite{perf-cpu-sample}.
+However, during this project I realised that sampling-based performance analysers only work well if the program runs for sufficiently long time and multiple stacks can be captured.
 
 
 
