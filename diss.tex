@@ -1141,56 +1141,33 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
 
 \section{Requirements Analysis}
 
-In order to measure performance of \texttt{QUIC}
+In order to measure performance of \texttt{QUIC}, I had to select suitable network simulation tools.
+I could have used localhost for performance measurements.
+On the one hand, it is relatively simple to set up such experiments.
+Hence, I used localhost connections for quick prototyping and unit tests.
+However, the major disadvantage of using localhost is that it is artificial so the performance measurements may not reflect actual networking conditions.
+For instance, packets sent via localhost are simply memory-copied from one place on the machine to another meaning that \texttt{QUIC} packets would not actually leave the machine.
+Hence, the tests could not measure the impact of Network Interface Cards (NICs) (e.g., offloading functionality).
+Another important feature of localhost connections is that they use parameters that are not usually seen on the global Internet.
+For example, usually, localhost connections use maximum transmission unit (MTU) of around 65000 bytes while in the real network it is usually around 1500 bytes.
 
-There were several ways I could have measured 
+ Alternatively, I could have forced packets to leave the testing machine but send them via loopback cable to the same machine on different interface. 
+ That would have been still a relatively simple setup. 
+ Moreover, I would have allowed me to inspect behaviour of NICs.
+ Traffic would have to be added on the same testing machine.
+ Hence, Network Emulation could have interfered with the analysis of QUIC.
+ As a result, I only used this configuration to test the correct partial setup required for the next simulation environment.
+ 
+ To elevate these issues, I used a separate intermediate dedicated machine to introduce traffic perturbations.
+ Such testing environment has already been used in the previous studies~\cite{Making_QUIC_Quicker}.
+ However, it was rather complicated set-up process to correctly configure the packet forwarding and network parameters.
+ But as I was not restricted by hardware, I used this option for the final performance analysis tests.
+ I used this environment to run integration tests.
+ 
+ Alternatively, I could have used Virtual machines to simulate the tests.
+ However, there would have been software related performance penalty required to simulate the guest operating systems.
+ 
 
-% TODO
-\simon{
-1. Which techniques and tools could I use?
-\begin{itemize}
-  \item Network simulation tools:
-      \begin{itemize}
-      \item I could have used localhost (adv: simple, disadv: artificial and cant use NICs that add extra pecularities (No offloading))
-        
-     \item I could have excluded the intermediate machine - meaning that I could have forced packets to leave the testing machine but send them via loopback to the same machine on different interface. (adv/disadv: more complex than the previous approach, but still relatively, adv: can inspect behaviour of NICs; disadv: traffic perturbations are added on the testing machine - extra burden; disadv: Network Emulation could have interfered with the analysis of QUIC. For instance, what packet arrival time should be used when packet enters an interface? - netem adds extra complexity here and these measurements might not be very accurate)
-        
-     \item Use a separate dedicated machine to introduce traffic perturbations
-        \begin{itemize}
-        \item Adv: replicate similar conditions as the ones used in Gianni's paper
-        
-        
-        \item Adv: Leave network emulation tasks to the intermediate machine - now intermediate machine can be optimised for responsiveness and the testing machine could be optimised for generating and receiving QUIC traffic
-        
-        \item Disadv: the most complex, requires additional computer, forwarding and separate subnets
-        \end{itemize}
-      \end{itemize}
-  
-  
-    \item Could have used Mininet and a pair of Virtual machines (but I already had required hardware and I wanted to make comparable tests with Gianni's paper)
-\end{itemize}
-}
-
-
-\simon{
-2. What did I actually decide to use?
-
-I used localhost connection for quick prototyping.
-
-Then, I used loopback cables to quickly test whether or not packets leave the machine (I ran experiments on the testing machine and check if unplugging network cable would stop the data transfer)
-
-However, my major testing configuration used the configuration with an intermediate machine - I used this configuration because I managed to configure different subnets and enabled packet forwarding.
-}
-
-\simon{3. Which factors led me to these decisions?
-
-
-The main reason for deciding on this architecture was correct configuration of netem - using a separate machine for Network emulation I was sure that packet arrival and departure times don't interfere with Netem - (e.g. don't want to say that the packet has arrived before it is droped/delayed in the Netem).
-
-
-
-In addition, this experiment setup would not be possible without the prio possession of the required hardware (i.e., additional machine). 
-}
 
 \simon{TodO: also, mention that I measured an overhead of NetEm and intermediate machine and it was negligible [TODO: bring those numbers here]}
 
