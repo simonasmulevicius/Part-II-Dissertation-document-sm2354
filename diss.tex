@@ -14,6 +14,30 @@
 \usepackage{textcomp}
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta}
+\usepackage{forest}
+ 
+ 
+\definecolor{folderbg}{RGB}{255,165,0}
+\definecolor{folderborder}{RGB}{110,144,169}
+
+\def\Size{4pt}
+\tikzset{
+  folder/.pic={
+    \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+      (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);  
+    \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+      (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+  }
+}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
 % Conditionals (for draft mode)
 \usepackage{ifthen}
@@ -25,6 +49,9 @@
 \usepackage{datetime}
 
 \usepackage{xspace}
+
+
+
 
 %    THIS IS THE BIG DRAFT SWITCH
 % FLICK THIS AND the todo notes and watermark disappear/appear
@@ -1168,6 +1195,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
  
  Similarly, there was a design choice I had to make when selecting a tool that could add traffic perturbations.
  Yang et al.~\cite{Making_QUIC_Quicker} used \texttt{TLEM} network emulator that is suitable for the high throughput network emulation~\cite{Very_high_speed_link_emulation_with_TLEM}.
+ \simon{Though, TLEM is for "high-speed" networks, does it refer to low latency or high throughput?}
  However, I used \texttt{NetEm} (abbreviation for \enquote{Network Emulator}) tool instead because it was simple to deploy and use.
  Besides that, I measured additional packet delay latency induced by \texttt{NetEm} on the intermediate machine, and it was negligible.
 \simon{TODO: bring those numbers here}
@@ -1268,30 +1296,115 @@ In addition, I did not end up using the high-speed network emulator called \text
 % ------------------------------------------------
 
 
-In this chapter I describe the actual software engineering tasks I completed to measure \texttt{QUIC} performance consistently and correctly.
+In this chapter I first present my work required to disable encryption of \texttt{QUIC}.
+Then, I describe the actual software engineering tasks that I completed to measure \texttt{QUIC} performance consistently and correctly.
 
 
 \section{Repository Overview} 
-% TODO
-\simon{TODO add reference to the original page of ngtcp2}
-First of all, I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
 
+    \begin{figure}[ht]
+\begin{forest}
+  for tree={
+    font=\ttfamily,
+    grow'=0,
+    child anchor=west,
+    parent anchor=south,
+    anchor=west,
+    calign=first,
+    inner xsep=7pt,
+    edge path={
+      \noexpand\path [draw, \forestoption{edge}]
+      (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+    },
+    before typesetting nodes={
+      if n=1
+        {insert before={[,phantom]}}
+        {}
+    },
+    fit=band,
+    before computing xy={l=15pt},
+  }  
+[top level folder
+  [Original encrypted stack: {openssl, \textbf{ngtcp2}, nghttp2, nghttp3}
+  ]
+  [unencrypted\_stack
+      [{openssl, ngtcp2, nghttp2, nghttp3}
+      ]
+  ]
+  [Additional evaluation tools: {FlameGraph, iperf, msquic\_folder}
+  ]
+  [Part-II-dissertation
+    [testing-scripts
+    ]
+    [testing-results
+    ]
+    [testing-libraries
+    ]
+  ]
+  [Part-II-Dissertation-document
+  ]
+]
+\end{forest}
+
+    \caption[High level directory structure of the project]{High level directory structure of the project}
+    \label{fig:High_level_directory_structure_of_the_project}
+    \end{figure}
+
+
+
+
+
+
+
+
+
+I forked part of networking stack required to run \texttt{ngtcp2}. 
+In particular, I worked on a separate \texttt{OpenSSL}(embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2} and \texttt{nghttp3} (application layers) 
+
+\simon{Initial code base is spilt into multiple repositories because each is implemented in modular fashion (e.g. \texttt{OpenSSL} code could be used in other protocols or algorithms)}
+
+\simon{ngtcp2 uses code from  \texttt{Openssl} repository. Similarly, nghttp2 uses code from both \texttt{OpenSSL},  \texttt{ngtcp2} and  \texttt{nghttp3} because it contains a performance analysis tool called h2load that measures \texttt{QUIC} throughput.}
+
+
+
+
+
+
+\simon{Somehow transition to this saying that the most work was done in \textbf{unencrypted\_stack/ngtcp2}, \textbf{unencrypted\_stack/nghtt2} and \textbf{testing-scripts} sections}
+I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
 In addition, I augmented \enquote{README} file of the primary repository with specific instructions on how to compile and run the software stack required for this project.
 
-% TODO
-\simon{TODO: mention that I forked part of networking stack required to run ngtcp2. In particular, I worked on a separate openssl(embeded security layer), ngtcp2 (transport layer), nghttp2 and nghttp3 (application layers) }
+
+\simon{Mention that, using the provided instructions, I also added build scripts to automate the process. Furthermore, this ensured that the same build flags were used consistently}
+
+\simon{Mention where unit and integration tests are placed}
+
+
+\simon{testing-scripts folder contains several different automated evaluation tests.
+For example, it contains \texttt{iperf} tests that were used to measure \texttt{TCP} and \texttt{UDP} throughput.
+Some of the tests used ssh commands to control the intermediate machine}
+\simon{I moved several common testing functions to testing-libraries folder}
+
+
+
+\simon{Results of several manually completed tests are stored in testing-results folder}
+
+\simon{I used original encrypted stack during the development process to compare its behaviour with my implementation (stored in unencrypted\_stack)}
+
+\simon{There is a list of other evaluation tools (e.g., FlameGraph, iperf, MsQuic) that I used for the QUIC behaviour analysis}
+
 
 \section{Preparation Scripts}
 As I have already mentioned, I wrote several scripts to prepare testing machines for performance analysis.
 These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see Appendix~\ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
 
 
- % TODO mention ping test
- % TODO state that it configures virtual namespaces to separate server from client
- % TODO add scripts to appendix
+\simon{TODO mention ping test}
+\simon{TODO state that it configures virtual namespaces to separate server from client}
+\simon{TODO add scripts to appendix}
 
 The automatic preparation scripts improved development speed because certain repetitive tasks were automated.
-Furthermore, the setup of the testing environment became more predictable, meaning that performance tests generated more reproducible results.
+Furthermore, the setup of the testing environment became more predictable allowing performance tests to generate more reproducible results.
 
 
 
