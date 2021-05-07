@@ -1089,25 +1089,31 @@ Furthermore, in order to better identify the most frequent function calls, stack
 As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
 
 In the standard \texttt{Flame Graph}, different frames are coloured differently in order to increase visual contrast between the neighbouring cells in the diagram~\cite{CPU_Flame_graphs} (see yellow, orange and red rows in Figure~\ref{fig:perf_results_of_h2load}).
-However, in this project, I am also using \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
-The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph} but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs}.
 
-% TODO
-\simon{TODO: add an example of \texttt{Differential Flame Graph}}
-
-
-% sampling based method
-
-
-
-\simon{[MAYBE TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames -- before that they were optimised by compiler and some stacks were partially anonymous  -- add a reason why this problem occurred -- compiler optimised one register?]}
-
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
     \caption[Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B)]{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of the time, default \texttt{ngtcp2} version spends doing cryptographic operations} 
     \label{fig:perf_results_of_h2load}
     \end{figure}
+
+
+However, in this project, I am also using \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
+The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph} but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.png}
+    \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files. The red areas in the center represenet removed cryptographic functions from the unencrypted \texttt{ngtcp2} version which that previously formed a CPU bottleneck for \texttt{QUIC}}
+    \label{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}
+    \end{figure}
+
+
+
+
+% \simon{[MAYBE TODO: mention that I had to enable additional compiler flags to be able to see deeper call frames -- before that they were optimised by compiler and some stacks were partially anonymous  -- add a reason why this problem occurred -- compiler optimised one register?]}
+
+
     
 \subsection{qlog and qvis}
 % TODO
