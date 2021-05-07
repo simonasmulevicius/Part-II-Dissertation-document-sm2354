@@ -911,7 +911,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     
     \item  \texttt{QUIC} has \textbf{loss recovery} mechanism.
     \texttt{QUIC} uses two ways to detect packet loss - by tracking unacknowledged packet numbers and using timeouts~\cite{UnderstandQUIC},~\cite[Section~6]{ietf-quic-recovery-32}.
-    An important point to mention is that a \texttt{QUIC} packet may be declared as lost if it gets reordered and some number of subsequent packets are acknowledged before the reordered packet,~\cite[Section~6]{ietf-quic-recovery-32}.
+    An important point to mention is that a \texttt{QUIC} packet may be declared as lost if it gets reordered and some number (e.g., three for \texttt{ngtcp2}) of subsequent packets are acknowledged before the reordered packet,~\cite[Section~6]{ietf-quic-recovery-32}.
     In case of the packet loss, \texttt{QUIC} passes other successfully received packets to the application layer above provided that a missing packet is from another stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
    
    \item \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
@@ -938,20 +938,12 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     \textrm{TCP throughput} (p) \approx \frac{1}{\textrm{RTT}}\sqrt{\frac{1}{2bp}} 
     \label{eq:gass_stuff}
     \end{equation}
-     where $p$ is the packet loss rate, $b$ is the number of packets acknowledged with a single acknowledgment message, and $RTT$ being the round-trip time.
+     where $p$ is the packet loss rate, $b$ is the number of packets acknowledged with a single acknowledgment message, and RTT being the round-trip time.
   
   
   However, under substantial but tolerable packet loss rate, \texttt{QUIC} can avoid decreasing its congestion window if it does not detect persistent congestion.
   
  %\simon{If I remember correctly, (as someone said) the problem with TCP is that it confuses network congestion with unreliable links}
-
-
-
-
-
-
-  
-  
   
 \end{itemize}
 
@@ -959,18 +951,18 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
 
 \subsection{Details about Encryption of \texttt{QUIC}} \label{subsection_QUIC_header_format}
 
-Header encryption hides some privacy information that could be otherwise used to correlate traffic of a single user~\cite{2017-12-18-transport-header-encryption, the-road-to-quic}.
 
+\texttt{QUIC} partially encrypts packet headers and fully encrypts packet payloads~\cite{the-road-to-quic}.
+However, packet header encryption is separate from the payload encryption
+\simon{TODO: FIND SOURCE}.
+Header encryption hides some privacy information that could be otherwise used to match traffic patterns of a single user~\cite{2017-12-18-transport-header-encryption, the-road-to-quic}.
+According to the \texttt{QUIC} IETF draft, obfuscated packet numbers provide only partial confidentiality~\cite{ietf-quic-transport-draft-32}, as connection IDs are not encrypted~\cite[Section~5.4.1]{ietf-quic-tls-32}.
+However, the primary purpose of hidden packet numbers is to prevent middleboxes from interfering, and thus ossifying the protocol~\cite{the-road-to-quic}.
+In contrast, packet payloads are authenticated and encrypted to secure and hide application layer data~\cite{ietf-quic-tls-32}.
 
-\begin{itemize}
-  \item  \simon{TODO mention that the packet header encryption is separate from payload encryption}
-  \item  \simon{TODO explain why do we need this separation}
   
- \item  \simon{TODO present long and short headers give a list of fields (maybe to Appendix)}
+ % \simon{TODO present long and short headers give a list of fields (maybe to Appendix)}
   
-  \item  \simon{ TODO mention that packet numbers are encrypted, but connection ID is not}
-\end{itemize}
-
 \subsection{\texttt{QUIC}'s Adoption}
 
 At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt{QUIC} and $14.5\%$ used \texttt{HTTP/3}~\cite{bib_Adoption_comparison_Between_http2_http3_quic}.
