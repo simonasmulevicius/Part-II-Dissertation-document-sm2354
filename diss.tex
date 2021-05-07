@@ -835,7 +835,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user space.
   
   However, there is an associated cost of the user space because data has to be copied from kernel space to user space~\cite{benchmarking-quic}.
-  Furthermore, Langley et. al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment}.
+  Furthermore, Langley et al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment}.
   In addition, by deploying \texttt{QUIC} changes in the user space, companies can also patch proprietary extensions.
   Firms can even use their market dominance (e.g., in the browser industry) to enforce these protocol updates.
   However, there is no guarantee that proprietary extensions would improve network quality for the general public. 
@@ -903,7 +903,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Impact_of_increasing_pkt_numbers.png}
-    \caption[Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering]{Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering. The diagram visualises Hunter Dellaverson et.al ideas~\cite{UnderstandQUIC}.}
+    \caption[Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering]{Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering. The diagram visualises Hunter Dellaverson et al. ideas~\cite{UnderstandQUIC}.}
     \label{fig:Impact_of_increasing_pkt_numbers}
     \end{figure}
     
@@ -1004,8 +1004,7 @@ Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning t
 \texttt{Iperf3}\footnote{\url{https://github.com/esnet/iperf}} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
 \texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
 One can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
-However, \texttt{UDP} does not provide a similar set of guarantees as \texttt{QUIC} does.
-For example, \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver could see different throughput values.
+However, as noted in~\ref{QUIC_details_section}, \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver could see different throughput values.
 Hence, to put \texttt{QUIC} into the perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
 An important aspect of \texttt{TCP} is that its congestion control mechanism allows sender to discover an appropriate sending bitrate.
 In contrast, \texttt{UDP} does not take into account the state of the network.
@@ -1141,35 +1140,37 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
 
 \section{Requirements Analysis}
 
-In order to measure performance of \texttt{QUIC}, I had to select suitable network simulation tools.
+In order to measure the performance of \texttt{QUIC}, I had to select suitable network simulation tools.
 I could have used localhost for performance measurements.
 On the one hand, it is relatively simple to set up such experiments.
 Hence, I used localhost connections for quick prototyping and unit tests.
-However, the major disadvantage of using localhost is that it is artificial so the performance measurements may not reflect actual networking conditions.
-For instance, packets sent via localhost are simply memory-copied from one place on the machine to another meaning that \texttt{QUIC} packets would not actually leave the machine.
+However, the major disadvantage of using localhost is that it is artificial, so the performance measurements may not reflect actual networking conditions.
+For instance, packets sent via localhost are memory-copied from one place on the machine to another, meaning that \texttt{QUIC} packets would not actually leave the machine.
 Hence, the tests could not measure the impact of Network Interface Cards (NICs) (e.g., offloading functionality).
 Another important feature of localhost connections is that they use parameters that are not usually seen on the global Internet.
-For example, usually, localhost connections use maximum transmission unit (MTU) of around 65000 bytes while in the real network it is usually around 1500 bytes.
+For example, usually, localhost connections use a maximum transmission unit (MTU) of around 65000 bytes, while in the actual Internet, it is usually around 1500 bytes.
 
- Alternatively, I could have forced packets to leave the testing machine but send them via loopback cable to the same machine on different interface. 
- That would have been still a relatively simple setup. 
- Moreover, I would have allowed me to inspect behaviour of NICs.
+ Alternatively, I could have forced packets to leave the testing machine but send them via loopback cable to the same machine on a different interface. 
+ That would have been still a relatively simple set-up. 
+ Moreover, I would have allowed me to inspect the behaviour of NICs.
  Traffic would have to be added on the same testing machine.
  Hence, Network Emulation could have interfered with the analysis of QUIC.
- As a result, I only used this configuration to test the correct partial setup required for the next simulation environment.
+ As a result, I only used this configuration to test the correct partial set-up required for the following simulation environment.
  
  To elevate these issues, I used a separate intermediate dedicated machine to introduce traffic perturbations.
- Such testing environment has already been used in the previous studies~\cite{Making_QUIC_Quicker}.
- However, it was rather complicated set-up process to correctly configure the packet forwarding and network parameters.
- But as I was not restricted by hardware, I used this option for the final performance analysis tests.
+ Such a testing environment has already been used in the previous studies~\cite{Making_QUIC_Quicker}.
+ However, it was a rather complicated set-up process to configure the packet forwarding and network parameters correctly.
+ However, as I was not restricted by hardware, I used this option for the final performance analysis tests.
  I used this environment to run integration tests.
  
  Alternatively, I could have used Virtual machines to simulate the tests.
  However, there would have been software related performance penalty required to simulate the guest operating systems.
  
-
-
-\simon{TodO: also, mention that I measured an overhead of NetEm and intermediate machine and it was negligible [TODO: bring those numbers here]}
+ Similarly, there was a design choice I had to make when selecting a tool that could add traffic perturbations.
+ Yang et al.~\cite{Making_QUIC_Quicker} used \texttt{TLEM} network emulator that is suitable for the high throughput network emulation~\cite{Very_high_speed_link_emulation_with_TLEM}.
+ However, I used \texttt{NetEm} (abbreviation for \enquote{Network Emulator}) tool instead because it was simple to deploy and use.
+ Besides that, I measured additional packet delay latency induced by \texttt{NetEm} on the intermediate machine, and it was negligible.
+\simon{TODO: bring those numbers here}
 
 
 \section{Starting Point}
