@@ -998,10 +998,12 @@ Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning t
 
 \section{Benchmarking tools}
 % Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
+
+
 \subsection{iperf3}
-\texttt{Iperf3} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
+\texttt{Iperf3}\footnote{\url{https://github.com/esnet/iperf}} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
 \texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
-We can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
+One can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
 However, \texttt{UDP} does not provide a similar set of guarantees as \texttt{QUIC} does.
 For example, \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver could see different throughput values.
 Hence, to put \texttt{QUIC} into the perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
@@ -1010,14 +1012,14 @@ In contrast, \texttt{UDP} does not take into account the state of the network.
 Consequently, if unlimited \texttt{UDP} throughput is allowed, then one could flood the network by running \texttt{iperf3} to measure \texttt{UDP} throughput.
 However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network so no damage was done to the public network.
 
+However, there were other similar throughput measurement tools (e.g., \texttt{nuttcp}\footnote{http://nuttcp.net/nuttcp/} or \texttt{iperf2}\footnote{https://sourceforge.net/projects/iperf2/}).
+In particular, \texttt{nuttcp} is said to be better for high \texttt{UDP} throughput measurements~\cite{network-troubleshooting-tools_nuttcp} and it out to provide more stable results when analysing \texttt{UDP}~\cite{Nuttcp_geant}.
+However, my primary throughput measurement tool was \texttt{iperf3} because it simplified experiments of variable-size files.
+In addition, I extensively used \texttt{iperf's} JSON ouput format.
 
 % TODO
-\simon{TODO: mention that one can adjust UDP send or receive (TODO check which one) buffer size}
+% \simon{TODO: mention that one can adjust UDP send or receive (TODO check which one) buffer size}
 
-\subsection{nuttcp}
-\simon{ According to https://fasterdata.es.net/performance-testing/network-troubleshooting-tools/nuttcp/ , nuttcp is better than iperf for high UDP throughput measurements. }
-
-\simon{Similarly, another source (https://wiki.geant.org/display/public/EK/Nuttcp) also said that nuttcp provides more stable results when analysing UDP}
 
 \subsection{ping}
 \texttt{Ping} is a network analysis tool used to measure the round trip time between the two communicating parties.
