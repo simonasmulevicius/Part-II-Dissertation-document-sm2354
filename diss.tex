@@ -15,6 +15,7 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta}
 \usepackage{forest}
+\usepackage{pdfpages}
 
 \definecolor{folderbg}{RGB}{255,165,0}
 \definecolor{folderborder}{RGB}{110,144,169}
@@ -2138,7 +2139,7 @@ However, I hope that in the future such experiments would be possible.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the appendices
-\begin{appendix}
+\appendix
 
 \chapter{Preparation script from \texttt{\textasciitilde/.zshrc}} \label{preparation_script_from_zshrc}
 
@@ -2265,11 +2266,7 @@ ip netns exec mr_server ethtool -k eth3 | grep tcp-segmentation-offload
     \section{appendix section}\label{referencedAppendixTag}
 
 
-\end{appendix}
-
-\simon{Fix the end of appendix}
 \chapter{Project Proposal}
-
 \input{proposal}
 
  \end{document}
