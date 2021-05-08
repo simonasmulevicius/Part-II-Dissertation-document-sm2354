@@ -15,8 +15,7 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta}
 \usepackage{forest}
- 
- 
+
 \definecolor{folderbg}{RGB}{255,165,0}
 \definecolor{folderborder}{RGB}{110,144,169}
 
@@ -29,8 +28,6 @@
       (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
   }
 }
- 
- 
  
  
  
@@ -180,6 +177,7 @@ College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
 Word Count:         & \bf 7996\footnotemark[1] \\
+Line Count:         & \bf 0 \simon{TODO: calculate} \\
 Project Originator: & Professor Andrew W. Moore                \\
 Supervisor:         & Professor Andrew W. Moore                \\ 
 \end{tabular}
@@ -1300,6 +1298,12 @@ In this chapter I first present my work required to disable encryption of \textt
 Then, I describe the actual software engineering tasks that I completed to measure \texttt{QUIC} performance consistently and correctly.
 
 
+\section{Implementation Milestones}
+First of all, I had to identify a suitable implementation of \texttt{QUIC}.
+Then, I had to disable the packet header and payload encryption.
+After that, I configured a physical testing environment to run performance analysis tests (see Figure~\ref{fig:Physical_testing_environment}).
+Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behaviour in different conditions. 
+
 \section{Repository Overview} 
 
     \begin{figure}[ht]
@@ -1352,16 +1356,16 @@ Then, I describe the actual software engineering tasks that I completed to measu
 
 My project structure is demonstrated in Figure~\ref{fig:High_level_directory_structure_of_the_project}.
 I implemented support for null encryption in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
-This folder also contains forked networking stack required to run \texttt{ngtcp2}. 
+This folder also contains a forked networking stack required to run \texttt{ngtcp2}. 
 In particular, I worked on separate \texttt{OpenSSL} (embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2}, and \texttt{nghttp3} (application layers) repositories.
-This software stack is spilt into multiple repositories because it is implemented in a modular fashion.
+This software stack is split into multiple repositories because it is implemented in a modular fashion.
 For instance, adopted \texttt{OpenSSL} library is used by other \texttt{QUIC} implementations, such as \texttt{MsQuic}\footnote{\url{https://github.com/quictls/openssl/tree/OpenSSL_1_1_1k+quic}}.
 \texttt{ngtcp2} uses code from \texttt{OpenSSL} repository, while \texttt{nghttp2} uses code from both \texttt{OpenSSL},  \texttt{ngtcp2}, and  \texttt{nghttp3} repositories because they are used to build an experimental performance analysis tool called \texttt{h2load} that can compare \texttt{HTTP/3} and \texttt{HTTP/2} throughput.
-It is important to mention that \texttt{h2load} was already provided in the original \texttt{nghttp2} repository. 
-\simon{Mention where unit and integration tests are placed}
+It is important to mention that \texttt{h2load} was already provided in the original \texttt{nghttp2} repository.
 
 
-I used the original encrypted stack (see Figure~\ref{fig:High_level_directory_structure_of_the_project}) during the development process to compare its behaviour with my implementation.
+I used the original encrypted \texttt{ngtcp2} stack (see Figure~\ref{fig:High_level_directory_structure_of_the_project}) during the development process to compare its behaviour with my implementation.
+In addition, I added unit and integration tests of null encryption to the \texttt{ngtcp2} repository located in \texttt{unencrypted\_stack} folder. 
 
 
 
@@ -1398,14 +1402,10 @@ The most of the work was done in \texttt{unencrypted\_stack/ngtcp2}, \texttt{une
 \section{Preparation Scripts}
 As I have already mentioned, I wrote several scripts to prepare testing machines for performance analysis.
 These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see Appendix~\ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
-
-
-\simon{TODO mention ping test}
-\simon{TODO state that it configures virtual namespaces to separate server from client}
-\simon{TODO add scripts to appendix}
-
+Preparation scripts checked connectivity of network links by sending \texttt{ping} messages between network interfaces used for testing.
+Furthermore, these scripts were used to configure virtual namespaces to separate the server from the client so that packets from the same machine would be forced to leave the physical network interface.
 The automatic preparation scripts improved development speed because certain repetitive tasks were automated.
-Furthermore, the setup of the testing environment became more predictable allowing performance tests to generate more reproducible results.
+Furthermore, the testing environment setup became more predictable, allowing performance tests to generate more reproducible results.
 
 
 
@@ -1439,8 +1439,6 @@ These intensive operations could have become a performance bottleneck of QUIC.
 To validate this claim, I had to measure the impact of cryptographic operations on QUIC's performance by comparing the throughput between the two server-client pairs.
 One pair had to use standard encryption and decryption procedures, while another had to exchange unencrypted packets.
 I achieved this by implementing logic that can turn on null encryption on \texttt{ngtcp2}.
-% TODO
-\simon{TODO add a link to null encryption}
 
 In essence, null encryption is a technique that effectively turns off encryption by encrypting/decrypting the data by ``XOR"ing the data with a key made entirely of zeroes (which leaves the data unchanged). 
 
@@ -1464,6 +1462,7 @@ Hence, I was able to improve my null cryptographic operations in a systematic wa
 
 My implementation of null encryption has room for improvements.
 For instance, every encrypted \texttt{ngtcp2} packet uses additional 16 bytes to store the encryption header.
+\simon{Rephrase sentence before}
 However, in the null-encryption scenario, these additional fields are not required, but my implementation of disabling encryption does not use them, meaning that 16 unused bytes are transferred in a single \texttt{QUIC} packet.
 In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{QUIC} packets to re-use these additional 16 bytes for data transfer.
 
@@ -2139,7 +2138,7 @@ However, I hope that in the future such experiments would be possible.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the appendices
-\appendix
+\begin{appendix}
 
 \chapter{Preparation script from \texttt{\textasciitilde/.zshrc}} \label{preparation_script_from_zshrc}
 
@@ -2266,6 +2265,9 @@ ip netns exec mr_server ethtool -k eth3 | grep tcp-segmentation-offload
     \section{appendix section}\label{referencedAppendixTag}
 
 
+\end{appendix}
+
+\simon{Fix the end of appendix}
 \chapter{Project Proposal}
 
 \input{proposal}
