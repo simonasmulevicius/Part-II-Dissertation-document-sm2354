@@ -1325,13 +1325,11 @@ Then, I describe the actual software engineering tasks that I completed to measu
     before computing xy={l=15pt},
   }  
 [top level folder
-  [Original encrypted stack: {openssl, \textbf{ngtcp2}, nghttp2, nghttp3}
-  ]
   [unencrypted\_stack
       [{openssl, ngtcp2, nghttp2, nghttp3}
       ]
   ]
-  [Additional evaluation tools: {FlameGraph, iperf, msquic\_folder}
+  [Original encrypted stack: {openssl, ngtcp2, nghttp2, nghttp3}
   ]
   [Part-II-dissertation
     [testing-scripts
@@ -1341,7 +1339,9 @@ Then, I describe the actual software engineering tasks that I completed to measu
     [testing-libraries
     ]
   ]
-  [Part-II-Dissertation-document
+  [Additional evaluation tools: {FlameGraph, iperf, msquic\_folder}
+  ]
+  [Part-II-dissertation-document
   ]
 ]
 \end{forest}
@@ -1350,48 +1350,49 @@ Then, I describe the actual software engineering tasks that I completed to measu
     \label{fig:High_level_directory_structure_of_the_project}
     \end{figure}
 
-
-
-
-
-
-
-
-
-I forked part of networking stack required to run \texttt{ngtcp2}. 
-In particular, I worked on a separate \texttt{OpenSSL}(embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2} and \texttt{nghttp3} (application layers) 
-
-\simon{Initial code base is spilt into multiple repositories because each is implemented in modular fashion (e.g. \texttt{OpenSSL} code could be used in other protocols or algorithms)}
-
-\simon{ngtcp2 uses code from  \texttt{Openssl} repository. Similarly, nghttp2 uses code from both \texttt{OpenSSL},  \texttt{ngtcp2} and  \texttt{nghttp3} because it contains a performance analysis tool called h2load that measures \texttt{QUIC} throughput.}
-
-
-
-
-
-
-\simon{Somehow transition to this saying that the most work was done in \textbf{unencrypted\_stack/ngtcp2}, \textbf{unencrypted\_stack/nghtt2} and \textbf{testing-scripts} sections}
-I added support of null encryption in the cloned repository of \texttt{ngtcp2}.
-In addition, I augmented \enquote{README} file of the primary repository with specific instructions on how to compile and run the software stack required for this project.
-
-
-\simon{Mention that, using the provided instructions, I also added build scripts to automate the process. Furthermore, this ensured that the same build flags were used consistently}
-
+My project structure is demonstrated in Figure~\ref{fig:High_level_directory_structure_of_the_project}.
+I implemented support for null encryption in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
+This folder also contains forked networking stack required to run \texttt{ngtcp2}. 
+In particular, I worked on separate \texttt{OpenSSL} (embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2}, and \texttt{nghttp3} (application layers) repositories.
+This software stack is spilt into multiple repositories because it is implemented in a modular fashion.
+For instance, adopted \texttt{OpenSSL} library is used by other \texttt{QUIC} implementations, such as \texttt{MsQuic}\footnote{\url{https://github.com/quictls/openssl/tree/OpenSSL_1_1_1k+quic}}.
+\texttt{ngtcp2} uses code from \texttt{OpenSSL} repository, while \texttt{nghttp2} uses code from both \texttt{OpenSSL},  \texttt{ngtcp2}, and  \texttt{nghttp3} repositories because they are used to build an experimental performance analysis tool called \texttt{h2load} that can compare \texttt{HTTP/3} and \texttt{HTTP/2} throughput.
+It is important to mention that \texttt{h2load} was already provided in the original \texttt{nghttp2} repository. 
 \simon{Mention where unit and integration tests are placed}
 
 
-\simon{testing-scripts folder contains several different automated evaluation tests.
+I used the original encrypted stack (see Figure~\ref{fig:High_level_directory_structure_of_the_project}) during the development process to compare its behaviour with my implementation.
+
+
+
+
+
+
+Performance analysis and evaluation scripts are placed under \texttt{Part-II-dissertation} folder.
+I added instructions on how to compile and run the software stack required for this project to the \texttt{README} file on the \texttt{Part-II-dissertation} repository.
+Using the provided instructions, I also added build scripts to automate the process of building \texttt{ngtcp2} software stack to ensure that the same build flags are used consistently.
+\texttt{Part-II-dissertation} folder also contains \texttt{testing-scripts} folder that has several different automated evaluation tests.
 For example, it contains \texttt{iperf} tests that were used to measure \texttt{TCP} and \texttt{UDP} throughput.
-Some of the tests used ssh commands to control the intermediate machine}
-\simon{I moved several common testing functions to testing-libraries folder}
+Some of the tests used \texttt{ssh} commands to control the intermediate machine.
+To reuse the code of common testing functions, I moved them to the \texttt{testing-libraries folder}.
+Results of several manually completed tests are stored in the \texttt{testing-results folder}.
+Some \texttt{QUIC} behaviour analysis tests use additional evaluation tools (e.g., \texttt{FlameGraph}, \texttt{iperf}, \texttt{MsQuic}).
+The most of the work was done in \texttt{unencrypted\_stack/ngtcp2}, \texttt{unencrypted\_stack/nghtt2} and \texttt{testing-scripts} sections.
+
+
+\simon{Mention licenses - can I publish everything?}
 
 
 
-\simon{Results of several manually completed tests are stored in testing-results folder}
 
-\simon{I used original encrypted stack during the development process to compare its behaviour with my implementation (stored in unencrypted\_stack)}
 
-\simon{There is a list of other evaluation tools (e.g., FlameGraph, iperf, MsQuic) that I used for the QUIC behaviour analysis}
+
+
+
+
+
+
+
 
 
 \section{Preparation Scripts}
@@ -1405,6 +1406,20 @@ These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textas
 
 The automatic preparation scripts improved development speed because certain repetitive tasks were automated.
 Furthermore, the setup of the testing environment became more predictable allowing performance tests to generate more reproducible results.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
