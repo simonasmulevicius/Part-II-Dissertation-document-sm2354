@@ -296,12 +296,12 @@ Nowadays, more and more people have access to the Internet.
 As the scale of the web continues to grow, both companies and researchers look for ways to satisfy ever-increasing market demand to improve the user experience of Internet users.
 Customers expect cheap, high-throughput and low latency Internet connections.
 However, in the last decade, several trends have emerged.
-For example, in recent years, we observed a proliferation of mobile devices -- at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
-Furthermore, we see the changing patterns of web development.
+For example, in recent years, mobile devices proliferated -- at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
+Furthermore, there are emerging new patterns in web development.
 In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g. from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
 But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet~\cite{RudmanRiaan2016DW3o}.
 Hence, the changing constraints and networking trends encourage us to re-evaluate past protocols.
-By using innovative solutions, we can continue improving the performance of the Internet. 
+Innovative solutions can further improve the performance of the Internet. 
 One of such ideas is \texttt{QUIC} -- the new transport layer protocol.
 
 \section{The motivation of the Project}
@@ -1107,12 +1107,12 @@ To understand the \texttt{Flame Graphs}, it is worth looking at the simple examp
     \end{figure}
 
 Here y-axis of \texttt{Flame Graphs} represents the depth and frames of the call stack~\cite{CPU_Flame_graphs}.
-For instance, we can see in Figure~\ref{fig:Flame_Graphs_explanation} that \textbf{function\_a()} invoked function calls \textbf{function\_b()} and \textbf{function\_g()}. 
+For instance, as shown in Figure~\ref{fig:Flame_Graphs_explanation}, \textbf{function\_a()} invoked function calls \textbf{function\_b()} and \textbf{function\_g()}. 
 However, an important point to mention is that x-axis of \texttt{Flame Graphs} does not represent time~\cite{CPU_Flame_graphs}.
 Instead, function names are sorted alphabetically along the x-axis, and it represents the approximate percentage of stack frames that were in the call stack~\cite{CPU_Flame_graphs}.
-Hence, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can tell that \textbf{function\_b()} and its \enquote{children} functions spent more time on CPU than \textbf{function\_g()} and its corresponding functions but we can not tell the relative order in which these functions were called.
+Hence, by looking at Figure~\ref{fig:Flame_Graphs_explanation} it is possible to tell that \textbf{function\_b()} and its \enquote{children} functions spent more time on CPU than \textbf{function\_g()} and its corresponding functions but it is impossible to tell the relative order in which these functions were called.
 Furthermore, in order to better identify the most frequent function calls, stack frames sampled at different times can be merged if they have a shared ancestor~\cite{CPU_Flame_graphs}.
-As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
+As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} one can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
 
 In the standard \texttt{Flame Graph}, different frames are coloured differently in order to increase visual contrast between the neighbouring cells in the diagram~\cite{CPU_Flame_graphs} (see yellow, orange and red rows in Figure~\ref{fig:perf_results_of_h2load}).
 
@@ -1566,11 +1566,11 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
 \simon{TODO: add information about the capacities of Ethernet links}
 
 
-    In the ideal scenario, we might want to use three dedicated machines for performance measurements, as shown in the previous section.
+    In the ideal scenario, it might be the best to use three dedicated machines for performance measurements, as shown in the previous section.
     However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
     In this environment, one machine (A) hosts client-server pair, while another computer (B) acts as a network emulator.
-    The physical configuration differs from the logical configuration because I wanted to replicate testing conditions under which Yang et al. performed throughput measurements of \texttt{QUIC}~\cite{Making_QUIC_Quicker}.
-    One advantage of having both server and client running on the same machine is that the shared system clock can perform measurements more accurately. 
+    The physical configuration differs from the logical configuration because I wanted to replicate \texttt{QUIC} testing conditions used in other experiments~\cite{Making_QUIC_Quicker}.
+    One advantage of having both server and client running on the same machine is that the common system clock can perform measurements more accurately. 
     
 
     \begin{figure}[ht]
@@ -1580,7 +1580,7 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
     \label{fig:Physical_testing_environment}
     \end{figure}
     
-    As we can see from Figure~\ref{fig:Physical_testing_environment}, both \texttt{QUIC} client and server operate on different virtual network namespaces which do not have shared point-to-point links.
+    As shown in Figure~\ref{fig:Physical_testing_environment}, both \texttt{QUIC} client and server operate on different virtual network namespaces which do not have shared point-to-point links.
     Client and server are assigned different network subnets.
     Subnets use private \texttt{IPv4} addresses~\cite{rfc1918}.
     The purpose of these addresses is to prevent experiments and the college network from interfering with one another.
@@ -1633,7 +1633,7 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
 \subsection{IP Version}
 
 To make results comparable with older studies, I decided to disable IPv6 in the testing environment.
-By specifying a particular IP version, we reduce the number of variable parameters.
+The number of variable parameters is reduced by specifying a particular IP version.
 Fortunately, at the time of writing, according to Google's IPv6 adoption tracker~\cite{IPv6_Adoption_Statistics}, only a third of all Internet users (30-35 \% to be precise) use IPv6 to connect to Google's services.
 Hence, analysis involving IPv4 is still relevant today.
 
@@ -1881,7 +1881,7 @@ This interesting effect could be explained by the fact that there is an associat
 \simon{TODO: explain these effects}
 
 \simon{TODO: context/queue switches? for concurrent streams penalise the transfer of large concurrent files, but with small files, these switches are more frequent.
-With a large number of clients, we can offer the server a variety of packets it can process}
+With a large number of clients, one can offer the server a variety of packets it can process}
 
 \simon{According to \url{https://fasterdata.es.net/performance-testing/network-troubleshooting-tools/iperf/multi-stream-iperf3/}, \texttt{iperf3} is a single threaded application so this might be a limiting testing factor}
 
