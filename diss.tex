@@ -875,7 +875,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   Moreover, there are no implementations of \texttt{QUIC} without embedded security layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}
   (just a side note, \texttt{MsQuic}, one implementation of \texttt{QUIC}, does provide a mechanism to turn off packet encryption after finishing a cryptographically secure handshake).
   However, there is some criticism that Internet Service Providers could be having problems in the future managing encrypted, and thus non-transparent, \texttt{QUIC} traffic inside their networks~\cite{why-is-googles-quic-leaving-network-operators-in-the-dark}.
-  The concern is that conventional wirewalls would not be able to reject suspicious \texttt{QUIC} packets.
+  The concern is that conventional firewalls would not be able to reject suspicious \texttt{QUIC} packets~\cite{quic-the-internet-transport-protocol-based-on-udp}.
   In addition, network engineers may find it more difficult to analyse encrypted \texttt{QUIC} headers to understand traffic patterns~\cite{2017-12-18-transport-header-encryption}.
   
   Each \texttt{QUIC} packet is encrypted and decrypted individually in order to avoid the \texttt{TLS} Head-of-line blocking~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
@@ -1216,7 +1216,7 @@ Hence, hardware offloading oriented code (e.g. \texttt{NetFPGA} codebase) and to
 In addition, I did not end up using the high-speed network emulator called \texttt{TLEM}~\cite{TLEM_tool} because the existing network emulation tool called \texttt{NetEm} did not seem to add a noticeable performance overhead for the selected testing workloads.
 
 
-\section{Software Engineering Techniques and Tools}
+\section{Software Engineering Techniques and Tools} \label{Software_Engineering_Techniques_and_Tools}
     To track the code changes, I used \texttt{Git} source control tool.
     In particular, I used \texttt{GitHub} to store forked repositories of \texttt{ngtcp2}, \texttt{openssl}, \texttt{nghttp2} and \texttt{nghttp3}.
     In addition, the dissertation document was written using the online \LaTeX\  editor Overleaf\footnote{\url{https://www.overleaf.com/}} and changes were also committed to a separate repository on \texttt{GitHub}.
@@ -1386,7 +1386,27 @@ Some \texttt{QUIC} behaviour analysis tests use additional evaluation tools (e.g
 The most of the work was done in \texttt{unencrypted\_stack/ngtcp2}, \texttt{unencrypted\_stack/nghtt2} and \texttt{testing-scripts} sections.
 
 
-\simon{Mention licenses - can I publish everything?}
+
+
+
+
+
+\subsection{Software Licences} 
+The vast majority of software used in this project was released under permissive \texttt{MIT}\footnote{\url{https://github.com/ngtcp2/nghttp3/blob/main/COPYING}, \\  \url{https://github.com/ngtcp2/ngtcp2/blob/main/COPYING}, \\
+\url{https://github.com/microsoft/msquic/blob/main/LICENSE}} or \texttt{Apache 2.0}\footnote{\url{https://github.com/quictls/openssl/blob/openssl-3.0.0-alpha15\%2Bquic/LICENSE.txt}} licences.
+As required by \texttt{Apache 2.0} licence, I declare that no changes were added to the \texttt{OpenSSL} library (i.e., adjustments of cryptographic functions were implemented in \texttt{ngtcp2} and \texttt{nghttp2} repositories).
+In addition, some other auxiliary repositories, such as \texttt{nghttp3} or \texttt{MsQuic} were not modified, so I did not submit them for assessment.
+
+
+
+% \simon{\texttt{nghttp2} does not have an associated licence\footnote{\url{https://github.com/nghttp2/nghttp2/blob/master/LICENSE}}}
+
+
+
+
+
+
+
 
 
 
@@ -1427,20 +1447,31 @@ Furthermore, the testing environment setup became more predictable, allowing per
 
 \section{Using Null Encryption}
 
-\simon{\url{https://tools.ietf.org/html/draft-ietf-quic-tls-19} section-5.4 describes header encryption}
 
 As I have already mentioned in \S~\ref{QUIC_details_section}, \texttt{QUIC} uses encryption by default.
 It encrypts both the payloads of the packets and some fields in the packet headers.
+\simon{\url{https://tools.ietf.org/html/draft-ietf-quic-tls-19} section-5.4 describes header encryption}
+\simon{draw a diagram according to this draft}
 
 
-However, encryption and decryption operations were found to be computationally expensive.
-% TODO
-\simon{TODO add a reference showing that \texttt{QUIC} crypto functions are expensive}
 
-These intensive operations could have become a performance bottleneck of QUIC.
-To validate this claim, I had to measure the impact of cryptographic operations on QUIC's performance by comparing the throughput between the two server-client pairs.
+However, \texttt{QUIC} encryption and decryption operations are computationally expensive and, under certain circumstances, they could form a performance bottleneck of \texttt{QUIC}~\cite{Making_QUIC_Quicker}.
+To validate this claim, I had to measure the impact of cryptographic operations on \texttt{QUIC's} performance by comparing the throughput between the two server-client pairs.
 One pair had to use standard encryption and decryption procedures, while another had to exchange unencrypted packets.
 I achieved this by implementing logic that can turn on null encryption on \texttt{ngtcp2}.
+
+
+
+     \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/Cryptographic_procedures_of_quic.png}
+    \caption[Original process of encrypting, transferring and decrypting \texttt{QUIC} packet]{Original process of encrypting (e.g., steps 1 and 2), transferring  (e.g., steps 3) and decrypting (e.g., steps 4 and 5) \texttt{QUIC} packet}
+    \label{fig:Cryptographic_procedures_of_quic}
+    \end{figure}
+
+\simon{Describe Figure~\ref{fig:Cryptographic_procedures_of_quic}}
+
+\simon{Add another diagram explaining my solution}
 
 In essence, null encryption is a technique that effectively turns off encryption by encrypting/decrypting the data by ``XOR"ing the data with a key made entirely of zeroes (which leaves the data unchanged). 
 
@@ -1449,7 +1480,7 @@ In essence, null encryption is a technique that effectively turns off encryption
 
 
 % TODO
-\simon{TODO: mention improved null encryption}
+\simon{TODO: mention improved null encryption (e.g., add a short code snippet demonstrating existing memcopy vs my naive implementation)}
 
 % TODO
 \simon{TODO: mention that I later on found existing null encryption and decryption mechanisms in the unit tests of \texttt{ngtcp2}. 
@@ -1487,6 +1518,12 @@ To check the correctness of disabled \texttt{QUIC} encryption, I added both unit
 Unit tests ensure that the original text is equal to the encrypted and then decrypted text.
 Integration tests transfer large \texttt{HTML} file between the \texttt{QUIC} client and server via the intermediate machine (see Figure~\ref{fig:Physical_testing_environment}).
 After that, sender's and receiver's file contents are compared.
+
+
+\section{Backup Plans}
+As I have already mentioned in \S~\ref{Software_Engineering_Techniques_and_Tools}, I used \texttt{GitHub} to store a backup copy of the software.
+In addition, I shared configuration instructions (see Appendix~\ref{preparation_script_from_zshrc}) between the two computers that were used in the experiment.
+
 
 
 \chapter{Evaluation}
@@ -2265,7 +2302,7 @@ ip netns exec mr_server ethtool -k eth3 | grep tcp-segmentation-offload
 
 \chapter{Source B}
 
-    \section{appendix section}\label{referencedAppendixTag}
+    \section{appendix section}
 %TC:endignore
 
 \chapter{Project Proposal}
