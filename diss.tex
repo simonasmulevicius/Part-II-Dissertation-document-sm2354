@@ -197,27 +197,27 @@ Hence, the adjusted goals of this dissertation are to study the behaviour of \te
 
 \section*{Work Completed}
 
-I configured a network emulation  and testing environment allowing the performance measurements of \texttt{QUIC}.
+I configured a network emulation and testing environment allowing the performance measurements of \texttt{QUIC}.
 Then, I measured \texttt{QUIC} throughput under different network conditions, e.g., when I applied additional packet delay, packet loss, and packet reordering.
 
 \section*{Special Difficulties}
 
-The initial goal of the project was to write hardware components in \texttt{Verilog} that would offload packet reordering logic of \texttt{QUIC} packets to hardware.
+The project's initial goal was to write hardware components in \texttt{Verilog} that would offload packet reordering logic of \texttt{QUIC} packets to hardware.
 For this project, I had access to two dedicated experimental machines equipped with specialised hardware components -- \texttt{NetFPGA SUME} network interface cards.
 However, the software and hardware stack of \texttt{NetFPGA} platform was relatively complex.
 For instance, it took me unexpectedly long to prepare, configure and test the correct functionality of \texttt{NetFPGA SUME} boards because, as I have already mentioned, COVID-19 complicated the set-up process.
 
-To simplify the development process I had a pair of the aforementioned machines in my college room.
+To simplify the development process, I had a pair of the aforementioned machines in my college room.
 However, I faced accessibility issues during the winter vacation when I was abroad at home.
-In particular, the testing machines were expensive, heavy and fragile so I could not take them with me for the winter vacation.
-Hence, to overcome this issue I had to configure remote access of the testing environment.
+In particular, the testing machines were expensive, heavy and fragile, so I could not take them with me for the winter vacation.
+Hence, to overcome this issue, I had to configure remote access to the testing environment.
 I spent more than one month working on the remote set-up of both the main pair of testing machines as well as the backup pair.
 Unfortunately, I could not configure two additional backup machines in the Computer Laboratory.
 A suspected issue was a possible hardware fault.
 Hence, to continue working on the project, I had to return to my college room.
 This lengthy preparation phase substantially delayed the actual development of the project.
-As a result, after consultation with the project supervisor I decided to change the focus of the dissertation from hardware offloading to the software-oriented performance analysis of \texttt{QUIC}. 
-In conclusion, one could argue that in the pre-pandemic times, physical access to the pre-configured and tested hardware could have saved me a lot of time.
+As a result, after consultation with the project supervisor, I decided to change the focus of the dissertation from hardware offloading to the software-oriented performance analysis of \texttt{QUIC}. 
+In conclusion, one could argue that in pre-pandemic times, physical access to the pre-configured and tested hardware could have saved me a lot of time.
 
 
 %Professional Practice and Presentation 14%
@@ -282,13 +282,13 @@ However, some formatting ideas are taken from Alex Coplan's dissertation~\cite{A
 
 \awm{(this paragraph is the abstract\\
 \textit{What is the PROBLEM?}\\
-new http protocols need to be well understood for performance and behaviour - the newest of these is QUIC...\\
+New HTTP protocols need to be well understood for performance and behaviour - the newest of these is QUIC...\\
 \textit{Why do people care?}\\
-the web is the Internet, yet earlier http do not have the rich features people now desire (you might enumerate a sshort list of things the http and tcp protocols don't do); QUIC provbides many features but as a new protocol is far from the high-performance transport we have come to need and expect in the Internet \\
-\textit{What are you doing / did you do?}\\
-Experimental studty of a QUIC implementation comparing the behaviour of two implementations, and identifying core contributors for future improvement and optimization 
+the web is the Internet, yet earlier HTTP does not have the rich features people now desire (you might enumerate a short list of things the HTTP and TCP protocols don't do); QUIC provides many features, but as a new protocol is far from the high-performance transport we have come to need and expect in the Internet \\
+\textit{What are you doing/did you do?}\\
+Experimental study of a QUIC implementation comparing the behaviour of two implementations and identifying core contributors for future improvement and optimization 
 \textit{why is it awesome?}\\
-I show that while cryptographic functions are a significant overhead in the current QUIC implementations and hardware offload can make a significant improvement; even using a null-cryptographic routine the performance of QUIC falls far below its potential and significantly below comparable TCP performance.
+I show that while cryptographic functions are a significant overhead in the current QUIC implementations and hardware offload can make a significant improvement, even using a null-cryptographic routine, the performance of QUIC falls far below its potential and significantly below comparable TCP performance.
 }
 
 % TODO add reference to the ideas of this paragraph:
@@ -304,20 +304,20 @@ Hence, the changing constraints and networking trends encourage us to re-evaluat
 By using innovative solutions, we can continue improving the performance of the Internet. 
 One of such ideas is \texttt{QUIC} -- the new transport layer protocol.
 
-\section{Motivation of the Project}
+\section{The motivation of the Project}
 
 The purpose of this dissertation is to understand \texttt{QUIC}.
 As I describe in the later chapters, this innovative transport layer protocol offers both performance and privacy improvements.
 However, \texttt{QUIC} has many new features that are either not present in \texttt{TCP} or that are used in different ways.
-Hence, because of this novelty, performance behaviour of \texttt{QUIC} is usually not well understood.
-Thus, in this project I seek to understand several key features of \texttt{QUIC} that determine its performance.
+Hence, because of this novelty, the performance behaviour of \texttt{QUIC} is usually not well understood.
+Thus, in this project, I seek to understand several key features of \texttt{QUIC} that determine its performance.
 Then, I analyse existing implementations of \texttt{QUIC} aiming to identify their performance bottlenecks.
 Finally, this analysis could provide guidance for further \texttt{QUIC} improvements that could lead to the most immediate effects.
 
 
 \section{Objectives of the Project}
 
-The primary primary goal of this project is to identify the bottlenecks of \texttt{QUIC} and characterise its performance behaviour.
+The primary goal of this project is to identify the bottlenecks of \texttt{QUIC} and characterise its performance behaviour.
 \texttt{QUIC} transport layer protocol is a new protocol.
 However, it is already necessary to start thinking about its performance.
 Otherwise, the low throughput of \texttt{QUIC} may prevent it from being widely adopted (as happened with earlier attempts to improve \texttt{TCP}). 
@@ -365,11 +365,11 @@ Hence, any performance measurements of \texttt{QUIC} guide the ongoing efforts t
 Furthermore, there are strong indications showing that \texttt{QUIC} could be widely adopted in the future.
 For instance, \texttt{Google}, one of the major advocates for \texttt{QUIC}, operates both on the server side (e.g. search engine or video streaming service \texttt{YouTube}) and the client side (e.g. \texttt{Google Chrome} browser for desktop and mobile devices)~\cite{A_QUICk_Introduction_to_HTTP3}.
 Hence, using its existing market presence \texttt{Google} could potentially encourage the faster adoption of \texttt{QUIC}.
-Actually, according to the report published in 2016~\cite{RuthJan2018AFLa}, at that time around 40\% of all traffic of \texttt{Google} was using \texttt{QUIC}.
+Actually, according to the report published in 2016~\cite{RuthJan2018AFLa}, at that time, around 40\% of all traffic of \texttt{Google} was using \texttt{QUIC}.
 Similarly, other large technology companies such as \texttt{Facebook} or \texttt{Microsoft} are also building their own implementations of \texttt{QUIC} (correspondingly \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic}).
 These companies are also pushing the deployment of \texttt{QUIC}. 
 For example, according to the report from \texttt{Facebook} published in 2020~\cite{how-facebook-is-bringing-quic-to-billions}, \texttt{QUIC} was used for the three quarters of \texttt{Facebook} traffic. 
-In conclusion, it is highly likely that \texttt{QUIC} would get wide range of support meaning that current performance measurements of \texttt{QUIC} could help shape the future.
+In conclusion, it is highly likely that \texttt{QUIC} would get a wide range of support, meaning that current performance measurements of \texttt{QUIC} could help shape the future.
 
 \section{Related Work}
 There have been several similar attempts to measure \texttt{QUIC} performance under different network scenarios. 
@@ -389,10 +389,10 @@ The author noted in private correspondence that this ideas had been already impl
 An analysis of the \texttt{QUIC} protocol was published in 2018~\cite{overview_of_the_QUIC_protocol}.
 We both use the same implementation of \texttt{QUIC}, called \texttt{ngtcp2}.
 Indeed, \texttt{ngtcp2} has a well-documented code-base with several examples, e.g., client and server implementations.   
-However, \texttt{QUIC} in 2018 was still in the early development stage as it had only been publicaly published for several years~\cite{Chromium_Blog_Experimenting_with_quic}.
+However, \texttt{QUIC} in 2018 was still in the early development stage as it had only been publically published for several years~\cite{Chromium_Blog_Experimenting_with_quic}.
 Sanadhi~\cite{overview_of_the_QUIC_protocol} focused on the correctness of \texttt{ngtcp2} and another implementation of \texttt{QUIC} called \texttt{gQUIC}.
 They inspected the correct order of packet exchange, although no quantitative performance analysis of the protocol was performed.
-Nevertheless, in the \enquote{Future work} chapter the author suggests carrying out a performance analysis of \texttt{QUIC} under different simulated network conditions.
+Nevertheless, in the \enquote{Future work} chapter, the author suggests carrying out a performance analysis of \texttt{QUIC} under different simulated network conditions.
 As a result, my work could be viewed as the continuation of the previous analysis of \texttt{QUIC}~\cite{overview_of_the_QUIC_protocol}.
 
 
@@ -514,7 +514,7 @@ Finally, I describe software engineering tools and techniques used during this p
 
 According to the initial draft of \texttt{HTTP/1.1}~\cite{RFC2068}, \texttt{HTTP/1.1} was proposed to mitigate some of the \texttt{HTTP/1.0} problems by introducing persistent connections.
 This in turn allows multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
-Besides being beneficial for small objects, advantage of using a shared \texttt{TCP} connection is that\texttt{TCP} can make better estimates of the actual round-trip time (\texttt{RTT}) between the server and the client~\cite{bib_Computer_Networking_L6}.
+Besides being beneficial for small objects, the advantage of using a shared \texttt{TCP} connection is that\texttt{TCP} can make better estimates of the actual round-trip time (\texttt{RTT}) between the server and the client~\cite{bib_Computer_Networking_L6}.
 More precise \texttt{RTT} measurements allow more consistent utilisation of networking resources.
 For example, by evaluating \texttt{TCP} parameters, such as retransmission-timeout, more accurately, the number of unnecessary pre-emptive \texttt{TCP} timeouts can be reduced~\cite{bib_rtt_tcp_Retransmissions}.
 
@@ -522,14 +522,14 @@ Furthermore, \texttt{HTTP/1.1} enables pipelining of multiple \texttt{HTTP} requ
 Hence, as stated in~\cite{bib_digital_ocean_http11_vs_http2}, the client does not need to wait for an \texttt{HTTP} reply from the server before sending consecutive \texttt{HTTP} requests.
 However, the problem with \texttt{HTTP/1.1} is that \texttt{HTTP} replies need to be sent in order~\cite{RFC7540}. 
 So a missing packet of one \texttt{HTTP} request-reply pair could block subsequent \texttt{HTTP} replies~\cite{bib_digital_ocean_http11_vs_http2, head-of-line-blocking-in-quic-and-http-3-the-details}.
-In the literature this issue is called Head-of-line blocking (abbreviated HOL).
+In the literature, this issue is called Head-of-line blocking (abbreviated HOL).
 As Robin Marx wrote, HOL could have a detrimental effect on user experience when sequentially rendering web pages that have dynamically generated content or that contain large embedded objects~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 
 
 
 One possible workaround to hide the effect of Head-of-line blocking is to use several shared \texttt{TCP} connections~\cite{bib_digital_ocean_http11_vs_http2}.
 In particular, \texttt{HTTP/1.1} uses six \texttt{TCP} connections ~\cite{bib_will-http2-make-my-site-faster, head-of-line-blocking-in-quic-and-http-3-the-details}.
-But, the use of large number of \texttt{TCP} connections is not practical because there is an associated performance overhead of opening and using them ~\cite{bib_digital_ocean_http11_vs_http2, head-of-line-blocking-in-quic-and-http-3-the-details}.
+But, the use of a large number of \texttt{TCP} connections is not practical because there is an associated performance overhead of opening and using them ~\cite{bib_digital_ocean_http11_vs_http2, head-of-line-blocking-in-quic-and-http-3-the-details}.
 However, servers also have to share some of the overheads.
 For instance, additional \texttt{TCP} connections may require additional memory to store the associated \texttt{TCP} parameters on the server-side~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Finally, application layer Head-of-line blocking problems of \texttt{HTTP/1.1} could be summarised in Figure~\ref{fig:Head_of_line_blocking_of_HTTP1_1}.
@@ -556,18 +556,18 @@ As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the pri
 For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
 However, the major innovation of \texttt{HTTP/2.0} over \texttt{HTTP/1.1} is that \texttt{HTTP/2.0} improved resource multiplexing \cite[Chapter~12]{bib_grigorik2013}.
 Instead of using six \texttt{TCP} connections to hide the problem of Head-of-line blocking, \texttt{HTTP/2.0} uses a single \texttt{TCP} connection~\cite{bib_grigorik2013, head-of-line-blocking-in-quic-and-http-3-the-details}.
-As stated in Chapter 12 of Ilya Grigorik's book~\cite{bib_grigorik2013}, to solve the HOL problem in the application level, \texttt{HTTP/2.0} shares the aforementioned single \texttt{TCP} connection over the varying number of streams.
+As stated in Chapter 12 of Ilya Grigorik's book~\cite{bib_grigorik2013}, to solve the HOL problem at the application level, \texttt{HTTP/2.0} shares the aforementioned single \texttt{TCP} connection over the varying number of streams.
 Ideas of \texttt{HTTP/2.0} multiplexing are visualised in Figure~\ref{fig:Multiplexing_HTTP2}.
 This diagram demonstrates that logical and independent streams are implemented using frames~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 In particular, a single \texttt{TCP} packet may contain several frame headers with their associated payloads~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other on the client side.
+These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other on the client-side.
 
     \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figs/Multiplexing_HTTP2.png}
     \caption[Multiplexing of \texttt{HTTP/2.0} using logical streams and frames]{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
    ~\cite{overview_of_the_QUIC_protocol}
-    as well as the article written by Robin Marx~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
+    as well as the article was written by Robin Marx~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
     \label{fig:Multiplexing_HTTP2}
     \end{figure}
     
@@ -578,13 +578,13 @@ These \texttt{HTTP/2.0} frame headers allow the protocol to identify different r
 
 
 \texttt{HTTP/2.0} solves the initial problem of \texttt{HTTP} Head-of-line blocking, but \texttt{TCP} still suffers from the Head-of-line blocking induced by the \texttt{TCP} itself~\cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue, head-of-line-blocking-in-quic-and-http-3-the-details}.
-In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets, containing frames of other streams, can not be delivered to the application layer until the missing packet is not retransmitted~\cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
-The reason for this is that \texttt{TCP} is a stream-oriented protocol and it guarantees in-order data delivery.
+In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets containing frames of other streams can not be delivered to the application layer until the missing packet is not retransmitted~\cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
+The reason for this is that \texttt{TCP} is a stream-oriented protocol, and it guarantees in-order data delivery.
 Furthermore, the underlying \texttt{TCP} transport layer is unaware of its byte-stream structure~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 As a result, \texttt{TCP} does not try to infer the boundaries of different \texttt{HTTP/2.0} frames~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Hence, in the presence of packet loss, \texttt{TCP} would not deliver to the above layer the correctly-received in-order \texttt{HTTP} frames that were received in the subsequent \texttt{TCP} packets from different logical \texttt{HTTP} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Even correctly delivered \texttt{HTTP} frames would not be delivered until the next correct retransmission of the missing previous \texttt{TCP} packets~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-\texttt{TCP} induced Head-of-line blocking has other side effects.
+\texttt{TCP} induced head-of-line blocking has other side effects.
 As Gaetano Carlucci et al.~\cite{HTTP_over_UDP_An_Experimental_Investigation_of_QUIC}, the lost \texttt{TCP} packet would reduce the congestion window for all streams multiplexed over the same \texttt{TCP} connection.
 
 
@@ -597,11 +597,11 @@ As Gaetano Carlucci et al.~\cite{HTTP_over_UDP_An_Experimental_Investigation_of_
 \subsection{Historical Reasons for Invention of \texttt{QUIC}}
 As demonstrated in the previous sections, there have already been several attempts to overcome the Head-of-line blocking problems present in \texttt{HTTP}.
 In order to finally resolve the HOL blocking problem of \texttt{TCP}, one would need to upgrade this protocol so that \texttt{TCP} could separate frames associated with different logical \texttt{HTTP} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-Hence, new version of \texttt{TCP} algorithm would be required. 
+Hence, a new version of the \texttt{TCP} algorithm would be required. 
 However, attempts to roll out experimental versions of \texttt{TCP} to yield benefits to the protocols in the application layer were mostly unsuccessful~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
 For instance, there was a largely unsuccessful proposal called \texttt{TCP Fast Open} to reduce the number of handshakes (and thus round-trip times) required to open \texttt{TCP} connections~\cite{the-sad-story-of-tcp-fast-open}.
 One of the failure factors was related to middleboxes~\cite{the-sad-story-of-tcp-fast-open}.
-During the early 2000s, specific architectural problem emerged.
+During the early 2000s, a specific architectural problem emerged.
 Around that time, the world faced an issue that the Internet was running out of \texttt{IPv4} addresses.
 Hence, during that period, middleboxes (e.g. Network Address Translators or NATs for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses~\cite{MurphyNiallRichard2005Ina, bib_Netdev_0x13_QUIC_Tutorial}.
 However, newly introduced middleboxes started to interfere with the \texttt{TCP} traffic~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
@@ -730,7 +730,7 @@ orangesquarednode/.style={rectangle, draw=orange!60, fill=orange!5, very thick, 
     
 \end{tikzpicture}
 
-\caption[Evolution timeline of the related network technologies]{Evolution timeline of the related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog~\cite{http-3-from-root-to-tip}.\simon{UNIMPORTANT TODO: add dates on the timeline axis}}
+\caption[Evolution timeline of the related network technologies]{Evolution timeline of related network technologies. This diagram is taken from \texttt{Cloudflare}'s blog~\cite{http-3-from-root-to-tip}.\simon{UNIMPORTANT TODO: add dates on the timeline axis}}
     \label{fig:cf-secure-web-timeline}
     \end{figure}
 
@@ -809,13 +809,13 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
  % (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
  
     % As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
-    Nowadays ubiquitous mobile devices~\cite{bib_number_of_mobile_users} can change their location, and thus their Internet access can change frequently too~\cite{PollardBarry2019HiAP}.
+    Nowadays, ubiquitous mobile devices~\cite{bib_number_of_mobile_users} can change their location, and thus their Internet access can frequently change too~\cite{PollardBarry2019HiAP}.
     This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address~\cite{PollardBarry2019HiAP}.
     As a result, \texttt{TCP} needs to establish a new connection every time the Wi-Fi network is changed~\cite{PollardBarry2019HiAP}.
     This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the \enquote{slow-start} phase and perform additional handshakes.
     In addition, because of the different signal paths, other access points may have distinct round-trip times.
     Hence, after changing its access point, the mobile device may incorrectly use RTT estimates from the previous Wi-Fi connection for the congestion control over the new access point.
-    These example demonstrates that \texttt{TCP} protocol assumes that \texttt{IP} address would not frequently change~\cite{PollardBarry2019HiAP}.
+    This example demonstrates that \texttt{TCP} protocol assumes that \texttt{IP} address would not frequently change~\cite{PollardBarry2019HiAP}.
     In contrast, \texttt{QUIC} is more suitable to handle connections via mobile devices.
     In particular, \texttt{QUIC} has an explicit connection ID that does not depend on the IP address~\cite{PollardBarry2019HiAP}.
     Hence, \texttt{QUIC} clients can migrate between multiple different \texttt{IP} networks without having to re-establish a \texttt{QUIC} connection.
@@ -829,13 +829,13 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 \item \textbf{Fast \texttt{TLS1.3} handshake}
 
-As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the core innovations of \texttt{QUIC} is to combine the transport and security layer handshakes thus reducing latency of the first \texttt{HTTP} request.
+As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the core innovations of \texttt{QUIC} is to combine the transport and security layer handshakes, thus reducing latency of the first \texttt{HTTP} request.
 
 
      \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
-    \caption[Comparison of handshakes required to issue an \texttt{HTTP} request]{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of the similar diagram taken from~\cite{the-road-to-quic}.}
+    \caption[Comparison of handshakes required to issue an \texttt{HTTP} request]{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of a similar diagram taken from~\cite{the-road-to-quic}.}
     \label{fig:QUIC_handshake_vs_TCP-TLS_handshake}
     \end{figure}
  
@@ -856,10 +856,10 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space rather than kernel space}~\cite{the-road-to-quic, Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel, quic-and-http-3-too-big-to-fail}.
   The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly developed and deployed (e.g., by deploying protocol updates with the software updates)~\cite{the-road-to-quic}.
   This explains why there are numerous different implementation of \texttt{QUIC} (see \S~\ref{List_of_QUIC_implementations}).
-  In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in C language family.
-  There are numerous bootstrapping compilers written in C, meaning that any user level program, potentially written in different programming language, can be compiled and run.
+  In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in the C language family.
+  There are numerous bootstrapping compilers written in C, meaning that any user-level program, potentially written in a different programming language, can be compiled and run.
   In addition, despite several exceptions such as Google, Microsoft, and Apple, operating systems may not be controlled by the same companies as the ones that develop client-side software, such as browsers~\cite{2016-12-01-quic-tou}.
-  Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in user space.
+  Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in userspace.
   
   However, there is an associated cost of the user space because data has to be copied from kernel space to user space~\cite{benchmarking-quic}.
   Furthermore, Langley et al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment}.
@@ -878,7 +878,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   The concern is that conventional firewalls would not be able to reject suspicious \texttt{QUIC} packets~\cite{quic-the-internet-transport-protocol-based-on-udp}.
   In addition, network engineers may find it more difficult to analyse encrypted \texttt{QUIC} headers to understand traffic patterns~\cite{2017-12-18-transport-header-encryption}.
   
-  Each \texttt{QUIC} packet is encrypted and decrypted individually in order to avoid the \texttt{TLS} Head-of-line blocking~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+  Each \texttt{QUIC} packet is encrypted and decrypted individually in order to avoid the \texttt{TLS} head-of-line blocking~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
   In contrast, an alternative approach would be to group packets for decryption, hoping to amortise the cost of cryptographic function calls~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, optimizing-tls-record-size-and-buffering-latency}.
   However, one missing packet from the group would prevent other packets from being decrypted (and thus transferred to the application layer)~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 
@@ -904,13 +904,13 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   
     \item \texttt{QUIC} also provides \textbf{reliable in-order data delivery}~\cite[Section 7]{ietf-quic-transport-draft-32}, ~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} .
     The primary purpose of this is to replace \texttt{TCP} by offering almost identical guarantees. 
-    However, there is an important point to mention that actually the delivery order is preserved within a single \texttt{QUIC} stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details},~\cite[Section 2]{ietf-quic-transport-draft-32}.
+    However, there is an important point to mention that actually, the delivery order is preserved within a single \texttt{QUIC} stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details},~\cite[Section 2]{ietf-quic-transport-draft-32}.
     Otherwise, because of the multiplexed streams, data transferred via different \texttt{QUIC} streams could be re-ordered on the receiver's side between different streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details},~\cite[Section 2]{ietf-quic-transport-draft-32}.
     On the one hand, the change in the total receive order is not important if separate files are transferred via different \texttt{QUIC} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}, which is usually the case with modern websites that send multiple embedded objects.
     But on the other hand, unguaranteed packet ordering between \texttt{QUIC} streams changed \texttt{HTTP} semantics.
-    As a result, the new custom application layer, called \texttt{HTTP/3}, had to be build for \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-    In other words, to avoid transport layer head of line problem, \texttt{QUIC} was made aware of the different streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-    Hence, for this reason \texttt{QUIC} in Figure~\ref{fig:QUIC_network_stack} is shown as also being part of the application layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+    As a result, the new custom application layer, called \texttt{HTTP/3}, had to be built for \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+    In other words, to avoid the transport-layer head of line problem, \texttt{QUIC} was made aware of the different streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+    Hence, for this reason, \texttt{QUIC} in Figure~\ref{fig:QUIC_network_stack} is shown as also being part of the application layer~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
     
     
     
@@ -923,9 +923,9 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     This concept is visualised in Figure~\ref{fig:Impact_of_increasing_pkt_numbers}.
     This diagram demonstrates that \texttt{QUIC} can cope with repeated packet loss better than \texttt{TCP}~\cite{UnderstandQUIC}.
     Furthermore, \texttt{QUIC}, as opposed to \texttt{TCP}, can identify whether or not a received packet contains retransmitted frames~\cite{UnderstandQUIC}.
-    This in turn allows \texttt{QUIC} to estimate round-trip time more accurately.
+    This, in turn, allows \texttt{QUIC} to estimate round-trip time more accurately.
     Figure~\ref{fig:Impact_of_increasing_pkt_numbers} also demonstrates that \texttt{QUIC} uses frame byte ranges to identify missing frames and provide reliable delivery~\cite{UnderstandQUIC}.
-    In subsequent paragraphs I describe how \texttt{QUIC} packet numbers are used to avoid network congestion~\cite{UnderstandQUIC}.
+    In subsequent paragraphs, I describe how \texttt{QUIC} packet numbers are used to avoid network congestion~\cite{UnderstandQUIC}.
     
     \begin{figure}[H]
     \centering
@@ -938,14 +938,14 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     
     \item  \texttt{QUIC} has \textbf{loss recovery} mechanism.
     \texttt{QUIC} uses two ways to detect packet loss - by tracking unacknowledged packet numbers and using timeouts~\cite{UnderstandQUIC},~\cite[Section~6]{ietf-quic-recovery-32}.
-    An important point to mention is that a \texttt{QUIC} packet may be declared as lost if it gets reordered and some number (e.g., three for \texttt{ngtcp2}) of subsequent packets are acknowledged before the reordered packet,~\cite[Section~6]{ietf-quic-recovery-32}.
+    An important point to mention is that a \texttt{QUIC} packet may be declared as lost if it gets reordered, and some number (e.g., three for \texttt{ngtcp2}) of subsequent packets are acknowledged before the reordered packet,~\cite[Section~6]{ietf-quic-recovery-32}.
     In case of the packet loss, \texttt{QUIC} passes other successfully received packets to the application layer above provided that a missing packet is from another stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
    
    \item \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
    The same \texttt{QUIC} congestion control algorithm is applied over all \texttt{QUIC} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
    Similarly, round-trip time estimations are also shared among different streams~\cite[Section~4.2]{ietf-quic-recovery-32}.
    As a result, a single lost packet on one stream would likely have an impact on the throughput of all streams, but a lost packet of one stream would not block the other streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
-   Actually, \texttt{QUIC} has to observe multiple systematic packet losses for a noticeable period of time in order to declare that there is a persistent congestion in the network ~\cite[Section~4]{ietf-quic-recovery-32},~\cite{UnderstandQUIC}.
+   Actually, \texttt{QUIC} has to observe multiple systematic packet losses for a noticeable period of time in order to declare that there is persistent congestion in the network ~\cite[Section~4]{ietf-quic-recovery-32},~\cite{UnderstandQUIC}.
    Then, the sender can reduce its congestion window~\cite{UnderstandQUIC}.
    As a side note, \texttt{ngtcp2}, the primary \texttt{QUIC} implementation that I am studying, uses \texttt{CUBIC} as the default congestion control mechanism (according to the private correspondence with the \texttt{ngtcp2} co-author).
   
@@ -956,8 +956,8 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   
   
   \item The effect of the \textbf{reduced latency} of \texttt{QUIC} is apparent.
-  For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low quality Internet links, e.g. wireless links~\cite{chromium_blog_about_quic, quic-vs-tcptls-and-why-quic-is-not-the-next-big-thing}.
-  In particular, the study revealed that in some cases the time required to download contents of Google's main website was reduced by one second~\cite{chromium_blog_about_quic}.
+  For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low-quality Internet links, e.g. wireless links~\cite{chromium_blog_about_quic, quic-vs-tcptls-and-why-quic-is-not-the-next-big-thing}.
+  In particular, the study revealed that in some cases, the time required to download contents of Google's main website was reduced by one second ~\cite{chromium_blog_about_quic}.
   One possible explanation of this effect could be that any packet loss decreases the effective \texttt{TCP} throughput (See Equation~\ref{eq:gass_stuff}).
   
   Steady state throughput formula, as defined by Jitendra Padhye et.al.~\cite{TCP_throughput_formula}: 
@@ -965,10 +965,10 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     \textrm{TCP throughput} (p) \approx \frac{1}{\textrm{RTT}}\sqrt{\frac{1}{2bp}} 
     \label{eq:gass_stuff}
     \end{equation}
-     where $p$ is the packet loss rate, $b$ is the number of packets acknowledged with a single acknowledgment message, and RTT being the round-trip time.
+     where $p$ is the packet loss rate, $b$ is the number of packets acknowledged with a single acknowledgement message, and RTT being the round-trip time.
   
   
-  However, under substantial but tolerable packet loss rate, \texttt{QUIC} can avoid decreasing its congestion window if it does not detect persistent congestion.
+  However, under a substantial but tolerable packet loss rate, \texttt{QUIC} can avoid decreasing its congestion window if it does not detect persistent congestion.
   
  %\simon{If I remember correctly, (as someone said) the problem with TCP is that it confuses network congestion with unreliable links}
   
@@ -984,7 +984,7 @@ However, packet header encryption is separate from the payload encryption
 \simon{TODO: FIND SOURCE}.
 Header encryption hides some privacy information that could be otherwise used to match traffic patterns of a single user~\cite{2017-12-18-transport-header-encryption, the-road-to-quic}.
 According to the \texttt{QUIC} IETF draft, obfuscated packet numbers provide only partial confidentiality~\cite{ietf-quic-transport-draft-32}, as connection IDs are not encrypted~\cite[Section~5.4.1]{ietf-quic-tls-32}.
-However, the primary purpose of hidden packet numbers is to prevent middleboxes from interfering, and thus ossifying the protocol~\cite{the-road-to-quic}.
+However, the primary purpose of hidden packet numbers is to prevent middleboxes from interfering and thus ossifying the protocol~\cite{the-road-to-quic}.
 In contrast, packet payloads are authenticated and encrypted to secure and hide application layer data~\cite{ietf-quic-tls-32}.
 
   
@@ -1012,7 +1012,7 @@ Hence, I performed a survey to find \texttt{QUIC} implementation, which had an A
 \texttt{Aioquic}, \texttt{MsQuic} and \texttt{ngtcp2} seemed to be the most promising.
 However, despite being a simple and well-documented implementation of \texttt{QUIC}, \texttt{aioquic} did not have an active development team that could answer technical questions.
 Similarly, \texttt{MsQuic} seemed promising, but some of the performance measurement tools used by the \texttt{MsQuic} team were proprietary and not yet released to the public. 
-I thought that in this dissertation it would be wise to use similar testing conditions as the ones used in the previous similar paper (Yang et al.~\cite{Making_QUIC_Quicker}).
+I thought that in this dissertation, it would be wise to use similar testing conditions as the ones used in the previous similar paper (Yang et al.~\cite{Making_QUIC_Quicker}).
 In particular, the authors of this paper evaluated several  or C\texttt{++} \texttt{QUIC} implementations.
 Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, written in C.
 I identified the experimental \texttt{QUIC} benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
@@ -1031,12 +1031,12 @@ Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning t
 \texttt{Iperf3}\footnote{\url{https://github.com/esnet/iperf}} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
 \texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
 One can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
-However, as noted in~\ref{QUIC_details_section}, \texttt{UDP} does not guarantee reliable packet delivery so the sender and receiver could see different throughput values.
-Hence, to put \texttt{QUIC} into the perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
-An important aspect of \texttt{TCP} is that its congestion control mechanism allows sender to discover an appropriate sending bitrate.
+However, as noted in~\ref{QUIC_details_section}, \texttt{UDP} does not guarantee reliable packet delivery, so the sender and receiver could see different throughput values.
+Hence, to put \texttt{QUIC} into perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
+An important aspect of \texttt{TCP} is that its congestion control mechanism allows the sender to discover an appropriate sending bitrate.
 In contrast, \texttt{UDP} does not take into account the state of the network.
 Consequently, if unlimited \texttt{UDP} throughput is allowed, then one could flood the network by running \texttt{iperf3} to measure \texttt{UDP} throughput.
-However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network so no damage was done to the public network.
+However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network, so no damage was done to the public network.
 
 However, there were other similar throughput measurement tools (e.g., \texttt{nuttcp}\footnote{http://nuttcp.net/nuttcp/} or \texttt{iperf2}\footnote{https://sourceforge.net/projects/iperf2/}).
 In particular, \texttt{nuttcp} is said to be better for high \texttt{UDP} throughput measurements~\cite{network-troubleshooting-tools_nuttcp} and it out to provide more stable results when analysing \texttt{UDP}~\cite{Nuttcp_geant}.
@@ -1069,17 +1069,17 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
     \label{fig:Wireshark_screenshot}
     \end{figure}
     
-When required, I ran \texttt{Wireshark} on the intermediate machine to inspect size of the packets transferred between the \texttt{QUIC} client and server.
+When required, I ran \texttt{Wireshark} on the intermediate machine to inspect the size of the packets transferred between the \texttt{QUIC} client and server.
 It is worth mentioning that \texttt{QUIC} packets are encrypted.
-Hence, I had to share server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g. packet number) of observed \texttt{QUIC} packets.
+Hence, I had to share the server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g. packet number) of observed \texttt{QUIC} packets.
 
-I used \texttt{Wireshark} in an ethical manner meaning that I only used it to analyse traffic between the dedicated network interfaces.
-In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because testing environment used separate network interfaces. 
+I used \texttt{Wireshark} in an ethical manner, meaning that I only used it to analyse traffic between the dedicated network interfaces.
+In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because the testing environment used separate network interfaces. 
 
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
-    \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network and I did not use \texttt{Wireshark} to capture packets from the college network}
+    \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network, and I did not use \texttt{Wireshark} to capture packets from the college network}
     \label{fig:Wireshark_separation}
     \end{figure}
 
@@ -1089,15 +1089,15 @@ In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did 
 \texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack.
 However, sampling-based performance analysers add lower overhead than event-based analysers because the performance measurement code is not executed for almost every instruction.
 Instead, \texttt{perf} inspects the CPU stack almost one thousand times a second to identify the most problematic functions.
-In particular, I used sampling frequency of 997 samples per second in order to avoid introducing bias of sampling \enquote{round numbers}~\cite{perf-cpu-sample}.
-However, during this project I realised that sampling-based performance analysers only work well if the program runs for sufficiently long time and multiple stacks can be captured.
+In particular, I used a sampling frequency of 997 samples per second in order to avoid introducing bias of sampling \enquote{round numbers}~\cite{perf-cpu-sample}.
+However, during this project, I realised that sampling-based performance analysers only work well if the program runs for a sufficiently long time and multiple stacks can be captured.
 
 
 
 \subsection{Flame Graphs}
-\texttt{Flame Graphs} \footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool which is used to visualise the performance of the program.
+\texttt{Flame Graphs} \footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool that is used to visualise the performance of the program.
 In this project I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous samples (see Figure~\ref{fig:perf_results_of_h2load}).
-To understand the \texttt{Flame Graphs} we should first look at the simple example diagram (see Figure~\ref{fig:Flame_Graphs_explanation}).
+To understand the \texttt{Flame Graphs}, it is worth looking at the simple example diagram first (see Figure~\ref{fig:Flame_Graphs_explanation}).
 
     \begin{figure}[H]
     \centering
@@ -1109,7 +1109,7 @@ To understand the \texttt{Flame Graphs} we should first look at the simple examp
 Here y-axis of \texttt{Flame Graphs} represents the depth and frames of the call stack~\cite{CPU_Flame_graphs}.
 For instance, we can see in Figure~\ref{fig:Flame_Graphs_explanation} that \textbf{function\_a()} invoked function calls \textbf{function\_b()} and \textbf{function\_g()}. 
 However, an important point to mention is that x-axis of \texttt{Flame Graphs} does not represent time~\cite{CPU_Flame_graphs}.
-Instead, function names are sorted alphabetically along the x-axis and it represents the approximate percentage of stack frames which were in the call stack~\cite{CPU_Flame_graphs}.
+Instead, function names are sorted alphabetically along the x-axis, and it represents the approximate percentage of stack frames that were in the call stack~\cite{CPU_Flame_graphs}.
 Hence, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can tell that \textbf{function\_b()} and its \enquote{children} functions spent more time on CPU than \textbf{function\_g()} and its corresponding functions but we can not tell the relative order in which these functions were called.
 Furthermore, in order to better identify the most frequent function calls, stack frames sampled at different times can be merged if they have a shared ancestor~\cite{CPU_Flame_graphs}.
 As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} we can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
@@ -1125,12 +1125,12 @@ In the standard \texttt{Flame Graph}, different frames are coloured differently 
 
 
 However, in this project, I am also using \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
-The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph} but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
+The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph}, but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
 
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.png}
-    \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files. The red areas in the center represenet removed cryptographic functions from the unencrypted \texttt{ngtcp2} version which that previously formed a CPU bottleneck for \texttt{QUIC}}
+    \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files. The red areas in the centre represent removed cryptographic functions from the unencrypted \texttt{ngtcp2} version which that previously formed a CPU bottleneck for \texttt{QUIC}}
     \label{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}
     \end{figure}
 
@@ -1185,7 +1185,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
  As a result, I only used this configuration to test the correct partial set-up required for the following simulation environment.
  
  To elevate these issues, I used a separate intermediate dedicated machine to introduce traffic perturbations.
- Such a testing environment has already been used in the previous studies~\cite{Making_QUIC_Quicker}.
+ Such a testing environment has already been used in previous studies~\cite{Making_QUIC_Quicker}.
  However, it was a rather complicated set-up process to configure the packet forwarding and network parameters correctly.
  However, as I was not restricted by hardware, I used this option for the final performance analysis tests.
  I used this environment to run integration tests.
@@ -1195,7 +1195,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
  
  Similarly, there was a design choice I had to make when selecting a tool that could add traffic perturbations.
  Yang et al.~\cite{Making_QUIC_Quicker} used \texttt{TLEM} network emulator that is suitable for the high throughput network emulation~\cite{Very_high_speed_link_emulation_with_TLEM}.
- \simon{Though, TLEM is for "high-speed" networks, does it refer to low latency or high throughput?}
+ \simon{Though TLEM is for "high-speed" networks, does it refer to low latency or high throughput?}
  However, I used \texttt{NetEm} (abbreviation for \enquote{Network Emulator}) tool instead because it was simple to deploy and use.
  Besides that, I measured additional packet delay latency induced by \texttt{NetEm} on the intermediate machine, and it was negligible.
 \simon{TODO: bring those numbers here}
@@ -1207,7 +1207,7 @@ In other words, relevant networking stack tools such as cryptographic library (e
 Moreover, in this project I used inspiration from Yang et al.~\cite{Making_QUIC_Quicker} when configuring the testing environment of \texttt{QUIC}.
 In particular, I replicated their physical and architectural layout of components required to simulate different conditions of the network (see section \ref{physical_setup_subsection}).
 
-The concepts of \texttt{QUIC} were introduced in the Part IB \enquote{Computer Networking} and Part II \enquote{Principles of Communications} courses.
+The concepts of \texttt{QUIC} were introduced in the Part IB \enquote{Computer Networking}, and Part II \enquote{Principles of Communications} courses.
 In addition, fundamentals of C and C\texttt{++} were covered in \enquote{Programming in C and C\texttt{++}} course. 
 Besides that, I used C\texttt{++} in my summer internship.
 
@@ -1241,11 +1241,11 @@ In addition, I did not end up using the high-speed network emulator called \text
     \label{fig:Trello_board}
     \end{figure}
     
-    During the winter vacation I returned back home so I had made the necessary steps beforehand to be able to have remote access to the specialised hardware.
+    During the winter vacation, I returned back home, so I had made the necessary steps beforehand to be able to have remote access to the specialised hardware.
     In particular, I first enabled permanent remote access to the testing machines using remote desktop access software called \texttt{TeamViewer}\footnote{\url{https://www.teamviewer.com/en/}}.
     It allowed me to access the aforementioned machines outside the college network.
     Then, as shown in Figure~\ref{fig:setup_map}, I added additional redundant backup \texttt{ssh} connections between the testing computers to improve the resilience of the system in case one of the \texttt{TeamViewer} links failed.
-    Finally, to further mitigate potential risks, I had two emergency contacts (two non-technical students from the same college) who were granted a permission to enter my room and access the machines inside it in case of an accident.
+    Finally, to further mitigate potential risks, I had two emergency contacts (two non-technical students from the same college) who were granted permission to enter my room and access the machines inside it in case of an accident.
     This last step turned out to be useful because I was able to ask my fellow students to turn off the testing machines before the college network was shut down for maintenance operations.
     
 
@@ -1296,7 +1296,7 @@ In addition, I did not end up using the high-speed network emulator called \text
 % ------------------------------------------------
 
 
-In this chapter I first present my work required to disable encryption of \texttt{QUIC}.
+In this chapter, I first present my work required to disable encryption of \texttt{QUIC}.
 Then, I describe the actual software engineering tasks that I completed to measure \texttt{QUIC} performance consistently and correctly.
 
 
@@ -1352,7 +1352,7 @@ Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behavi
 ]
 \end{forest}
 
-    \caption[High level directory structure of the project]{High level directory structure of the project}
+    \caption[High-level directory structure of the project]{High-level directory structure of the project}
     \label{fig:High_level_directory_structure_of_the_project}
     \end{figure}
 
@@ -1451,8 +1451,7 @@ As I have already mentioned in \S~\ref{QUIC_details_section}, \texttt{QUIC} uses
 It encrypts both the payloads of the packets and some fields in the packet headers.
 A simplified high-level overview of \texttt{QUIC} packet encryption and decryption is demonstrated in Figure~\ref{fig:Cryptographic_procedures_of_quic}.
 
-% TODO
-% 1. Encrypt QUIC packet payload using both the plaintext payload and 16 byte long authentication tag. 
+At first, the sender encrypts the \texttt{QUIC} packet payload by using both the plain text payload and 16-byte long authentication tag~\cite[Section 5]{ietf-quic-tls-32}. 
 % The authentication tag depends on the Destination connection ID, Initiail Salt and other cryptographic parameters.
 % In this stage, the produced  cyphertext  is 16 bytes longer than the provided plaintext because the cyphertext has to accomodate both the plaintext and the authentication tag~\cite[Section 5.3]{ietf-quic-tls-32}
 % 2. Encrypt packet header with a 5 byte long mask.
@@ -1485,12 +1484,6 @@ I achieved this by implementing logic that can turn on null encryption on \textt
 
 
 \simon{Explain my solution}
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/my_implementation_of_cryptographic_procedures_of_quic.png}
-    \caption[My implementation of disabled encryption]{My implementation of disabled encryption}
-    \label{fig:my_implementation_of_cryptographic_procedures_of_quic}
-    \end{figure}
 
 % 1. Short circuit payload encryption
 % 2. Header encryption key is generated by sampling first few hundred bytes of the encrypted packet
@@ -1501,14 +1494,27 @@ I achieved this by implementing logic that can turn on null encryption on \textt
 % But QUIC is a complex protocol (people complain about its complexity), so removal of these functions could have had any additional unintented side effects that could have lead to the protocol errors.
 % Headers are negligible compared with the payloads so futrther performance optimisations would have provided only limited performance improvements.
 
-
-
-
-
-
-
-
 In essence, null encryption is a technique that effectively turns off encryption by encrypting/decrypting the data by ``XOR"ing the data with a key made entirely of zeroes (which leaves the data unchanged). 
+
+
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/my_implementation_of_cryptographic_procedures_of_quic.png}
+    \caption[My implementation of disabled encryption]{My implementation of disabled encryption}
+    \label{fig:my_implementation_of_cryptographic_procedures_of_quic}
+    \end{figure}
+
+
+
+
+
+
+
+
+
+
+
 
 % TODO
 \simon{TODO -- say which cryptographic operations are performed and which ones are omitted when using my implementation of null-crypto}
@@ -1518,10 +1524,7 @@ In essence, null encryption is a technique that effectively turns off encryption
 \simon{TODO: mention improved null encryption (e.g., add a short code snippet demonstrating existing memcopy vs my naive implementation)}
 
 % TODO
-\simon{TODO: mention that I later on found existing null encryption and decryption mechanisms in the unit tests of \texttt{ngtcp2}. 
-However, my implementation was developed independently and without knowledge about the existence of these functions.
-This can be proven by my commit history and communication history on the \texttt{Slack} messaging platform.
-Furthermore, the performance analysis I described before allowed me to identify potential bottlenecks of my implementation.
+\simon{TODO: mention that the performance analysis I described before allowed me to identify potential bottlenecks of my implementation.
 Hence, I was able to improve my null cryptographic operations in a systematic way.}
 
 
@@ -1540,7 +1543,7 @@ In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{
 
 In order to measure the performance of the \texttt{QUIC} protocol, I am running several automated scripts on the testing computer (see Figure~\ref{fig:Physical_testing_environment}).
 In particular, I am using Python and/or Bash scripts to configure the testing environment and initiate the \texttt{QUIC} server-client pair.
-In addition, to control the networking conditions of the simulated network the scripts on the testing machine use \texttt{ssh} (abbreviation of Secure Shell Protocol) connection to control the intermediate machine.
+In addition, to control the networking conditions of the simulated network, the scripts on the testing machine use \texttt{ssh} (abbreviation of Secure Shell Protocol) connection to control the intermediate machine.
 Later on, Python scripts save, aggregate and visualise the results of the experiments.
 The use of scripting languages, in this case, is acceptable because performance measurements require quick prototyping.
 Furthermore, code maintainability is not the major design goal of this project.
@@ -1552,7 +1555,7 @@ Furthermore, code maintainability is not the major design goal of this project.
 To check the correctness of disabled \texttt{QUIC} encryption, I added both unit and integration tests.
 Unit tests ensure that the original text is equal to the encrypted and then decrypted text.
 Integration tests transfer large \texttt{HTML} file between the \texttt{QUIC} client and server via the intermediate machine (see Figure~\ref{fig:Physical_testing_environment}).
-After that, sender's and receiver's file contents are compared.
+After that, the sender's and receiver's file contents are compared.
 
 
 \section{Backup Plans}
@@ -1578,7 +1581,7 @@ As this project builds on the ideas presented in~\cite{Making_QUIC_Quicker}, I t
 
 \subsection{Logical Setup}
 To test a simple single flow performance, it is sufficient to have a single \texttt{QUIC} server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
-To measure \texttt{QUIC} performance under different conditions, we need to add a network emulator between the \texttt{QUIC} client and the \texttt{QUIC} server.
+To measure \texttt{QUIC} performance under different conditions, a network emulator between the \texttt{QUIC} client and the \texttt{QUIC} server has to be added.
 
     \begin{figure}[ht]
     \centering
@@ -1604,30 +1607,32 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Physical_testing_environment.png}
-    \caption[Physical configuration of testing environment]{Physical configuration of testing environment. This scheme is an adaptation of the configuration environment used in ~\cite{Making_QUIC_Quicker}}
+    \caption[Physical configuration of the testing environment]{Physical configuration of the testing environment. This scheme is an adaptation of the configuration environment used in ~\cite{Making_QUIC_Quicker}}
     \label{fig:Physical_testing_environment}
     \end{figure}
     
     As we can see from Figure~\ref{fig:Physical_testing_environment}, both \texttt{QUIC} client and server operate on different virtual network namespaces which do not have shared point-to-point links.
     Client and server are assigned different network subnets.
+    Subnets use private \texttt{IPv4} addresses~\cite{rfc1918}.
+    The purpose of these addresses is to prevent experiments from interfering with the college network and prevent interference of external packets in the experiments.
     An intermediate machine (B) is configured as the default gateway for both virtual network namespaces.
     As a result, all the packets between the \texttt{QUIC} server and client have to travel via an intermediate machine (B).
     Here, depending on the experiment, network perturbations (e.g. packet loss, delay, reordering) may be introduced.
     In particular, to simulate different networking conditions I used \texttt{NetEm} tool (abbreviation of \enquote{Network Emulator})\footnote{http://manpages.ubuntu.com/manpages/trusty/man8/tc-netem.8.html}.
-    The small implementation detail of \texttt{NetEm} is that by default it introduces traffic perturbations for the packets leaving the network interface but not the incoming packets~\cite{Ubuntu_Manpage_NetEm}.
-    Hence, to simulate symmetrical network conditions I had to specify \texttt{NetEm} rules for both interfaces of the intermediate machine.
+    The small implementation detail of \texttt{NetEm} is that by default, it introduces traffic perturbations for the packets leaving the network interface but not the incoming packets~\cite{Ubuntu_Manpage_NetEm}.
+    Hence, to simulate symmetrical network conditions, I had to specify \texttt{NetEm} rules for both interfaces of the intermediate machine.
     For this reason, in other diagrams, I represent Network Emulator as separated into two sections (see Figure~\ref{fig:Wireshark_separation}).
     
     
     IP forwarding is enabled on the intermediate machine (B), redirecting \texttt{QUIC} packets from one subnet to another.
-    Correctness of the experimental environment was tested by inspecting transit packets on the machine B.
+    The correctness of the experimental environment was tested by inspecting transit packets on machine B.
 
     The intermediate machine adds only limited overhead.
     I derived these conclusions by comparing round-trip-times (using \texttt{ping} tool) and the maximum available \texttt{UDP} throughput (using \texttt{iperf3} tool) under two different conditions.
     At first, I measured performance when packets travel from one physical interface of machine A to its another physical interface via machine B.
     Then, I performed identical tests but without the intermediate machine meaning that packets were still forced to go from one physical interface to another via a loopback cable.
-    Results were as follows: the maximum \texttt{UDP} throughput via machine B was 4.11 Gbits/sec [TODO: redo experiment] and via loopback cables this number was 9.91 Gbits/sec.
-    In both case, throughput was measured on the receiver side.
+    Results were as follows: the maximum \texttt{UDP} throughput via machine B was 4.11 Gbits/sec [TODO: redo experiment], and via loopback cables, this number was 9.91 Gbits/sec.
+    In both cases, throughput was measured on the receiver side.
     Similarly, after introducing the intermediate machine, the \texttt{RTT} increased from:
     
     \textbf{"RTT min/avg/max/mdev = 0.077/0.118/0.156/0.026 ms"}\\
@@ -1639,10 +1644,10 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
     \textbf{"RTT min/avg/max/mdev = 0.188/0.262/0.353/0.065 ms"}\\
     (\url{https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_maximum-iperf-troughput_via-B/ping_result.txt})
     
-    (Here each result was obtained after running ten \texttt{ping} experiments).
+    (Here, each result was obtained after running ten \texttt{ping} experiments).
     
     % TODO
-    \simon{TODO: add a table of results showing that lower RTT of looback cables increased throughput of ngtcp-h2load by about 10\%}
+    \simon{TODO: add a table of results showing that lower RTT of loopback cables increased throughput of ngtcp2-h2load by about 10\%}
     % https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_unencrypted-ngtcp2-throughput_via-loopback_delay-0ms_uncorrelated-loss-0_0_percent_improved-null-encryption_with-command-line-option/result.ods
     
 
@@ -1650,7 +1655,7 @@ To measure \texttt{QUIC} performance under different conditions, we need to add 
     [TODO: what was TCP throughput via machine B?]
 
 
-    Large segmentation offload and \texttt{TCP} segmentation offload mechanisms were in place on the machine A. 
+    Large segmentation offload and \texttt{TCP} segmentation offload mechanisms were in place on machine A. 
     \simon{TODO: check which ones, because I disabled LRO}
 
 
@@ -1664,7 +1669,7 @@ Fortunately, at the time of writing, according to Google's IPv6 adoption tracker
 Hence, analysis involving IPv4 is still relevant today.
 
 %TODO
-\simon{TODO: Ubuntu 20.04 has different mechanism  to disable IPv6 -- check that it is still working}
+\simon{TODO: Ubuntu 20.04 has a different mechanism  to disable IPv6 -- check that it is still working}
 
 %TODO
 \simon{TODO: State that I had to revert this with MsQuic}
@@ -1686,7 +1691,7 @@ As stated in~\cite{hyperthreading_book}, this means that threads allocated to su
 This is problematic for precise experiments.
 On the one hand, a neighbouring thread might pre-fetch required data to the cache, but on the other hand, this thread might pollute the cache, thus hurting the performance of the thread which is being measured.
 Hence, to reduce the potential performance variability, I had to disable \texttt{hyper-threading} on the testing machines.
-The final version of architectural topology is shown in Figure~\ref{fig:memory_topology}. 
+The final version of the architectural topology is shown in Figure~\ref{fig:memory_topology}. 
 Correct configuration of \texttt{hyper-threading} was tested using different commands, such as \texttt{lscpu} and the aforementioned \texttt{lstopo}. 
 
     
@@ -1696,7 +1701,7 @@ Machine A from Figure~\ref{fig:Physical_testing_environment} has four physical c
 To make performance tests even more predictable, I had to assign exclusive physical cores to the \texttt{QUIC} client and server using \texttt{taskset}\footnote{https://man7.org/linux/man-pages/man1/taskset.1.html} tool.
 In particular, \texttt{ngtcp2} server was assigned the first core (marked as \enquote{P\#0} in Figure~\ref{fig:memory_topology}).
 \texttt{QUIC} client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core (marked as \enquote{P\#1}).
-Finally, remaining two cores (marked as \enquote{P\#2} and \enquote{P\#3}) were assigned to all the remaining system processes.
+Finally, the remaining two cores (marked as \enquote{P\#2} and \enquote{P\#3}) were assigned to all the remaining system processes.
 Robert Love refers to this technique of assigning particular processes to particular cores as \texttt{hard CPU affinity}~\cite{CPU_Affinity}.
 
     \begin{figure}[H]
@@ -1710,8 +1715,8 @@ In addition, to evaluate the impact of core pinning, I measured throughput of \t
 At first, I allocated both \texttt{QUIC} server and client to the same core (see the red dashes in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500}).
 Then, I performed identical throughput analysis tests with separated cores meaning that \texttt{QUIC} server and client resided on the two different cores.
 Blue dashes in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500} demonstrate that core pinning almost doubled the maximum \texttt{QUIC} throughput for the transfer of large files (above 100MB).
-However, impact of core pinning is not substantial when transferring small files.
-One explanation of this could be that transmission time of small files is dominated by the overhead of networking stack and transmission time of a single packet.
+However, the impact of core pinning is not substantial when transferring small files.
+One explanation of this could be that the transmission time of small files is dominated by the overhead of the networking stack and the transmission time of a single packet.
 As far as testing conditions are concerned, the intermediate machine was not configured to introduce additional explicit traffic perturbations.
     \begin{figure}[H]
     \centering
@@ -1720,7 +1725,7 @@ As far as testing conditions are concerned, the intermediate machine was not con
     \label{fig:Throughput_via_A-to-B-to-A_MTU=1500}
     \end{figure}
 % TODO
-\simon{TODO: Am I talking here about iperf3 client-server pair or is it ngtcp2 pair?}
+\simon{TODO: Am I talking here about iperf3 client-server pair, or is it the ngtcp2 pair?}
 
 % TODO
 \simon{TODO add a chart showing lower performance variability when using different cores for testing }
@@ -1805,19 +1810,19 @@ As far as testing conditions are concerned, the intermediate machine was not con
 
   
   \item 
-  \simon{TODO show that Jumbo frames are not accepted in the wild Internet / TODO state that MTUs above 1500 bytes are not prevalent in the Internet}
+  \simon{TODO show that Jumbo frames are not accepted in the wild Internet / TODO state that MTUs above 1500 bytes are not prevalent on the Internet}
   
   
   See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
   
   
 \subsection{Interrupt Request Queue (IRQ) Balancing} 
-Breno Henrique Leitao in his work suggested using~\cite{Tuning_10Gb_network_cards_on_Linux} Interrupt Request Queue (IRQ) Balancing to improve general throughput of the testing system.
-By default, \texttt{IRQ} is enabled meaning that operating system aims to distribute the burden of handling interrupts evenly over all the processors~\cite{Tuning_10Gb_network_cards_on_Linux}.
-The suggestion was to delegate processing of certain interrupts to specified processors hoping that this would improve performance of cores that were designated for the \texttt{QUIC} tests.
+Breno Henrique Leitao in his work suggested using~\cite{Tuning_10Gb_network_cards_on_Linux} Interrupt Request Queue (IRQ) Balancing to improve the general throughput of the testing system.
+By default, \texttt{IRQ} is enabled, meaning that the operating system aims to distribute the burden of handling interrupts evenly over all the processors~\cite{Tuning_10Gb_network_cards_on_Linux}.
+The suggestion was to delegate the processing of certain interrupts to specified processors hoping that this would improve the performance of cores that were designated for the \texttt{QUIC} tests.
 However, \texttt{IRQ} did not yield any noticeable effects for the \texttt{UDP} throughput measured by \texttt{iperf3} so I decided to leave the default \texttt{IRQ} settings on.
-One plausible explanation for this insignificant improvement could be that the testing environment used already saturated network link.
-In other words, measured maximum available throughput before and after experiment was around 9.8Gbits/second while the maximum theoretical limit of the link was 10Gbits/second. 
+One plausible explanation for this insignificant improvement could be that the testing environment used an already saturated network link.
+In other words, the measured maximum available throughput before and after the experiment was around 9.8Gbits/second, while the maximum theoretical limit of the link was 10Gbits/second. 
 
 
 \subsection{Size of the Buffers} 
@@ -1842,12 +1847,12 @@ In other words, measured maximum available throughput before and after experimen
 
 As illustrated in Figure~\ref{fig:QUIC_network_stack}, \texttt{QUIC} is built on top of \texttt{UDP}.
 I measured throughput of \texttt{UDP} because the performance of \texttt{QUIC} is limited by this underlying protocol (see Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}).
-In particular, I used testing topology similar to the one shown in  Figure~\ref{fig:Physical_testing_environment}.
+In particular, I used a testing topology similar to the one shown in  Figure~\ref{fig:Physical_testing_environment}.
 However, in this experiment I replaced the \texttt{QUIC} client and the server with the corresponding \texttt{iperf3} client-server pair.
 In addition, I did not add any additional packet delay or packet loss on the intermediate machine.
 Furthermore, I repeated each individual test ten times and measured both the mean and standard deviation of these samples.
 Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
-As a side note, Large Receive Offload is disable on both the testing and intermediate machines.
+As a side note, the Large Receive Offload is disabled on both the testing and intermediate machines.
 
 
 
@@ -1907,7 +1912,7 @@ This interesting effect could be explained by the fact that there is an associat
 \simon{TODO: explain these effects}
 
 \simon{TODO: context/queue switches? for concurrent streams penalise the transfer of large concurrent files, but with small files, these switches are more frequent.
-With large number of clients we can offer server a variety of packets it can process}
+With a large number of clients, we can offer the server a variety of packets it can process}
 
 \simon{According to \url{https://fasterdata.es.net/performance-testing/network-troubleshooting-tools/iperf/multi-stream-iperf3/}, \texttt{iperf3} is a single threaded application so this might be a limiting testing factor}
 
@@ -1929,7 +1934,7 @@ Hence, the server and its associated stack could form the performance bottleneck
 \subsection{Throughput of Parallel \texttt{TCP} Streams}
 
 Similarly, Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} demonstrates \texttt{TCP} throughput measurements using the same testing environment as described in the previous subsection (see \S~\ref{section_Throughput_of_Parallel_UDP_Streams}).
-In other words, I repeated each individual experiment ten times, packets traveled via the intermediate machine that was configured not to add any additional packet delay or packet loss.
+In other words, I repeated each individual experiment ten times, packets travelled via the intermediate machine that was configured not to add any additional packet delay or packet loss.
 In addition, here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes and 1~Gbit = 1000~Mbits = 1~000~000~Kbits = 1~000~000~000~bits.
 
 
@@ -1956,24 +1961,24 @@ In addition, here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes
 
 
 Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} shows the effect of increased transferred file size for the throughput of \texttt{TCP}.
-Naturally, it takes less time to transfer small file than the large one.
+Naturally, it takes less time to transfer a small file than the large one.
 However, this means that \texttt{TCP} spends most of the time in the \enquote{slow start} phase when sending small files because their transfer time is shorter than the duration of the \enquote{slow start}.
 As a result, \texttt{TCP}'s throughput when sending small files is low.
 In contrast, transferring larger files allows \texttt{TCP} to discover the maximum sustainable network capacity.
 Thus, the \texttt{TCP} throughput is noticeably larger when sending larger files. 
-In addition, transfer of large files allows \texttt{TCP} to amortise the overhead of initial \texttt{TCP} handshake.
+In addition, the transfer of large files allows \texttt{TCP} to amortise the overhead of initial \texttt{TCP} handshake.
 Hence, when sending 1GByte of data, \texttt{TCP} was able to approach the maximum link capacity that was 10~Gbits/s.
 
 
-\simon{describe function of TCP throughput in time (see Figure~\ref{fig:TCP_throughput_in_time})}
+\simon{describe the function of TCP throughput in time (see Figure~\ref{fig:TCP_throughput_in_time})}
 
 
-\simon{First 4 rows of the table - there are 4 different experiments with different throughputs (differ by at least the factor of 2) and the average completion time of all of them was around 10ms. Hence, this example demonstrates that iperf3 does not have sufficient resolution to capture and visualise the effect of slow start. }
+\simon{First 4 rows of the table - there are 4 different experiments with different throughputs (differ by at least the factor of 2), and the average completion time of all of them was around 10ms. Hence, this example demonstrates that iperf3 does not have sufficient resolution to capture and visualise the effect of a slow start. }
 
 % TODO
 \simon{TODO: comparison of TCP vs UDP}
 
-\simon{According to https://support.cumulusnetworks.com/hc/en-us/articles/216509388-Throughput-Testing-and-Troubleshooting, TCP might have better offloading support than UDP meaning that their throughouts may not be comparable}
+\simon{According to https://support.cumulusnetworks.com/hc/en-us/articles/216509388-Throughput-Testing-and-Troubleshooting, TCP might have better offloading support than UDP, meaning that their throughputs may not be comparable}
 
     \begin{figure}[H]
     \centering
@@ -1993,7 +1998,7 @@ Hence, when sending 1GByte of data, \texttt{TCP} was able to approach the maximu
 \subsection{Throughput of Parallel \texttt{TCP} Streams that use \texttt{TLS}}
  
 Throughput measurements of \texttt{TCP} with \texttt{TLS} are relevant because these values form an equal comparison with \texttt{QUIC} throughput.
-In other words, as I have already mentioned in Section \ref{QUIC_details_section}, \texttt{QUIC} uses cryptographic handshakes by default meaning that for a fair comparison with \texttt{QUIC}, \texttt{TCP} also has to include \texttt{Transport Layer Security} layer.
+In other words, as I have already mentioned in Section~\ref{QUIC_details_section}, \texttt{QUIC} uses cryptographic handshakes by default, meaning that for a fair comparison with \texttt{QUIC}, \texttt{TCP} also has to include \texttt{Transport Layer Security} layer.
 
 Unfortunately, I could not measure the throughput of parallel \texttt{TCP} streams that use \texttt{TLS}.
 It turns out that \texttt{iperf3}, the aforementioned throughput measurement tool, currently does not generate combined \texttt{TCP} and \texttt{TLS} throughput.
@@ -2006,7 +2011,7 @@ In the future, \texttt{MsQuic} tools may provide better support for the family o
 To evaluate \texttt{TCP with TLS} performance, I connected two laptops running on \texttt{Windows 10} OS with 1 Gigabit-per-second Ethernet link.
 However, initially, firewalls on both machines prevented the successful packet exchange.
 After turning firewalls off, I managed to exchange \texttt{ping} packets between the two computers.
-However, because of the suspected, additional antivirus rules, I could not run \texttt{MsQuic} performance analysis tools and measure \texttt{TCP with TLS} performance on Windows.
+However, because of the suspected additional antivirus rules, I could not run \texttt{MsQuic} performance analysis tools and measure \texttt{TCP with TLS} performance on Windows.
 Actually, it was speculated that firewalls could be a noticeable \texttt{QUIC} deployment issue~\cite{The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment}.
 
 \subsection{Throughput of Parallel \texttt{QUIC} Streams}
@@ -2134,14 +2139,14 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 \subsection{Performance Comparison of \enquote{Null Encryption} in Application Layer}
 
-\simon{Compare througputs of HTTP/3 with null crypto vs HTTP/2 with "--no-tls-proto" (h2load client supports that, now I just need to find HTTP/2 server)}
+\simon{Compare throughputs of HTTP/3 with null crypto vs HTTP/2 with "--no-tls-proto" (h2load client supports that, now I just need to find HTTP/2 server)}
 
 \section{\texttt{QUIC} Performance Evaluation}
 
 
 \subsection{Impact of Link Delay}
 
-\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet DELAY. No packet loss should be added. Probably I should use similar delays as the ones that were used in other papers (e.g. +10ms, +50ms, +100ms).}
+\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet DELAY. No packet loss should be added. Probably I should use similar delays like the ones that were used in other papers (e.g. +10ms, +50ms, +100ms).}
 
 \simon{What requested file size should I use for these measurements?}
 
@@ -2161,7 +2166,7 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 \section{Final the Most Optimised Version Of \texttt{QUIC}}
 
-\simon{It might be an interesting section to combine all of the performance boosting ideas (GSO, null-crypto, Jumbo frames, large frame sizes) to create ngtcp2 version with the highest throughput}
+\simon{It might be an interesting section to combine all of the performance-boosting ideas (GSO, null-crypto, Jumbo frames, large frame sizes) to create an ngtcp2 version with the highest throughput}
 
 
 
@@ -2182,7 +2187,7 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 \section{Summary}
 
-In this project I simulated offloading of cryptographic \texttt{QUIC} functions and I measured impact of this improvement.
+In this project, I simulated offloading of cryptographic \texttt{QUIC} functions, and I measured the impact of this improvement.
 My dissertation reiterates the idea that, if implemented correctly, hardware offloading of \texttt{QUIC} could offer substantial performance improvements.
 
 \simon{Mention energy efficiency and application of QUIC for IoT https://calendar.perfplanet.com/2018/quic-and-http-3-too-big-to-fail/}
@@ -2196,7 +2201,7 @@ In particular, hands-on experience with the reference hardware projects during t
 
 Certain innovative network analysis tools, such as the aforementioned \texttt{MsQuic} performance analysis programs, were not adopted for \texttt{Ubuntu 20.04 LTS (Focal Fossa)} operating system.
 Hence, I could not compare performance of disabled encryption of \texttt{MsQuic} with the corresponding \texttt{TCP/TLS} stack.
-However, I hope that in the future such experiments would be possible.
+However, I hope that in the future, such experiments would be possible.
 
 % TODO
 \simon{TODO: suggest offloading crypto to hardware (as Gianni's team has already suggested)}
