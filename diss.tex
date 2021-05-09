@@ -1481,7 +1481,6 @@ On the one hand, packet headers are still \texttt{XORed} with a fixed 5-byte lon
 On the other hand, my implementation avoids the sampling procedure required to generate the header encryption key in the first place.
 Alternatively, I could have even removed the function calls used to encrypt \texttt{QUIC} packet headers.
 However, \texttt{QUIC} is a complex protocol, so removing these functions could have had additional unintended side effects that could have led to protocol errors.
-\simon{ (people complain about QUIC's complexity) - find source  }
 Finally, \texttt{QUIC} headers are relatively small compared with the packet payloads, so further performance optimisations dealing with header encryption would have provided only limited performance improvements.
 
 
@@ -1492,29 +1491,11 @@ Finally, \texttt{QUIC} headers are relatively small compared with the packet pay
     \label{fig:my_implementation_of_cryptographic_procedures_of_quic}
     \end{figure}
 
-
-
-
-
-
-
-
-
-
-
-
-% TODO
-\simon{TODO -- say which cryptographic operations are performed and which ones are omitted when using my implementation of null-crypto}
-
-
-
-
-% TODO
-\simon{TODO: mention improved null encryption (e.g., add a short code snippet demonstrating existing memcopy vs my naive implementation)}
-
-% TODO
-\simon{TODO: mention that the performance analysis I described before allowed me to identify potential bottlenecks of my implementation.
-Hence, I was able to improve my null cryptographic operations in a systematic way.}
+At first, I used naive implementation to copy relevant packet bits.
+However, as memory copying took a proportionally long time to complete, I decided to use built-in functions instead.
+For instance, \texttt{memmove} function from \texttt{string.h} library runs significantly faster than my simple algorithm that copies one symbol at a time.
+For instance, after running 100 experiments that copy arrays with 1000000 symbols, my naive implementation took $5.001 \pm 0.029$ milliseconds, while \texttt{memmove} took $0.151 \pm 0.002$ milliseconds.
+Hence, this performance analysis allowed me to identify potential bottlenecks of my implementation thus allowing me to improve my cryptographic operations in a systematic way.
 
 
 
@@ -1522,7 +1503,6 @@ Hence, I was able to improve my null cryptographic operations in a systematic wa
 
 My implementation of null encryption has room for improvements.
 For instance, every encrypted \texttt{ngtcp2} packet uses additional 16 bytes to store the encryption header.
-\simon{Rephrase sentence before}
 However, in the null-encryption scenario, these additional fields are not required, but my implementation of disabling encryption does not use them, meaning that 16 unused bytes are transferred in a single \texttt{QUIC} packet.
 In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{QUIC} packets to re-use these additional 16 bytes for data transfer.
 
