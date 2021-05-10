@@ -1638,15 +1638,14 @@ The number of variable parameters is reduced by specifying a particular IP versi
 Fortunately, at the time of writing, according to Google's IPv6 adoption tracker~\cite{IPv6_Adoption_Statistics}, only a third of all Internet users (30-35 \% to be precise) use IPv6 to connect to Google's services.
 Hence, analysis involving IPv4 is still relevant today.
 
-%TODO
-\simon{TODO: Ubuntu 20.04 has a different mechanism  to disable IPv6 -- check that it is still working}
-
-%TODO
-\simon{TODO: State that I had to revert this with MsQuic}
+However, I could not run \texttt{MsQuic} tools with IPv6 disabled, so at the end of the project I had to revert this setting.
+Fortunately, using \texttt{Wireshark} I observed that \texttt{MsQuic} also uses IPv4 by default, meaning that results were comparable.
 
 \subsection{Hyper-threading}\label{Hyperthreading_Subsection_Tag}
 
-As Michael E. Thomadakis states on the 23rd page of~\cite{hyperthreading_book}, \texttt{hyper-threading} (more generally known as \texttt{simultaneous multi-threading}) is a thread allocation technique that allows two threads to run on the same physical core at the same time.
+\texttt{Hyper-threading} (more generally known as \texttt{simultaneous multi-threading}) is a thread allocation technique that allows two threads to run on the same physical core at the same time~\cite[page~ 23]{hyperthreading_book}.
+
+
 On the testing machines \texttt{hyper-threading} at first was implemented by assigning two virtual cores for every physical core (see Figure~\ref{fig:topology_with_hyperthreading}).
 For instance, in this diagram core \enquote{L \#0} has two \enquote{processing units} marked as \enquote{PU L\#0} and \enquote{PU L\#1}.
 
@@ -1667,12 +1666,14 @@ Correct configuration of \texttt{hyper-threading} was tested using different com
     
     
 \subsection{Separated Cores} \label{SeparatedCores_Subsection_Tag}
-Machine A from Figure~\ref{fig:Physical_testing_environment} has four physical cores (see Figure~\ref{fig:memory_topology}).
 To make performance tests even more predictable, I had to assign exclusive physical cores to the \texttt{QUIC} client and server using \texttt{taskset}\footnote{https://man7.org/linux/man-pages/man1/taskset.1.html} tool.
-In particular, \texttt{ngtcp2} server was assigned the first core (marked as \enquote{P\#0} in Figure~\ref{fig:memory_topology}).
+
+
+In particular, the testing machine from Figure~\ref{fig:Physical_testing_environment} has four physical cores (see Figure~\ref{fig:memory_topology}) and I assigned \texttt{ngtcp2} server to the first core (marked as \enquote{P\#0} in Figure~\ref{fig:memory_topology}).
 \texttt{QUIC} client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core (marked as \enquote{P\#1}).
 Finally, the remaining two cores (marked as \enquote{P\#2} and \enquote{P\#3}) were assigned to all the remaining system processes.
 Robert Love refers to this technique of assigning particular processes to particular cores as \texttt{hard CPU affinity}~\cite{CPU_Affinity}.
+Core pinning is important for performance analysis because it removes the overhead of reallocating processes from one core to another by reducing the frequency of cache misses~\cite{Tuning_10Gb_network_cards_on_Linux}.
 
     \begin{figure}[H]
     \centering
@@ -1684,42 +1685,61 @@ Robert Love refers to this technique of assigning particular processes to partic
 In addition, to evaluate the impact of core pinning, I measured throughput of \texttt{QUIC} under two different conditions by sending a file of the specified size over the intermediate machine.
 At first, I allocated both \texttt{QUIC} server and client to the same core (see the red dashes in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500}).
 Then, I performed identical throughput analysis tests with separated cores meaning that \texttt{QUIC} server and client resided on the two different cores.
-Blue dashes in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500} demonstrate that core pinning almost doubled the maximum \texttt{QUIC} throughput for the transfer of large files (above 100MB).
+As far as testing conditions are concerned, the intermediate machine was not configured to introduce additional explicit traffic perturbations.
+
+Blue symbols in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500} demonstrate that core pinning almost doubled the maximum \texttt{QUIC} throughput for the transfer of large files (above 100MBytes).
 However, the impact of core pinning is not substantial when transferring small files.
 One explanation of this could be that the transmission time of small files is dominated by the overhead of the networking stack and the transmission time of a single packet.
-As far as testing conditions are concerned, the intermediate machine was not configured to introduce additional explicit traffic perturbations.
+In contrast, transfer of large files is a data intensive operation.
+Hence, two data-intensive processes that run on the same core could compete for the same cache resources.
+
+In addition, Table~\ref{Standard_deviation_of_throughput_measurements} demonstrates that \texttt{h2load's} throughput was almost always more variable when both the client and the server used the same core.
+
+
     \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{figs/Throughput via node B (A-to-B-to-A)_MTU=1500.png}
-    \caption{Impact of core pinning for \texttt{QUIC} throughput}
+    \includegraphics[width=0.8\textwidth]{figs/QUIC Throughput when packets go via machine B (A1-to-B-to-A2).png}
+    \caption{Impact of core pinning for \texttt{QUIC} throughput measured with \texttt{h2load}}
     \label{fig:Throughput_via_A-to-B-to-A_MTU=1500}
     \end{figure}
 % TODO
-\simon{TODO: Am I talking here about iperf3 client-server pair, or is it the ngtcp2 pair?}
+\simon{TODO:If there is time, augment this diagram with iperf3 measurements on different cores}
 
-% TODO
-\simon{TODO add a chart showing lower performance variability when using different cores for testing }
 
-% TODO
-\simon{TODO according to https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf, "CPU affinity" reduces cache misses}
+
+
+
+\begin{table}[H]
+\begin{tabular}{|c|r|r|r|r|r|r|r|r|r|}
+\hline
+\begin{tabular}[c]{@{}c@{}}Number \\ of transferred bytes\end{tabular}                              & \multicolumn{1}{c|}{10} & \multicolumn{1}{c|}{100} & \multicolumn{1}{c|}{1k} & \multicolumn{1}{c|}{10k} & \multicolumn{1}{c|}{100k} & \multicolumn{1}{c|}{1M} & \multicolumn{1}{c|}{10M} & \multicolumn{1}{c|}{100M} & \multicolumn{1}{c|}{1G} \\ \hline
+\begin{tabular}[c]{@{}c@{}}throughput \\ standard deviation \\ (using the same core)\end{tabular}   & 0.010                   & 0.011                    & 0.040                   & 0.749                    & 2.010                     & 4.361                   & 2.717                    & 1.409                     & 1.426                   \\ \hline
+\begin{tabular}[c]{@{}c@{}}throughput \\ standard deviation \\ (using different cores)\end{tabular} & 0.003                   & 0.002                    & 0.025                   & 0.470                    & 3.264                     & 5.557                   & 3.593                    & 1.277                     & 0.669                   \\ \hline
+\end{tabular}
+    \caption{Standard deviation of throughput measurements that are shown in Figure~\ref{fig:Throughput_via_A-to-B-to-A_MTU=1500}}
+    \label{Standard_deviation_of_throughput_measurements}
+\end{table}
+
+
+
 
 \subsection{GSO}
 \begin{itemize}
-  \item TODO introduce GSO (General Segmentation Offload)
+  \item \simon{TODO introduce GSO (General Segmentation Offload)}
   
   
-  \item TODO add a chart showing GSO's impact on throughput
+  \item \simon{TODO add a chart showing GSO's impact on throughput}
   
   
-  \item TODO mention when GSO is relevant
+  \item \simon{TODO mention when GSO is relevant}
   
-  \item TODO state that from now on, GSO is used in all the remaining tests by default because GSO provided great performance improvements
+  \item \simon{TODO state that, GSO is used in all the remaining tests by default because GSO provided great performance improvements}
 \end{itemize}
 
 \subsection{MTUs}
 \begin{itemize}
-  \item TODO introduce/refresh MTUs
-  \item TODO demonstrate the Jumbo frames impact for iperf/\texttt{QUIC} throughput
+  \item \simon{TODO introduce/refresh MTUs}
+  \item \simon{TODO demonstrate the Jumbo frames impact for iperf/\texttt{QUIC} throughput}
   
   
   
@@ -1809,9 +1829,6 @@ In other words, the measured maximum available throughput before and after the e
 
 \section{Baseline Measurements}
 
-\subsection{\texttt{ping} Measurements}
-
-\simon{MAYBE TODO: Move ping measurements from "Physical Setup" section to here}
 
 \subsection{Throughput of Parallel \texttt{UDP} Streams} \label{section_Throughput_of_Parallel_UDP_Streams}
 
@@ -1892,8 +1909,7 @@ Hence, the server and its associated stack could form the performance bottleneck
 
 
 % TODO
-[TODO: function of UDP throughput in time]
-[TODO: see Figure~\ref{fig:UDP_throughput_in_time}]
+\simon{TODO: explain function of UDP throughput in time (see Figure~\ref{fig:UDP_throughput_in_time}}
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/UDP_throughput_in_time.png}
