@@ -1198,7 +1198,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
  \simon{Though TLEM is for "high-speed" networks, does it refer to low latency or high throughput?}
  However, I used \texttt{NetEm} (abbreviation for \enquote{Network Emulator}) tool instead because it was simple to deploy and use.
  Besides that, I measured additional packet delay latency induced by \texttt{NetEm} on the intermediate machine, and it was negligible.
-\simon{TODO: bring those numbers here}
+ The overhead measurment results are located in \S~\ref{physical_setup_subsection}.
 
 
 \section{Starting Point}
@@ -1554,21 +1554,18 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
 
     \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/Logical_testing_environment.png}
+    \includegraphics[width=0.95\textwidth]{figs/Logical_testing_environment.png}
     \caption{Logical configuration of testing environment}
     \label{fig:Logical_testing_environment}
     \end{figure}
 
 \subsection{Physical Setup} \label{physical_setup_subsection}
 
-\simon{Specify software and hardware parameters of the testing environment as shown in \url{https://github.com/Shenggan/quic_vs_tcp} }
-
-\simon{TODO: add information about the capacities of Ethernet links}
-
 
     In the ideal scenario, it might be the best to use three dedicated machines for performance measurements, as shown in the previous section.
     However, I decided to use a slightly different physical layout (see Figure~\ref{fig:Physical_testing_environment}).
     In this environment, one machine (A) hosts client-server pair, while another computer (B) acts as a network emulator.
+    Software parameters of the testing machine are shown in Table~\ref{software_parameters_of_testing_machine}.
     The physical configuration differs from the logical configuration because I wanted to replicate \texttt{QUIC} testing conditions used in other experiments~\cite{Making_QUIC_Quicker}.
     One advantage of having both server and client running on the same machine is that the common system clock can perform measurements more accurately. 
     
@@ -1580,6 +1577,20 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
     \label{fig:Physical_testing_environment}
     \end{figure}
     
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|l|l|}
+        \hline
+        OS     & Ubuntu 20.04.2.0 LTS (Focal Fossa) \\ \hline
+        Kernel & 5.4.0-72-generic                   \\ \hline
+        GCC    & 10.2.0                             \\ \hline
+        Python & Python 2.7.18 and Python 3.8.5     \\ \hline
+        \end{tabular}
+        
+        \caption[Software parameters of the testing machine]{Software parameters of the testing machine. Idea to add this table is taken from~\cite{quic_vs_tcp}.}
+        \label{software_parameters_of_testing_machine}
+    \end{table}
+    
     As shown in Figure~\ref{fig:Physical_testing_environment}, both \texttt{QUIC} client and server operate on different virtual network namespaces which do not have shared point-to-point links.
     Client and server are assigned different network subnets.
     Subnets use private \texttt{IPv4} addresses~\cite{rfc1918}.
@@ -1590,42 +1601,32 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
     In particular, to simulate different networking conditions I used \texttt{NetEm} tool (abbreviation of \enquote{Network Emulator})\footnote{http://manpages.ubuntu.com/manpages/trusty/man8/tc-netem.8.html}.
     The small implementation detail of \texttt{NetEm} is that by default, it introduces traffic perturbations for the packets leaving the network interface but not the incoming packets~\cite{Ubuntu_Manpage_NetEm}.
     Hence, to simulate symmetrical network conditions, I had to specify \texttt{NetEm} rules for both interfaces of the intermediate machine.
-    For this reason, in other diagrams, I represent Network Emulator as separated into two sections (see Figure~\ref{fig:Wireshark_separation}).
+    For this reason, in other diagrams, I represent \texttt{Network Emulator} as separated into two sections (see Figure~\ref{fig:Wireshark_separation}).
     
     
     IP forwarding is enabled on the intermediate machine (B), redirecting \texttt{QUIC} packets from one subnet to another.
     The correctness of the experimental environment was tested by inspecting transit packets on machine B.
 
+
+
     The intermediate machine adds only limited overhead.
     I derived these conclusions by comparing round-trip-times (using \texttt{ping} tool) and the maximum available \texttt{UDP} throughput (using \texttt{iperf3} tool) under two different conditions.
     At first, I measured performance when packets travel from one physical interface of machine A to its another physical interface via machine B.
     Then, I performed identical tests but without the intermediate machine meaning that packets were still forced to go from one physical interface to another via a loopback cable.
-    Results were as follows: the maximum \texttt{UDP} throughput via machine B was 4.11 Gbits/sec [TODO: redo experiment], and via loopback cables, this number was 9.91 Gbits/sec.
-    In both cases, throughput was measured on the receiver side.
-    Similarly, after introducing the intermediate machine, the \texttt{RTT} increased from:
+    Results were as follows: after running ten \texttt{iperf3} experiments, the average \texttt{UDP} throughput sending \texttt{UDP} packets containing 1448 data bytes via machine B was $4.11$ Gbits/sec.
+    Alternatively, \texttt{UDP} throughput via loopback cables was $4.22 \pm 0.03$ Gbits/sec or $364389.8$ packets per second.
+    However, by increasing \texttt{iperf3} buffers from 1460 bytes for UDP, to more than about 65000 bytes, I improved loopback \texttt{UDP} throughput to 9.93 Gbits/sec.
+    In either cases, throughput was measured on the receiver side.
     
-    \textbf{"RTT min/avg/max/mdev = 0.077/0.118/0.156/0.026 ms"}\\
-    (\url{https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_maximum-iperf-troughput_via-loopback-cables/ping_result.txt})
-    %[TODO: update these numbers with the new values from "test_ping-via-loopback-cables]
-    
-    to
-    
-    \textbf{"RTT min/avg/max/mdev = 0.188/0.262/0.353/0.065 ms"}\\
-    (\url{https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_maximum-iperf-troughput_via-B/ping_result.txt})
-    
-    (Here, each result was obtained after running ten \texttt{ping} experiments).
-    
-    % TODO
-    \simon{TODO: add a table of results showing that lower RTT of loopback cables increased throughput of ngtcp2-h2load by about 10\%}
-    % https://github.com/simonasmulevicius/Part-II-dissertation/blob/main/testing-scripts/test_overhead-of-intermediate-machine/test_unencrypted-ngtcp2-throughput_via-loopback_delay-0ms_uncorrelated-loss-0_0_percent_improved-null-encryption_with-command-line-option/result.ods
-    
-
-    Similarly, \texttt{TCP} throughput via loopback cable was 9.89 Gbis/sec.
-    [TODO: what was TCP throughput via machine B?]
+    Similarly, \texttt{TCP} throughput via intermediate was 9.24 Gbits/sec and via loopback cable it was 9.41 Gbits/sec.
 
 
-    Large segmentation offload and \texttt{TCP} segmentation offload mechanisms were in place on machine A. 
-    \simon{TODO: check which ones, because I disabled LRO}
+    Similarly, after introducing the intermediate machine, the \texttt{RTT} increased from
+    $0.118 \pm 0.026$ ms to $0.262 \pm 0.065$ ms.
+    Here, each result was obtained after running ten \texttt{ping} experiments.
+    
+
+
 
 
 \section{Parameter Tuning}
