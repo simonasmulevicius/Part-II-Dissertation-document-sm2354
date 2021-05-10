@@ -1643,9 +1643,8 @@ Fortunately, using \texttt{Wireshark} I observed that \texttt{MsQuic} also uses 
 
 \subsection{Hyper-threading}\label{Hyperthreading_Subsection_Tag}
 
-\texttt{Hyper-threading} (more generally known as \texttt{simultaneous multi-threading}) is a thread allocation technique that allows two threads to run on the same physical core at the same time~\cite[page~ 23]{hyperthreading_book}.
-
-
+\texttt{Hyper-threading} is a thread allocation technique that allows two threads to run on the same physical core at the same time~\cite[page~ 23]{hyperthreading_book}.
+Another name for \texttt{hyper-threading} is \texttt{simultaneous multi-threading}.
 On the testing machines \texttt{hyper-threading} at first was implemented by assigning two virtual cores for every physical core (see Figure~\ref{fig:topology_with_hyperthreading}).
 For instance, in this diagram core \enquote{L \#0} has two \enquote{processing units} marked as \enquote{PU L\#0} and \enquote{PU L\#1}.
 
@@ -1724,17 +1723,20 @@ In addition, Table~\ref{Standard_deviation_of_throughput_measurements} demonstra
 
 
 \subsection{GSO}
-\begin{itemize}
-  \item \simon{TODO introduce GSO (General Segmentation Offload)}
-  
-  
-  \item \simon{TODO add a chart showing GSO's impact on throughput}
-  
-  
-  \item \simon{TODO mention when GSO is relevant}
-  
-  \item \simon{TODO state that, GSO is used in all the remaining tests by default because GSO provided great performance improvements}
-\end{itemize}
+    Generic Segmentation Offload (abbreviated GSO) is a software technique that groups system calls issued by user-space applications to send \texttt{UDP} packets~\cite{segmentation-offloads, Tuning_10Gb_network_cards_on_Linux, segmentation-offloading-with-wireshark-and-ethtool}.
+    As a result, the kernel has to make fewer context switches to segment the data into Ethernet packets before sending them over the network~\cite{accelerating-udp-packet-transmission-for-quic}.
+    
+    To measure GSO impact for \texttt{QUIC} throughput, I compared \texttt{QUIC} throughput between the \texttt{ngtcp2} server and \texttt{h2load} client.
+    I performed two groups of experiments with different file sizes.
+    At first, I disabled Generic Segmentation Offload both on the server and client sides.
+    Then, I repeated the same experiments with enabled GSO.
+    I repeated every experiment ten times.
+    Throughput measurements are left in the appendix (see Table~\ref{GSO_impact_measurement_results}).
+    But in general, Generic Segmentation Offload improved \texttt{QUIC} throughput considerably.
+    For instance, when transferring 1~Gbyte amount of data, \texttt{QUIC's} throughput increased from $418.44 \pm 3.21$ Mbits/s to $663.06 \pm 0.98$ Mbits/s.
+    However, in real networks, GSO could contribute to the more bursty traffic patterns and thus increase the rate of dropped packets~\cite{accelerating-udp-packet-transmission-for-quic}.
+    Nevertheless, GSO is used in all the remaining tests by default because it provided significant performance improvements.
+
 
 \subsection{MTUs}
 \begin{itemize}
@@ -2328,10 +2330,27 @@ ip netns exec mr_server ethtool -k eth3 | grep tcp-segmentation-offload
 
 \chapter{Source B}
 
-    \section{appendix section}
-%TC:endignore
+    \section{GSO impact measurement results}
+\begin{table}[H]
+\begin{tabular}{|l|l|r|r|r|r|r|r|}
+\hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}number \\ of \\ experiments:\end{tabular}} & \multicolumn{1}{c|}{10}                                                                       & \multicolumn{1}{c|}{}                                                                          & \multicolumn{1}{c|}{}                                                         & \multicolumn{1}{c|}{}                                                                           & \multicolumn{1}{c|}{}                                                                                         & \multicolumn{1}{c|}{}                                                                         & \multicolumn{1}{c|}{}                                                                                       \\ \hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}delay\\ (ms)\end{tabular}}                 & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}probability\\ of\\ packet\\ loss\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file\\ size\\ (bytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Is GSO\\ enabled\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}average\\ completion\\ time\\ (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard \\ deviation\\ completion\\ time\\ (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}average\\ throughput\\ (Mbits/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard \\ deviation\\ throughput\\ (Mbits/s)\end{tabular}} \\ \hline
+0                                                                                          & 0                                                                                             & 1000000                                                                                        & no GSO                                                                        & 27.54                                                                                           & 0.41                                                                                                          & 290.62                                                                                        & 4.29                                                                                                        \\ \hline
+0                                                                                          & 0                                                                                             & 1000000                                                                                        & with GSO                                                                      & 21.27                                                                                           & 1.40                                                                                                          & 377.69                                                                                        & 23.06                                                                                                       \\ \hline
+0                                                                                          & 0                                                                                             & 10000000                                                                                       & no GSO                                                                        & 201.87                                                                                          & 2.30                                                                                                          & 396.46                                                                                        & 4.52                                                                                                        \\ \hline
+0                                                                                          & 0                                                                                             & 10000000                                                                                       & with GSO                                                                      & 133.65                                                                                          & 2.53                                                                                                          & 598.97                                                                                        & 11.15                                                                                                       \\ \hline
+0                                                                                          & 0                                                                                             & 100000000                                                                                      & no GSO                                                                        & 1,897.00                                                                                        & 24.06                                                                                                         & 421.96                                                                                        & 5.27                                                                                                        \\ \hline
+0                                                                                          & 0                                                                                             & 100000000                                                                                      & with GSO                                                                      & 1,218.00                                                                                        & 4.22                                                                                                          & 657.49                                                                                        & 1.74                                                                                                        \\ \hline
+0                                                                                          & 0                                                                                             & 1000000000                                                                                     & no GSO                                                                        & 19,125.00                                                                                       & 145.47                                                                                                        & 418.44                                                                                        & 3.21                                                                                                        \\ \hline
+0                                                                                          & 0                                                                                             & 1000000000                                                                                     & with GSO                                                                      & 12,068.00                                                                                       & 17.51                                                                                                         & 663.06                                                                                        & 0.98                                                                                                        \\ \hline
+\end{tabular}
+    \centering
+    \caption{GSO impact measurement results}
+    \label{GSO_impact_measurement_results}
+\end{table}
 
 \chapter{Project Proposal}
 \input{proposal}
-
+%TC:endignore
  \end{document}
