@@ -492,7 +492,7 @@ My results are consistent with previous studies that identified cryptographic fu
 
 % ------------------------------------------------
 
-In this chapter, I first provide essential background knowledge about the networking landscape before \texttt{QUIC}. 
+In this chapter, I provide background knowledge about the networking landscape of \texttt{QUIC}. 
 Then I analyse \texttt{QUIC} protocol in more detail.
 Secondly, I present my requirements analysis.
 Finally, I describe software engineering tools and techniques used during this project.
@@ -1301,7 +1301,7 @@ Then, I describe the actual software engineering tasks that I completed to measu
 
 
 \section{Implementation Milestones}
-First of all, I had to identify a suitable implementation of \texttt{QUIC}.
+Firstly, I identified a suitable implementation of \texttt{QUIC}.
 Then, I had to disable the packet header and payload encryption.
 After that, I configured a physical testing environment to run performance analysis tests (see Figure~\ref{fig:Physical_testing_environment}).
 Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behaviour in different conditions. 
@@ -1356,7 +1356,7 @@ Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behavi
     \label{fig:High_level_directory_structure_of_the_project}
     \end{figure}
 
-My project structure is demonstrated in Figure~\ref{fig:High_level_directory_structure_of_the_project}.
+My project structure is illustrated in Figure~\ref{fig:High_level_directory_structure_of_the_project}.
 I implemented support for null encryption in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
 This folder also contains a forked networking stack required to run \texttt{ngtcp2}. 
 In particular, I worked on separate \texttt{OpenSSL} (embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2}, and \texttt{nghttp3} (application layers) repositories.
@@ -1423,7 +1423,7 @@ In addition, some other auxiliary repositories, such as \texttt{nghttp3} or \tex
 
 \section{Preparation Scripts}
 As I have already mentioned, I wrote several scripts to prepare testing machines for performance analysis.
-These commands are stored in \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see Appendix~\ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
+These commands are part of \texttt{\textasciitilde/.zshrc} and \texttt{\textasciitilde/.bashrc} files (see Appendix~\ref{preparation_script_from_zshrc}) meaning that preparation scripts are executed every time a new terminal is opened.
 Preparation scripts checked connectivity of network links by sending \texttt{ping} messages between network interfaces used for testing.
 Furthermore, these scripts were used to configure virtual namespaces to separate the server from the client so that packets from the same machine would be forced to leave the physical network interface.
 The automatic preparation scripts improved development speed because certain repetitive tasks were automated.
@@ -1447,9 +1447,9 @@ Furthermore, the testing environment setup became more predictable, allowing per
 
 \section{Using Null Encryption}
 
-As I have already mentioned in \S~\ref{QUIC_details_section}, \texttt{QUIC} uses encryption by default.
-It encrypts both the payloads of the packets and some fields in the packet headers.
-A simplified high-level overview of \texttt{QUIC} packet encryption and decryption is demonstrated in Figure~\ref{fig:Cryptographic_procedures_of_quic}.
+As mentioned in \S~\ref{QUIC_details_section}, \texttt{QUIC} uses encryption by default.
+It encrypts the payload of the packet and some fields in the packet headers.
+A simplified high-level overview of \texttt{QUIC} packet encryption and decryption is illustrated in Figure~\ref{fig:Cryptographic_procedures_of_quic}.
 At first, the sender encrypts the \texttt{QUIC} packet payload by using 16-byte long authentication tag~\cite[Section 5]{ietf-quic-tls-32}. 
 The authentication tag depends on the destination connection ID, initial salt value and other cryptographic parameters~\cite[Section 5]{ietf-quic-tls-32}.
 In this stage, the produced ciphertext is 16 bytes longer than the provided plain text because the ciphertext has to accommodate both the plain text and the authentication tag~\cite[Section 5.3]{ietf-quic-tls-32}.
@@ -1468,11 +1468,11 @@ To decrypt the contents of \texttt{QUIC} packets receiver has to do the steps by
     \end{figure}
 
 
-However, \texttt{QUIC} encryption and decryption operations are computationally expensive and, under certain circumstances, they could form a performance bottleneck of \texttt{QUIC}~\cite{Making_QUIC_Quicker}.
+However, \texttt{QUIC} encryption and decryption operations are computationally expensive and, under certain circumstances, they may form a performance bottleneck of \texttt{QUIC}~\cite{Making_QUIC_Quicker}.
 To validate this claim, I had to measure the impact of cryptographic operations on \texttt{QUIC's} performance by comparing the throughput between the two server-client pairs.
 One pair had to use standard encryption and decryption procedures, while another had to exchange unencrypted packets.
-I achieved this by implementing logic that can turn on null encryption on \texttt{ngtcp2} (see Figure~\ref{fig:my_implementation_of_cryptographic_procedures_of_quic}).
-I remove the encryption of \texttt{QUIC} packets by short-circuiting associated functions.
+I achieved this by implementing logic that enacted a \it{null} encryption in \texttt{ngtcp2} (see Figure~\ref{fig:my_implementation_of_cryptographic_procedures_of_quic}).
+I remove the encryption of \texttt{QUIC} packets by performing early returns in associated functions.
 However, to preserve the payload format, I had to pad unencrypted payloads with sixteen zeroes.
 Usually, the header encryption key is generated by sampling the first few hundred bytes of the encrypted packet~\cite[Section 5.4.1]{ietf-quic-tls-32}. 
 In order to avoid this and ensure that packets are also completely transparent, I disabled header encryption by replacing the header encryption mask with a string of zeroes.
@@ -1480,7 +1480,7 @@ But exclusive-or operation performed on a sequence of zeroes preserves the origi
 On the one hand, packet headers are still \texttt{XORed} with a fixed 5-byte long mask.
 On the other hand, my implementation avoids the sampling procedure required to generate the header encryption key in the first place.
 Alternatively, I could have even removed the function calls used to encrypt \texttt{QUIC} packet headers.
-However, \texttt{QUIC} is a complex protocol, so removing these functions could have had additional unintended side effects that could have led to protocol errors.
+However, \texttt{QUIC} is a complex protocol, so removing these functions may have had additional unintended side effects that could have led to protocol errors and additional (unnecessary) debugging.
 Finally, \texttt{QUIC} headers are relatively small compared with the packet payloads, so further performance optimisations dealing with header encryption would have provided only limited performance improvements.
 
 
@@ -1491,17 +1491,16 @@ Finally, \texttt{QUIC} headers are relatively small compared with the packet pay
     \label{fig:my_implementation_of_cryptographic_procedures_of_quic}
     \end{figure}
 
-At first, I used naive implementation to copy relevant packet bits.
-However, as memory copying took a proportionally long time to complete, I decided to use built-in functions instead.
-For instance, \texttt{memmove} function from \texttt{string.h} library runs significantly faster than my simple algorithm that copies one symbol at a time.
-For instance, after running 100 experiments that copy arrays with 1000000 symbols, my naive implementation took $5.001 \pm 0.029$ milliseconds, while \texttt{memmove} took $0.151 \pm 0.002$ milliseconds.
-Hence, this performance analysis allowed me to identify potential bottlenecks of my implementation thus allowing me to improve my cryptographic operations in a systematic way.
+At first, I used a naive implementation to copy relevant packet bits.
+However, as memory copying took a proportionally long time to complete, I used built-in functions instead.
+For instance, \texttt{memmove} function from \texttt{string.h} library runs significantly faster than my simple algorithm that copies one symbol at a time; after running 100 experiments that copy arrays with 1000000 symbols, my naive implementation took $5.001 \pm 0.029$ milliseconds, while \texttt{memmove} took $0.151 \pm 0.002$ milliseconds.
+Hence, this performance analysis allowed me to identify potential bottlenecks of my implementation and thus allowed me to improve my cryptographic operations in a systematic way.
 
 
 
 
 
-My implementation of null encryption has room for improvements.
+My final implementation of null encryption has room for improvements.
 For instance, every encrypted \texttt{ngtcp2} packet uses additional 16 bytes to store the encryption header.
 However, in the null-encryption scenario, these additional fields are not required, but my implementation of disabling encryption does not use them, meaning that 16 unused bytes are transferred in a single \texttt{QUIC} packet.
 In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{QUIC} packets to re-use these additional 16 bytes for data transfer.
@@ -1510,12 +1509,12 @@ In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{
 
 \section{Performance Analysis Scripts}
 
-In order to measure the performance of the \texttt{QUIC} protocol, I am running several automated scripts on the testing computer (see Figure~\ref{fig:Physical_testing_environment}).
-In particular, I am using Python and/or Bash scripts to configure the testing environment and initiate the \texttt{QUIC} server-client pair.
-In addition, to control the networking conditions of the simulated network, the scripts on the testing machine use \texttt{ssh} (abbreviation of Secure Shell Protocol) connection to control the intermediate machine.
-Later on, Python scripts save, aggregate and visualise the results of the experiments.
-The use of scripting languages, in this case, is acceptable because performance measurements require quick prototyping.
-Furthermore, code maintainability is not the major design goal of this project.
+In order to measure the performance of the \texttt{QUIC} protocol, I ran several automated scripts on the testing computer (see Figure~\ref{fig:Physical_testing_environment}).
+In particular, I used Python and/or Bash scripts to configure the testing environment and initiate the \texttt{QUIC} server-client pair.
+In addition, to control the networking conditions of the simulated network, the scripts on the testing machine used \texttt{ssh} (abbreviation of Secure Shell Protocol) connection to control the intermediate machine.
+Later on, Python scripts saved, aggregated and visualised the results of the experiments.
+The use of scripting languages, in this case, was acceptable because performance measurements required quick prototyping.
+Furthermore, code maintainability was not the major design goal of this project.
 
 
 
