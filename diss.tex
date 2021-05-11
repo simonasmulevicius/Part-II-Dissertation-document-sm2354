@@ -1027,7 +1027,7 @@ Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning t
 % Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
 
 
-\subsection{iperf3}
+\subsection{iperf3 and nuttcp}
 \texttt{Iperf3}\footnote{\url{https://github.com/esnet/iperf}} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
 \texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
 One can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
@@ -1038,10 +1038,11 @@ In contrast, \texttt{UDP} does not take into account the state of the network.
 Consequently, if unlimited \texttt{UDP} throughput is allowed, then one could flood the network by running \texttt{iperf3} to measure \texttt{UDP} throughput.
 However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network, so no damage was done to the public network.
 
-However, there were other similar throughput measurement tools (e.g., \texttt{nuttcp}\footnote{http://nuttcp.net/nuttcp/} or \texttt{iperf2}\footnote{https://sourceforge.net/projects/iperf2/}).
-In particular, \texttt{nuttcp} is said to be better for high \texttt{UDP} throughput measurements~\cite{network-troubleshooting-tools_nuttcp} and it out to provide more stable results when analysing \texttt{UDP}~\cite{Nuttcp_geant}.
+There were other similar throughput measurement tools (e.g., \texttt{nuttcp}\footnote{http://nuttcp.net/nuttcp/} or \texttt{iperf2}\footnote{https://sourceforge.net/projects/iperf2/}).
+In particular, \texttt{nuttcp} is said to be better for high \texttt{UDP} throughput measurements~\cite{network-troubleshooting-tools_nuttcp} and it ought to provide more stable results when analysing \texttt{UDP}~\cite{Nuttcp_geant}.
 However, my primary throughput measurement tool was \texttt{iperf3} because it simplified experiments of variable-size files.
-In addition, I extensively used \texttt{iperf's} JSON ouput format.
+In addition, I extensively used \texttt{iperf3's} JSON ouput format.
+Despite that, I sometimes used \texttt{nuttcp} when measuring throughput for fixed periods of time. 
 
 % TODO
 % \simon{TODO: mention that one can adjust UDP send or receive (TODO check which one) buffer size}
@@ -1198,7 +1199,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
  \simon{Though TLEM is for "high-speed" networks, does it refer to low latency or high throughput?}
  However, I used \texttt{NetEm} (abbreviation for \enquote{Network Emulator}) tool instead because it was simple to deploy and use.
  Besides that, I measured additional packet delay latency induced by \texttt{NetEm} on the intermediate machine, and it was negligible.
- The overhead measurment results are located in \S~\ref{physical_setup_subsection}.
+ The overhead measurement results are located in \S~\ref{physical_setup_subsection}.
 
 
 \section{Starting Point}
@@ -1817,6 +1818,9 @@ In particular, when sending packets via an intermediate machine for 60 seconds, 
 One plausible explanation for this insignificant change could be that the testing environment was already using core pinning meaning that packets were already redirected to particular cores.
 
 \subsection{Size of the Buffers} 
+
+In order to saturate the links, I increased \texttt{nuttcp's} window size to be more than the bandwidth-delay product of the link.
+To be precise, the testing environment used 10 Gigabit Ethernet links and the end-to-end delay between the client and the server was $0.262 \pm 0.065$ ms (see \S~\ref{physical_setup_subsection}), meaning that the window size was at least $10^{10}*2.62*10^{-4} = 2.62$~Mbytes.
 
 % TODO
 \simon{TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf}
