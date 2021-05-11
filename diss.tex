@@ -1736,18 +1736,32 @@ Because of the performance improvements and more consistent results, I use core 
     Nevertheless, GSO is used in all the remaining tests by default because it provided significant performance improvements.
 
 
-\subsection{MTUs}
-   \simon{TODO introduce/refresh MTUs}
+\subsection{Maximum Transmission Units}
+  MTU (abbreviation of Maximum Transmission Unit) specifies the maximum payload of the Ethernet packet.
+  The standard Ethernet MTU size is 1500 bytes~\cite{The_Ethernet_Frame_Payload_Size_and_Its_Effect_on_IPv4_and_IPv6_Traffic}. 
+  Murray et al. suggested that default Maximum Transmission Units have relatively high overhead~\cite{Large_MTUs_and_Internet_Performance}.
+  For instance, IPv4 packet headers are usually 20 bytes long~\cite{FallKevinR2012TiV1}, and TCP headers take 20-32 bytes~\cite{Large_MTUs_and_Internet_Performance}.
+  Hence, about 2.67\%-3.47\% of the standard Ethernet packet payload are wasted.
+  In contrast, these per-packet overheads could be reduced by using larger Ethernet frames.
+  For example, the MTU of so-called jumbo frames is 9000 bytes meaning that per-packet header overhead is reduced to just 0.44\%-0.57\%.
+  However, the major improvement of jumbo frames is that they can reduce CPU workload by reducing the number of interrupts required to process Ethernet packets~\cite{Extended_rame_Sizes_for_Next_Generation_Ethernets}.
   
-  \simon{State that intermediate machine had MTU of 9000 bytes}
-   
-   Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput} summarises tests that measure the impact of different MTU sizes.    
-    In particular, this experiment measures \texttt{QUIC} throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
-    Furthermore, a server uses a single thread, only a single stream is used, and a single file transfer is performed for each experiment.
-    According to Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}, \texttt{QUIC} throughput can be improved by increasing the size of Ethernet frames.
-    \simon{Explain why there is throughput improvement}
+  
+   Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput} summarises tests that measured the impact of different MTU sizes.    
+    In particular, this experiment measured \texttt{QUIC} throughput between the server and the client when they were pinned to two different cores on the same machine, and their packets travelled via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
+    Furthermore, a server used a single thread, only a single stream was used, a single data transfer was performed for each experiment, each experiment ran for ten seconds, and each test was repeated ten times.
+    According to Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}, \texttt{QUIC} throughput could be improved by increasing the size of Ethernet frames.
     However, this improvement is only applicable when transferring large (e.g., 1 GByte) files.
-    Furthermore, MTUs above 1500 bytes are not prevalent on the Internet~\cite{why-is-ethernet-mtu-1500}.
+    It is important to note that in these tests I used \texttt{nuttcp}, a recommended \texttt{UDP} throughput measurement tool~\cite{network-troubleshooting-tools_nuttcp}.
+    For this experiment I decided to use \texttt{nuttcp} instead of \texttt{iperf3} because  \texttt{UDP's} throughput measured with \texttt{iperf3} was significantly lower than \texttt{TCP's} throughput under the same networking conditions.
+    Furthermore, to reach the maximum \texttt{UDP} throughput I had to increase window size to 4 MBytes.
+    
+    MTUs above 1500 bytes are not prevalent on the Internet~\cite{why-is-ethernet-mtu-1500}.
+    Hence, network elements that do not support jumbo frames would either have to drop them or fragment them into smaller packets~\cite{Large_MTUs_and_Internet_Performance}.
+    This, in turn, could lead to performance degradation.
+    Hence, if not specified otherwise, I used MTU of 1500 bytes in all other experiments.
+    
+    
   
   
     \begin{figure}[H]
@@ -1787,7 +1801,7 @@ Because of the performance improvements and more consistent results, I use core 
 \end{tabular}
 
     \centering
-    \caption[Impact of Jumbo frames for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files. 
+    \caption[Impact of Jumboframes for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumboframes on the throughput of \texttt{ngtcp2} completion time required to transfer specified files. 
     \simon{Are packets going via loopback?}}
     \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
 \end{table}
@@ -2139,7 +2153,7 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 \section{Final the Most Optimised Version Of \texttt{QUIC}}
 
-\simon{It might be an interesting section to combine all of the performance-boosting ideas (GSO, null-crypto, Jumbo frames, large frame sizes) to create an ngtcp2 version with the highest throughput}
+\simon{It might be an interesting section to combine all of the performance-boosting ideas (GSO, null-crypto, Jumboframes, large frame sizes) to create an ngtcp2 version with the highest throughput}
 
 
 
