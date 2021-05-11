@@ -1691,9 +1691,8 @@ However, the impact of core pinning is not substantial when transferring small f
 One explanation of this could be that the transmission time of small files is dominated by the overhead of the networking stack and the transmission time of a single packet.
 In contrast, transfer of large files is a data intensive operation.
 Hence, two data-intensive processes that run on the same core could compete for the same cache resources.
-
 In addition, Table~\ref{Standard_deviation_of_throughput_measurements} demonstrates that \texttt{h2load's} throughput was almost always more variable when both the client and the server used the same core.
-
+Because of the performance improvements and more consistent results, I use core pinning by default in all the experiments (if not stated otherwise).
 
     \begin{figure}[H]
     \centering
@@ -1739,15 +1738,11 @@ In addition, Table~\ref{Standard_deviation_of_throughput_measurements} demonstra
 
 
 \subsection{MTUs}
-\begin{itemize}
-  \item \simon{TODO introduce/refresh MTUs}
-  \item \simon{TODO demonstrate the Jumbo frames impact for iperf/\texttt{QUIC} throughput}
-  
-  
+   \simon{TODO introduce/refresh MTUs}
   
     \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/Iperf3 UDP throughput using different MTUs (localhost).png}
+    \includegraphics[width=0.97\textwidth]{figs/Iperf3 UDP throughput using different MTUs (localhost).png}
     \caption{Impact of MTU size for iperf throughput (when packets travel via localhost)}
     \label{fig:MTU_impact_for_localhost_iperf_throughput}
     \end{figure}
@@ -1759,54 +1754,35 @@ In addition, Table~\ref{Standard_deviation_of_throughput_measurements} demonstra
     \label{fig:}
     \end{figure}
   
-  
-  
-% Please add the following required packages to your document preamble:
-% \usepackage{multirow}
+    Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput} summarises tests that measure the impact of different MTU sizes.    
+    In particular, this experiment measures \texttt{QUIC} throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
+    Furthermore, a server uses a single thread, only a single stream is used, and a single file transfer is performed for each experiment.
+    According to Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}, \texttt{QUIC} throughput can be improved by increasing the size of Ethernet frames.
+    \simon{Explain why there is throughput improvement}
+    However, this improvement is only applicable when transferring large (e.g., 1 GByte) files.
+    Furthermore, MTUs above 1500 bytes are not prevalent on the Internet~\cite{why-is-ethernet-mtu-1500}.
+ 
+ 
 \begin{table}[H]
 
-    \begin{tabular}{|c|c|c|c|c|c|}
-    \hline
-    \multirow{2}{*}{MTU (B)} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size\end{tabular}} & \multicolumn{4}{c|}{Throughput (MiB/s)}                                                     \\ \cline{3-6} 
-                             &                                                                                & minimum & maximum & mean    & \begin{tabular}[c]{@{}c@{}}standard \\ deviation\end{tabular} \\ \hline
-    \multirow{2}{*}{1280}    & 1MB                                                                            & 40.610  & 47.870  & 44.125  & 2.487                                                         \\ \cline{2-6} 
-                             & 1GB                                                                            & 98.990  & 105.200 & 103.950 & 1.794                                                         \\ \hline
-    \multirow{2}{*}{1500}    & 1MB                                                                            & 42.060  & 50.220  & 45.382  & 2.547                                                         \\ \cline{2-6} 
-                             & 1GB                                                                            & 107.920 & 110.820 & 110.001 & 0.942                                                         \\ \hline
-    \multirow{2}{*}{9000}    & 1MB                                                                            & 37.300  & 46.950  & 39.750  & 2.727                                                         \\ \cline{2-6} 
-                             & 1GB                                                                            & 135.940 & 141.500 & 139.616 & 1.852                                                         \\ \hline
-    \end{tabular}
-
-
-    \begin{tabular}{|c|c|c|c|c|c|}
-    \hline
-    \multirow{2}{*}{MTU (B)} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size\end{tabular}} & \multicolumn{4}{c|}{Completion time (s)}                                                 \\ \cline{3-6} 
-                             &                                                                                & minimum & maximum & mean  & \begin{tabular}[c]{@{}c@{}}standard\\ deviation\end{tabular} \\ \hline
-    \multirow{2}{*}{1280}    & 1MB                                                                            & 0.020   & 0.023   & 0.022 & 0.001                                                        \\ \cline{2-6} 
-                             & 1GB                                                                            & 9.070   & 9.640   & 9.180 & 0.166                                                        \\ \hline
-    \multirow{2}{*}{1500}    & 1MB                                                                            & 0.019   & 0.023   & 0.021 & 0.001                                                        \\ \cline{2-6} 
-                             & 1GB                                                                            & 8.610   & 8.840   & 8.674 & 0.075                                                        \\ \hline
-    \multirow{2}{*}{9000}    & 1MB                                                                            & 0.020   & 0.026   & 0.024 & 0.001                                                        \\ \cline{2-6} 
-                             & 1GB                                                                            & 6.740   & 7.020   & 6.834 & 0.092                                                        \\ \hline
-    \end{tabular}
-
-
-
+    \begin{tabular}{|c|l|r|r|r|r|}
+\hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}MTU \\ (Byte)\end{tabular}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Completion \\ time (s)\end{tabular}}                            & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Throughput\\ (Mbits/s)\end{tabular}}                            \\ \cline{3-6} 
+                                                                                & \multicolumn{1}{c|}{}                                                                       & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard \\ deviation\end{tabular}} & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard \\ deviation\end{tabular}} \\ \hline
+\multirow{3}{*}{1MByte}                                                         & \textbf{1280}                                                                               & 0.022                     & 0.001                                                                              & 370.147                   & 20.865                                                                             \\ \cline{2-6} 
+                                                                                & \textbf{1500}                                                                               & 0.021                     & 0.001                                                                              & 380.692                   & 21.364                                                                             \\ \cline{2-6} 
+                                                                                & \textbf{9000}                                                                               & 0.024                     & 0.001                                                                              & 333.447                   & 22.875                                                                             \\ \hline
+\multirow{3}{*}{1GByte}                                                         & \textbf{1280}                                                                               & 9.180                     & 0.166                                                                              & 871.996                   & 15.050                                                                             \\ \cline{2-6} 
+                                                                                & \textbf{1500}                                                                               & 8.674                     & 0.075                                                                              & 922.755                   & 7.899                                                                              \\ \cline{2-6} 
+                                                                                & \textbf{9000}                                                                               & 6.834                     & 0.092                                                                              & 1171.184                  & 15.540                                                                             \\ \hline
+\end{tabular}
 
     \centering
-    \caption[Impact of Jumbo frames on the throughput of \texttt{ngtcp2} Completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} Completion time required to transfer specified files. In particular, this experiment measures \texttt{QUIC} throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
-    Furthermore, a server uses a single thread, only a single stream is used, and a single file transfer is performed for each experiment.
-    }
+    \caption[Impact of Jumbo frames for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files.}
     \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
 \end{table}
+  
 
-  
-  \item 
-  \simon{TODO show that Jumbo frames are not accepted in the wild Internet / TODO state that MTUs above 1500 bytes are not prevalent on the Internet}
-  
-  
-  See Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}.
-  
   
 \subsection{Interrupt Request Queue (IRQ) Balancing} 
 Breno Henrique Leitao in his work suggested using~\cite{Tuning_10Gb_network_cards_on_Linux} Interrupt Request Queue (IRQ) Balancing to improve the general throughput of the testing system.
@@ -1826,7 +1802,6 @@ In other words, the measured maximum available throughput before and after the e
  
  \awm{ what are you writing here? make clear you mean txqueue and rxqueue as appropriate and not the "buffers" normally thought of as resident in the intermediate network devices}
   
-\end{itemize}
 
 
 \section{Baseline Measurements}
