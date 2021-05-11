@@ -240,7 +240,7 @@ The following people helped with the project setup or provided useful insights o
     \item \textbf{Dr Marcin Wojcik} helped with general inquiries related to the setup of NetFPGA developing platform;
     \item \textbf{Professor Andrew W. Moore} was my project supervisor and originator of the project idea;
     \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory during the winter vacation;
-    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of the \texttt{ngtcp2} implementation of \texttt{QUIC}, and he answered usability questions related to it. Moreover, he provided guidance on how null encryption could be turned on in \texttt{ngtcp2};
+    \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of the \texttt{ngtcp2} implementation of \texttt{QUIC}, and he answered usability questions related to it. Moreover, he provided guidance on how \textit{null} encryption could be turned on in \texttt{ngtcp2};
     \item \textbf{Mr Nick Banks}, software developer from \texttt{Microsoft}, is the co-author of the \texttt{MsQuic} implementation of \texttt{QUIC}, and he helped with the setup of this particular implementation of \texttt{QUIC};
     \item Part II students \textbf{Ms Akvile Valentukonyte} and \textbf{Mr Justas Janickas} participated in our weekly meetings where we all shared our achieved progress;
 \end{itemize}
@@ -333,7 +333,7 @@ Otherwise, the low throughput of \texttt{QUIC} may prevent it from being widely 
 %[TODO: incorrect - Mr  Nick  Banks proposed null-crypto option already in autumn of 2020 but I was not aware of that]
 
 % This analysis could be useful in the future when \texttt{QUIC}’s cryptographic operations would be offloaded to hardware. Nevertheless, these experiments could also have some tangible value for current times. 
-% For instance, an experimental \texttt{QUIC} with null encryption could be used in secure networks controlled by a single entity (e.g. within a data centre).
+% For instance, an experimental \texttt{QUIC} with \textit{null} encryption could be used in secure networks controlled by a single entity (e.g. within a data centre).
 % Alternatively, unencrypted \texttt{QUIC} traffic could be used to isolate expensive cryptographic operations from the performance analysis of \texttt{QUIC}, as suggested in~\cite{banks-quic-disable-encryption-00}.
 % <END_OF_REMOVAL>
 % ----------------------------------------------
@@ -1265,7 +1265,7 @@ In addition, I did not end up using the high-speed network emulator called \text
     This computer was used as a sandbox to test different implementations of \texttt{QUIC} before deploying them to the main machines.
     Before then, I had a problem that testing machines had pre-configured software which used incompatible settings with the configuration parameters required for \texttt{QUIC} implementations (e.g. existing software stack used older OS version).
     However, with the help of the additional laptop, I was able to verify the correctness of \texttt{ngtcp2}, a selected implementation of \texttt{QUIC}.
-    Besides that, I ensured the correctness of the null encryption of \texttt{ngtcp2} by writing and running several integration tests.
+    Besides that, I ensured the correctness of the \textit{null} encryption of \texttt{ngtcp2} by writing and running several integration tests.
     In particular, these tests check whether or not the received \texttt{HTML} file is identical to the transmitted \texttt{HTML} file.
     
     Finally, for some aspects of the project, I used non-standard practices.
@@ -1357,7 +1357,7 @@ Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behavi
     \end{figure}
 
 My project structure is illustrated in Figure~\ref{fig:High_level_directory_structure_of_the_project}.
-I implemented support for null encryption in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
+I implemented support for \textit{null} encryption in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
 This folder also contains a forked networking stack required to run \texttt{ngtcp2}. 
 In particular, I worked on separate \texttt{OpenSSL} (embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2}, and \texttt{nghttp3} (application layers) repositories.
 This software stack is split into multiple repositories because it is implemented in a modular fashion.
@@ -1367,7 +1367,7 @@ It is important to mention that \texttt{h2load} was already provided in the orig
 
 
 I used the original encrypted \texttt{ngtcp2} stack (see Figure~\ref{fig:High_level_directory_structure_of_the_project}) during the development process to compare its behaviour with my implementation.
-In addition, I added unit and integration tests of null encryption to the \texttt{ngtcp2} repository located in \texttt{unencrypted\_stack} folder. 
+In addition, I added unit and integration tests of \textit{null} encryption to the \texttt{ngtcp2} repository located in \texttt{unencrypted\_stack} folder. 
 
 
 
@@ -1471,7 +1471,7 @@ To decrypt the contents of \texttt{QUIC} packets receiver has to do the steps by
 However, \texttt{QUIC} encryption and decryption operations are computationally expensive and, under certain circumstances, they may form a performance bottleneck of \texttt{QUIC}~\cite{Making_QUIC_Quicker}.
 To validate this claim, I had to measure the impact of cryptographic operations on \texttt{QUIC's} performance by comparing the throughput between the two server-client pairs.
 One pair had to use standard encryption and decryption procedures, while another had to exchange unencrypted packets.
-I achieved this by implementing logic that enacted a \it{null} encryption in \texttt{ngtcp2} (see Figure~\ref{fig:my_implementation_of_cryptographic_procedures_of_quic}).
+I achieved this by implementing logic that enacted a \textit{null} encryption in \texttt{ngtcp2} (see Figure~\ref{fig:my_implementation_of_cryptographic_procedures_of_quic}).
 I remove the encryption of \texttt{QUIC} packets by performing early returns in associated functions.
 However, to preserve the payload format, I had to pad unencrypted payloads with sixteen zeroes.
 Usually, the header encryption key is generated by sampling the first few hundred bytes of the encrypted packet~\cite[Section 5.4.1]{ietf-quic-tls-32}. 
@@ -1500,7 +1500,7 @@ Hence, this performance analysis allowed me to identify potential bottlenecks of
 
 
 
-My final implementation of null encryption has room for improvements.
+My final implementation of \textit{null} encryption has room for improvements.
 For instance, every encrypted \texttt{ngtcp2} packet uses additional 16 bytes to store the encryption header.
 However, in the null-encryption scenario, these additional fields are not required, but my implementation of disabling encryption does not use them, meaning that 16 unused bytes are transferred in a single \texttt{QUIC} packet.
 In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{QUIC} packets to re-use these additional 16 bytes for data transfer.
@@ -2088,10 +2088,10 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 
 
 
-\subsection{Performance Comparison of \enquote{Null encryption} in \texttt{MsQuic} and \texttt{ngtcp2}}
+\subsection{Performance Comparison of \enquote{\textit{Null} encryption} in \texttt{MsQuic} and \texttt{ngtcp2}}
 
 As I have already mentioned, \texttt{MsQuic}, \texttt{Microsoft's} implementation of \texttt{QUIC}, has the pre-built option to disable cryptography.
-\enquote{Null encryption} mechanism of  \texttt{MsQuic} works as follows.
+\enquote{\textit{Null} encryption} mechanism of  \texttt{MsQuic} works as follows.
 At first, communicating end hosts still have to complete a secure handshake~\cite{banks-quic-disable-encryption-00}.
 After that, if both client and server express their will to turn off encryption, then plaintext packets are used for communications (i.e. both packet headers and payloads are unencrypted)~\cite{banks-quic-disable-encryption-00}.
 However, according to Mr N. Banks, one drawback of continuing to use encryption for the first \texttt{QUIC} handshake is that performance of \texttt{QUIC} handshake is not improved.
