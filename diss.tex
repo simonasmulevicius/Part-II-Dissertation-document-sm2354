@@ -1739,29 +1739,39 @@ Because of the performance improvements and more consistent results, I use core 
 \subsection{MTUs}
    \simon{TODO introduce/refresh MTUs}
   
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.97\textwidth]{figs/Iperf3 UDP throughput using different MTUs (localhost).png}
-    \caption{Impact of MTU size for iperf throughput (when packets travel via localhost)}
-    \label{fig:MTU_impact_for_localhost_iperf_throughput}
-    \end{figure}
-    
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/Iperf3 UDP throughput using different MTUs (A1-to-B-to-A2).png}
-    \caption{Impact of MTU size for iperf throughput (when packets travel via the intermediate machine)}
-    \label{fig:}
-    \end{figure}
-  
-    Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput} summarises tests that measure the impact of different MTU sizes.    
+  \simon{State that intermediate machine had MTU of 9000 bytes}
+   
+   Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput} summarises tests that measure the impact of different MTU sizes.    
     In particular, this experiment measures \texttt{QUIC} throughput between the server and the client when they are pinned to two different cores on the same machine, and their packets travel via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
     Furthermore, a server uses a single thread, only a single stream is used, and a single file transfer is performed for each experiment.
     According to Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}, \texttt{QUIC} throughput can be improved by increasing the size of Ethernet frames.
     \simon{Explain why there is throughput improvement}
     However, this improvement is only applicable when transferring large (e.g., 1 GByte) files.
     Furthermore, MTUs above 1500 bytes are not prevalent on the Internet~\cite{why-is-ethernet-mtu-1500}.
- 
- 
+  
+  
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figs/UDP throughput using different MTUs and measured with nuttcp (packets travel via the intermediate machine).png}
+    \caption{UDP throughput using different MTUs and measured with \texttt{nuttcp} (packets travel via the intermediate machine)}
+    \label{fig:UDP_throughput_with_different_MTUs}
+    \end{figure}
+    
+    % \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.97\textwidth]{figs/Iperf3 UDP throughput using different MTUs (localhost).png}
+    % \caption{Impact of MTU size for iperf throughput (when packets travel via localhost)}
+    % \label{fig:MTU_impact_for_localhost_iperf_throughput}
+    % \end{figure}
+    
+    % \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.9\textwidth]{figs/Iperf3 UDP throughput using different MTUs (A1-to-B-to-A2).png}
+    % \caption{Impact of MTU size for iperf throughput (when packets travel via the intermediate machine)}
+    % \label{fig:}
+    % \end{figure}
+  
+
 \begin{table}[H]
 
     \begin{tabular}{|c|l|r|r|r|r|}
@@ -1777,7 +1787,8 @@ Because of the performance improvements and more consistent results, I use core 
 \end{tabular}
 
     \centering
-    \caption[Impact of Jumbo frames for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files.}
+    \caption[Impact of Jumbo frames for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files. 
+    \simon{Are packets going via loopback?}}
     \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
 \end{table}
   
