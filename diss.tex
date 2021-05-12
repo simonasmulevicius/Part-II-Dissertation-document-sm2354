@@ -1973,22 +1973,12 @@ Actually, it was speculated that firewalls could be a noticeable \texttt{QUIC} d
 \subsection{Throughput of Parallel \texttt{QUIC} Streams}
 
 Table~\ref{fig:QUIC_throughput_via_B_using_parallel_requests} summarises the impact of  parallel \texttt{QUIC} connections for \texttt{QUIC's} throughput.
-In particular, these experiments measured \texttt{QUIC} throughput between the encrypted server (i.e., \texttt{ngtcp2}) and client (i.e., \texttt{h2load}).
-
-ngtcp2-h2load version
+In particular, these experiments measured \texttt{QUIC} throughput between the encrypted server (i.e., \texttt{ngtcp2}) and the client (i.e., \texttt{h2load}).
 I transferred packets via the intermediate machine which was configured not to add any additional packet delay, loss or reordering.
-
-
-% TODO
-\simon{TODO: describe testing conditions in prose}
-
-Number of tests for each experiment: 10
-
-
-Uses 
-
-GSO enabled
-
+Each individual test was repeated ten times.
+The results show that by sending larger amounts of data, \texttt{QUIC} can reach higher throughput.
+In addition, Table~\ref{fig:QUIC_throughput_via_B_using_parallel_requests} illustrates that, as expected, \texttt{QUIC} has smaller throughput than the underlying \texttt{UDP} protocol.
+Possible explanation of these results could be that \texttt{QUIC} adds congestion control and encryption that reduce throughput.
 
 
 \begin{table}[H]
@@ -2005,8 +1995,7 @@ GSO enabled
 1000                                                                                             & 10                                                                                                                         & 685.84                                                                                                                                          & 7.55                                                                                                                             & 116694.00                                                                                                & 1258.09                                                                                                                          \\ \hline
 \end{tabular}
     \centering
-    \caption{Impact of parallel requests for encrypted \texttt{QUIC} throughput. Here packets travel via an intermediate machine. 
-    \simon{h2load experiment is probably sending 1 or 10 separate "files" while iperf3 is probably sending just a single "file" over 1 or 10 connections}}
+    \caption{Impact of parallel requests for encrypted \texttt{QUIC} throughput. Here packets travel via an intermediate machine.}
     \label{fig:QUIC_throughput_via_B_using_parallel_requests}
 \end{table}
 
@@ -2040,10 +2029,18 @@ GSO enabled
 
 
 
-\subsection{Performance Comparison of encrypted and unencrypted versions of \texttt{ngtcp2}}
+\subsection{Performance Comparison of Encrypted and Unencrypted Versions of \texttt{ngtcp2}}
+
+In order to measure the impact of \texttt{QUIC} cryptographic operations, I implemented \textit{null} encryption of \texttt{QUIC} packets and then measured throughput of unencrypted stack.
+As usually, I sent packets via the intermediate machine that did not add any explicit packet loss, delay or reordering.
+Results are summarised in Table~\ref{fig:unencrypted_QUIC_throughput_via_B_using_parallel_requests}.
+Unencrypted \texttt{QUIC} had two or three times higher throughput in all categories.
+This performance improvement could be explained by comparing the call stacks of the two variants of \texttt{QUIC} implementations.
 
 
+\simon{1. Add a flame chart of ENCRYPTED ngtcp2 behaviour over some standard link and sufficiently large requested file size}
 
+\simon{2. Add a flame chart of UNENCRYPTED ngtcp2 behaviour over the same link and sufficiently large requested file size}
 
 \begin{table}[H]
 \begin{tabular}{|r|r|r|r|r|r|}
@@ -2065,14 +2062,8 @@ GSO enabled
 
 
 
-\simon{1. Add a flame chart of ENCRYPTED ngtcp2 behaviour over some standard link and sufficiently large requested file size}
 
-\simon{2. Add a flame chart of UNENCRYPTED ngtcp2 behaviour over the same link and sufficiently large requested file size}
-
-
-
-
-\subsection{Performance Comparison of \textit{Null} encryption in \texttt{MsQuic} and \texttt{ngtcp2}}
+\subsection{Performance Comparison of \textit{Null} Encryption in \texttt{MsQuic} and \texttt{ngtcp2}}
 
 As I have already mentioned, \texttt{MsQuic}, \texttt{Microsoft's} implementation of \texttt{QUIC}, has the pre-built option to disable cryptography.
 \enquote{\textit{Null} encryption} mechanism of  \texttt{MsQuic} works as follows.
