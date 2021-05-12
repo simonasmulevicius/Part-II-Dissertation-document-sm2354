@@ -298,7 +298,7 @@ Customers expect cheap, high-throughput and low latency Internet connections.
 However, in the last decade, several trends have emerged.
 For example, in recent years, mobile devices proliferated -- at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
 Furthermore, there are emerging new patterns in web development.
-In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g. from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
+In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g.,from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
 But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet~\cite{RudmanRiaan2016DW3o}.
 Hence, the changing constraints and networking trends encourage us to re-evaluate past protocols.
 Innovative solutions can further improve the performance of the Internet. 
@@ -333,7 +333,7 @@ Otherwise, the low throughput of \texttt{QUIC} may prevent it from being widely 
 %[TODO: incorrect - Mr  Nick  Banks proposed null-crypto option already in autumn of 2020 but I was not aware of that]
 
 % This analysis could be useful in the future when \texttt{QUIC}’s cryptographic operations would be offloaded to hardware. Nevertheless, these experiments could also have some tangible value for current times. 
-% For instance, an experimental \texttt{QUIC} with \textit{null} encryption could be used in secure networks controlled by a single entity (e.g. within a data centre).
+% For instance, an experimental \texttt{QUIC} with \textit{null} encryption could be used in secure networks controlled by a single entity (e.g.,within a data centre).
 % Alternatively, unencrypted \texttt{QUIC} traffic could be used to isolate expensive cryptographic operations from the performance analysis of \texttt{QUIC}, as suggested in~\cite{banks-quic-disable-encryption-00}.
 % <END_OF_REMOVAL>
 % ----------------------------------------------
@@ -345,7 +345,7 @@ Otherwise, the low throughput of \texttt{QUIC} may prevent it from being widely 
 %-------IDEAS to add to this section:-------
 
 
-%The performance study of \texttt{QUIC} under several variable conditions (e.g. packet loss, reordering and delay) in comparison with iperf is the focus of my work.
+%The performance study of \texttt{QUIC} under several variable conditions (e.g.,packet loss, reordering and delay) in comparison with iperf is the focus of my work.
  
  
 %The purpose of this work is to predict future bottlenecks. To achieve this, I would first need to exclude/bypass the cryptographic operations of  \texttt{QUIC}. I already have the functionality to turn on null-encryption on the server-side, so I would need to adopt similar ideas for the  \texttt{QUIC} client. Such a set-up would simulate offloaded encryption. Previous studies analysed different implementations of  \texttt{QUIC} (not ngtcp2), so the primary goal would be to run similar experiments with ngtcp2. After that, I would have to identify situations where  \texttt{QUIC} (ngtcp2 in particular) outperforms TCP using different network conditions. To achieve this, I have a complete testing environment with a configured intermediate machine that can introduce traffic perturbations. In addition, I have already performed some performance measurements using different MTUs. Furthermore, I estimated the impact of core pinning for these tests and took into account both hyperthreading and GSO.
@@ -363,7 +363,7 @@ On the other hand, \texttt{QUIC} protocol offers some performance benefits for m
 \texttt{QUIC}, after being publicly launched in 2013~\cite{Chromium_Blog_Experimenting_with_quic},  is still a relatively new protocol that is still in the development stage.
 Hence, any performance measurements of \texttt{QUIC} guide the ongoing efforts to improve this new transport layer protocol.
 Furthermore, there are strong indications showing that \texttt{QUIC} could be widely adopted in the future.
-For instance, \texttt{Google}, one of the major advocates for \texttt{QUIC}, operates both on the server side (e.g. search engine or video streaming service \texttt{YouTube}) and the client side (e.g. \texttt{Google Chrome} browser for desktop and mobile devices)~\cite{A_QUICk_Introduction_to_HTTP3}.
+For instance, \texttt{Google}, one of the major advocates for \texttt{QUIC}, operates both on the server side (e.g., search engine or video streaming service \texttt{YouTube}) and the client side (e.g., \texttt{Google Chrome} browser for desktop and mobile devices)~\cite{A_QUICk_Introduction_to_HTTP3}.
 Hence, using its existing market presence \texttt{Google} could potentially encourage the faster adoption of \texttt{QUIC}.
 Actually, according to the report published in 2016~\cite{RuthJan2018AFLa}, at that time, around 40\% of all traffic of \texttt{Google} was using \texttt{QUIC}.
 Similarly, other large technology companies such as \texttt{Facebook} or \texttt{Microsoft} are also building their own implementations of \texttt{QUIC} (correspondingly \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic}).
@@ -603,7 +603,7 @@ For instance, there was a largely unsuccessful proposal called \texttt{TCP Fast 
 One of the failure factors was related to middleboxes~\cite{the-sad-story-of-tcp-fast-open}.
 During the early 2000s, a specific architectural problem emerged.
 Around that time, the world faced an issue that the Internet was running out of \texttt{IPv4} addresses.
-Hence, during that period, middleboxes (e.g. Network Address Translators or NATs for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses~\cite{MurphyNiallRichard2005Ina, bib_Netdev_0x13_QUIC_Tutorial}.
+Hence, during that period, middleboxes (e.g., Network Address Translators or NATs for short) gained popularity because it was a temporary and cost-effective solution to the shortage of IP addresses~\cite{MurphyNiallRichard2005Ina, bib_Netdev_0x13_QUIC_Tutorial}.
 However, newly introduced middleboxes started to interfere with the \texttt{TCP} traffic~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
 For instance, NATs made assumptions about the structure of \texttt{TCP} headers~\cite{bib_Netdev_0x13_QUIC_Tutorial, PollardBarry2019HiAP}.
 As \texttt{TCP/IP} stack was and still is a predominant backbone of the Internet~\cite{tcp-ip-stack_shtml}, some NATs offloaded some \texttt{TCP} processing to hardware or used some software optimisation techniques.
@@ -956,7 +956,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
   
   
   \item The effect of the \textbf{reduced latency} of \texttt{QUIC} is apparent.
-  For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low-quality Internet links, e.g. wireless links~\cite{chromium_blog_about_quic, quic-vs-tcptls-and-why-quic-is-not-the-next-big-thing}.
+  For example, engineers in Google discovered that, when compared with \texttt{TCP}, \texttt{QUIC} substantially improved user experience for the customers that used the low-quality Internet links, e.g., wireless links~\cite{chromium_blog_about_quic, quic-vs-tcptls-and-why-quic-is-not-the-next-big-thing}.
   In particular, the study revealed that in some cases, the time required to download contents of Google's main website was reduced by one second ~\cite{chromium_blog_about_quic}.
   One possible explanation of this effect could be that any packet loss decreases the effective \texttt{TCP} throughput (See Equation~\ref{eq:gass_stuff}).
   
@@ -1051,7 +1051,7 @@ Despite that, I sometimes used \texttt{nuttcp} when measuring throughput for fix
 \subsection{ping}
 \texttt{Ping} is a network analysis tool used to measure the round trip time between the two communicating parties.
 \texttt{Ping} uses Internet Control Message Protocol (or \texttt{ICMP} for short) to issue a request-reply pair~\cite{internet-control-message-protocol-icmp}.
-Round trip time measurements were used to test the correctness of the testing environment (e.g. to measure additional network delay induced by the intermediate machine).
+Round trip time measurements were used to test the correctness of the testing environment (e.g., to measure additional network delay induced by the intermediate machine).
 However, on \texttt{ping} could not be used to measure one-way delay because network delays can be asymmetric.
 
 
@@ -1072,7 +1072,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
     
 When required, I ran \texttt{Wireshark} on the intermediate machine to inspect the size of the packets transferred between the \texttt{QUIC} client and server.
 It is worth mentioning that \texttt{QUIC} packets are encrypted.
-Hence, I had to share the server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g. packet number) of observed \texttt{QUIC} packets.
+Hence, I had to share the server's cryptographic certificate with \texttt{Wireshark} so that it could decrypt and extract relevant fields (e.g., packet number) of observed \texttt{QUIC} packets.
 
 I used \texttt{Wireshark} in an ethical manner, meaning that I only used it to analyse traffic between the dedicated network interfaces.
 In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because the testing environment used separate network interfaces. 
@@ -1158,7 +1158,7 @@ Then, I used \texttt{qvis}\footnote{\url{https://qvis.quictools.info/##/files}},
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/qvis.png}
-    \caption[Example of \texttt{qvis} visualisation]{Example of \texttt{qvis} visualisation. This diagram demonstrates that \texttt{server} is unable to send a reply to the \texttt{client}.}
+    \caption[Example of \texttt{qvis} visualisation]{Example of \texttt{qvis} visualisation. This diagram demonstrates a situation when the \texttt{server} was unable to send a reply to the \texttt{client}.}
     \label{fig:qvis}
     \end{figure}
     
@@ -1203,7 +1203,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
 
 \section{Starting Point}
 As mentioned in the previous sections, this project builds on top of \texttt{ngtcp2} implementation of \texttt{QUIC}.
-In other words, relevant networking stack tools such as cryptographic library (e.g. \texttt{OpenSSL}), benchmarking tool (e.g. \texttt{h2load}), custom \texttt{HTTP} layers (e.g. \texttt{nghttp2} and \texttt{ngtcp3}) have already been built and integrated. 
+In other words, relevant networking stack tools such as cryptographic library (e.g., \texttt{OpenSSL}), benchmarking tool (e.g., \texttt{h2load}), custom \texttt{HTTP} layers (e.g., \texttt{nghttp2} and \texttt{ngtcp3}) have already been built and integrated. 
 Moreover, in this project I used inspiration from Yang et al.~\cite{Making_QUIC_Quicker} when configuring the testing environment of \texttt{QUIC}.
 In particular, I replicated their physical and architectural layout of components required to simulate different conditions of the network (see section \ref{physical_setup_subsection}).
 
@@ -1212,7 +1212,7 @@ In addition, fundamentals of C and C\texttt{++} were covered in \enquote{Program
 Besides that, I used C\texttt{++} in my summer internship.
 
 Throughout the project, the focus of the dissertation changed from hardware to software.
-Hence, hardware offloading oriented code (e.g. \texttt{NetFPGA} codebase) and tools (e.g. \texttt{Xilinx/Vivado} tools for programming with FPGAs) used at the beginning of the project had little utility for the remaining part of the dissertation.
+Hence, hardware offloading oriented code (e.g., \texttt{NetFPGA} codebase) and tools (e.g., \texttt{Xilinx/Vivado} tools for programming with FPGAs) used at the beginning of the project had little utility for the remaining part of the dissertation.
 In addition, I did not end up using the high-speed network emulator called \texttt{TLEM}~\cite{TLEM_tool} because the existing network emulation tool called \texttt{NetEm} did not seem to add a noticeable performance overhead for the selected testing workloads.
 
 
@@ -1263,7 +1263,7 @@ In addition, I did not end up using the high-speed network emulator called \text
 
     Furthermore, after winter vacation, I brought an additional laptop from home to improve the development speed.
     This computer was used as a sandbox to test different implementations of \texttt{QUIC} before deploying them to the main machines.
-    Before then, I had a problem that testing machines had pre-configured software which used incompatible settings with the configuration parameters required for \texttt{QUIC} implementations (e.g. existing software stack used older OS version).
+    Before then, I had a problem that testing machines had pre-configured software which used incompatible settings with the configuration parameters required for \texttt{QUIC} implementations (e.g., existing software stack used older OS version).
     However, with the help of the additional laptop, I was able to verify the correctness of \texttt{ngtcp2}, a selected implementation of \texttt{QUIC}.
     Besides that, I ensured the correctness of the \textit{null} encryption of \texttt{ngtcp2} by writing and running several integration tests.
     In particular, these tests check whether or not the received \texttt{HTML} file is identical to the transmitted \texttt{HTML} file.
@@ -1600,7 +1600,7 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
     The purpose of these addresses is to prevent experiments and the college network from interfering with one another.
     An intermediate machine (B) is configured as the default gateway for both virtual network namespaces.
     As a result, all the packets between the \texttt{QUIC} server and client have to travel via an intermediate machine (B).
-    Here, depending on the experiment, network perturbations (e.g. packet loss, delay, reordering) may be introduced.
+    Here, depending on the experiment, network perturbations (e.g., packet loss, delay, reordering) may be introduced.
     In particular, to simulate different networking conditions I used \texttt{NetEm} tool (abbreviation of \enquote{Network Emulator})\footnote{http://manpages.ubuntu.com/manpages/trusty/man8/tc-netem.8.html}.
     The small implementation detail of \texttt{NetEm} is that by default, it introduces traffic perturbations for the packets leaving the network interface but not the incoming packets~\cite{Ubuntu_Manpage_NetEm}.
     Hence, to simulate symmetrical network conditions, I had to specify \texttt{NetEm} rules for both interfaces of the intermediate machine.
@@ -1636,18 +1636,17 @@ To measure \texttt{QUIC} performance under different conditions, a network emula
 
 \subsection{IP Version}
 
-To make results comparable with older studies, I decided to disable IPv6 in the testing environment.
+To make results comparable with older studies, I disabled IPv6 in the testing environment.
 The number of variable parameters is reduced by specifying a particular IP version.
 Fortunately, at the time of writing, according to Google's IPv6 adoption tracker~\cite{IPv6_Adoption_Statistics}, only a third of all Internet users (30-35 \% to be precise) use IPv6 to connect to Google's services.
 Hence, analysis involving IPv4 is still relevant today.
 
-However, I could not run \texttt{MsQuic} tools with IPv6 disabled, so at the end of the project I had to revert this setting.
+However, I could not run \texttt{MsQuic} tools with IPv6 disabled, so I had to revert this setting.
 Fortunately, using \texttt{Wireshark} I observed that \texttt{MsQuic} also uses IPv4 by default, meaning that results were comparable.
 
 \subsection{Hyper-threading}\label{Hyperthreading_Subsection_Tag}
 
 \texttt{Hyper-threading} is a thread allocation technique that allows two threads to run on the same physical core at the same time~\cite[page~ 23]{hyperthreading_book}.
-Another name for \texttt{hyper-threading} is \texttt{simultaneous multi-threading}.
 On the testing machines \texttt{hyper-threading} at first was implemented by assigning two virtual cores for every physical core (see Figure~\ref{fig:topology_with_hyperthreading}).
 For instance, in this diagram core \enquote{L \#0} has two \enquote{processing units} marked as \enquote{PU L\#0} and \enquote{PU L\#1}.
 
@@ -1658,7 +1657,7 @@ For instance, in this diagram core \enquote{L \#0} has two \enquote{processing u
     \label{fig:topology_with_hyperthreading}
     \end{figure}
 
-As stated in~\cite{hyperthreading_book}, this means that threads allocated to such virtual cores (also marked as \enquote{processing units} in the diagram above) would share the same physical resources (e.g. private L1 cache entries).
+As stated in~\cite{hyperthreading_book}, this means that threads allocated to such virtual cores (also marked as \enquote{processing units} in the diagram above) would share the same physical resources (e.g., private L1 cache entries).
 This is problematic for precise experiments.
 On the one hand, a neighbouring thread might pre-fetch required data to the cache, but on the other hand, this thread might pollute the cache, thus hurting the performance of the thread which is being measured.
 Hence, to reduce the potential performance variability, I had to disable \texttt{hyper-threading} on the testing machines.
@@ -1674,7 +1673,7 @@ To make performance tests even more predictable, I had to assign exclusive physi
 In particular, the testing machine from Figure~\ref{fig:Physical_testing_environment} has four physical cores (see Figure~\ref{fig:memory_topology}) and I assigned \texttt{ngtcp2} server to the first core (marked as \enquote{P\#0} in Figure~\ref{fig:memory_topology}).
 \texttt{QUIC} client (i.e. \texttt{ngtcp2} or \texttt{h2load} client) was assigned the second core (marked as \enquote{P\#1}).
 Finally, the remaining two cores (marked as \enquote{P\#2} and \enquote{P\#3}) were assigned to all the remaining system processes.
-Robert Love refers to this technique of assigning particular processes to particular cores as \texttt{hard CPU affinity}~\cite{CPU_Affinity}.
+This technique of assigning particular processes to particular cores is referred to as \texttt{hard CPU affinity}~\cite{CPU_Affinity}.
 Core pinning is important for performance analysis because it removes the overhead of reallocating processes from one core to another by reducing the frequency of cache misses~\cite{Tuning_10Gb_network_cards_on_Linux}.
 
     \begin{figure}[H]
@@ -1700,11 +1699,11 @@ Because of the performance improvements and more consistent results, I use core 
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/QUIC Throughput when packets go via machine B (A1-to-B-to-A2).png}
-    \caption{Impact of core pinning for \texttt{QUIC} throughput measured with \texttt{h2load}}
+    \caption[Impact of core pinning for \texttt{QUIC} throughput measured with \texttt{h2load}]{Impact of core pinning for \texttt{QUIC} throughput measured with \texttt{h2load}. In one case, both the server and the client ran on the same core, while in the second group of experiments, both end points ran on the separate physical cores.}
     \label{fig:Throughput_via_A-to-B-to-A_MTU=1500}
     \end{figure}
 % TODO
-\simon{TODO:If there is time, augment this diagram with iperf3 measurements on different cores}
+% \simon{TODO:If there is time, augment this diagram with iperf3 measurements on different cores}
 
 
 
@@ -1725,7 +1724,7 @@ Because of the performance improvements and more consistent results, I use core 
 
 
 \subsection{GSO}
-    Generic Segmentation Offload (abbreviated GSO) is a software technique that groups system calls issued by user-space applications to send \texttt{UDP} packets~\cite{segmentation-offloads, Tuning_10Gb_network_cards_on_Linux, segmentation-offloading-with-wireshark-and-ethtool}.
+    Generic Segmentation Offload (GSO) is a software technique that groups system calls issued by user-space applications to send \texttt{UDP} packets~\cite{segmentation-offloads, Tuning_10Gb_network_cards_on_Linux, segmentation-offloading-with-wireshark-and-ethtool}.
     As a result, the kernel has to make fewer context switches to segment the data into Ethernet packets before sending them over the network~\cite{accelerating-udp-packet-transmission-for-quic}.
     
     To measure GSO impact for \texttt{QUIC} throughput, I compared \texttt{QUIC} throughput between the \texttt{ngtcp2} server and \texttt{h2load} client.
@@ -1733,8 +1732,8 @@ Because of the performance improvements and more consistent results, I use core 
     At first, I disabled Generic Segmentation Offload both on the server and client sides.
     Then, I repeated the same experiments with enabled GSO.
     I repeated every experiment ten times.
-    Throughput measurements are left in the appendix (see Table~\ref{GSO_impact_measurement_results}).
-    But in general, Generic Segmentation Offload improved \texttt{QUIC} throughput considerably.
+    Complete throughput measurements are in the appendix (Table~\ref{GSO_impact_measurement_results}).
+    In general, Generic Segmentation Offload improved \texttt{QUIC} throughput considerably.
     For instance, when transferring 1~Gbyte amount of data, \texttt{QUIC's} throughput increased from $418.44 \pm 3.21$ Mbits/s to $663.06 \pm 0.98$ Mbits/s.
     However, in real networks, GSO could contribute to the more bursty traffic patterns and thus increase the rate of dropped packets~\cite{accelerating-udp-packet-transmission-for-quic}.
     Nevertheless, GSO is used in all the remaining tests by default because it provided significant performance improvements.
@@ -1747,23 +1746,22 @@ Because of the performance improvements and more consistent results, I use core 
   For instance, IPv4 packet headers are usually 20 bytes long~\cite{FallKevinR2012TiV1}, and TCP headers take 20-32 bytes~\cite{Large_MTUs_and_Internet_Performance}.
   Hence, about 2.67\%-3.47\% of the standard Ethernet packet payload are wasted.
   In contrast, these per-packet overheads could be reduced by using larger Ethernet frames.
-  For example, the MTU of so-called jumbo frames is 9000 bytes meaning that per-packet header overhead is reduced to just 0.44\%-0.57\%.
-  However, the major improvement of jumbo frames is that they can reduce CPU workload by reducing the number of interrupts required to process Ethernet packets~\cite{Extended_rame_Sizes_for_Next_Generation_Ethernets}.
+  For example, the MTU of so-called jumbo frames is 9000 bytes and per-packet header overhead is reduced to just 0.44\%-0.57\%.
+  However, the major improvement of jumbo frames is that they can reduce CPU workload by combining data operations and thus reducing the number of interrupts required to process Ethernet packets~\cite{Extended_rame_Sizes_for_Next_Generation_Ethernets}.
   
   
    Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput} summarises tests that measured the impact of different MTU sizes.    
     In particular, this experiment measured \texttt{QUIC} throughput between the server and the client when they were pinned to two different cores on the same machine, and their packets travelled via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
-    Furthermore, a server used a single thread, only a single stream was used, a single data transfer was performed for each experiment, each experiment ran for ten seconds, and each test was repeated ten times.
+    Furthermore, a server used a single thread, a single data transfer was performed for each experiment, each experiment ran for ten seconds, and each test was repeated ten times.
     According to Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}, \texttt{QUIC} throughput could be improved by increasing the size of Ethernet frames.
     However, this improvement is only applicable when transferring large (e.g., 1 GByte) files.
-    It is important to note that in these tests I used \texttt{nuttcp}, a recommended \texttt{UDP} throughput measurement tool~\cite{network-troubleshooting-tools_nuttcp}.
-    For this experiment I decided to use \texttt{nuttcp} instead of \texttt{iperf3} because  \texttt{UDP's} throughput measured with \texttt{iperf3} was significantly lower than \texttt{TCP's} throughput under the same networking conditions.
+    It is important to note that in these tests I used \texttt{nuttcp}, a recommended \texttt{UDP} throughput measurement tool~\cite{network-troubleshooting-tools_nuttcp} because  \texttt{UDP's} throughput measured with \texttt{iperf3} was significantly lower than \texttt{TCP's} throughput under the same networking conditions.
     Furthermore, to reach the maximum \texttt{UDP} throughput I had to increase window size to 4 MBytes.
     
     MTUs above 1500 bytes are not prevalent on the Internet~\cite{why-is-ethernet-mtu-1500}.
     Hence, network elements that do not support jumbo frames would either have to drop them or fragment them into smaller packets~\cite{Large_MTUs_and_Internet_Performance}.
     This, in turn, could lead to performance degradation.
-    Hence, if not specified otherwise, I used MTU of 1500 bytes in all other experiments.
+    Hence, if not specified otherwise, I used an MTU of the more typical 1500 bytes in all other experiments.
     
     
   
@@ -1805,8 +1803,7 @@ Because of the performance improvements and more consistent results, I use core 
 \end{tabular}
 
     \centering
-    \caption[Impact of Jumboframes for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumboframes on the throughput of \texttt{ngtcp2} completion time required to transfer specified files. 
-    \simon{Are packets going via loopback?}}
+    \caption[Impact of Jumboframes for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumboframes on the throughput of \texttt{ngtcp2} completion time required to transfer specified files via an intermediate machine.}
     \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
 \end{table}
   
@@ -2096,7 +2093,7 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 \subsection{Impact of Link Delay}
 
-\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet DELAY. No packet loss should be added. Probably I should use similar delays like the ones that were used in other papers (e.g. +10ms, +50ms, +100ms).}
+\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet DELAY. No packet loss should be added. Probably I should use similar delays like the ones that were used in other papers (e.g.,+10ms, +50ms, +100ms).}
 
 \simon{What requested file size should I use for these measurements?}
 
