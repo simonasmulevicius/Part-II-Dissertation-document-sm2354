@@ -177,7 +177,7 @@ Candidate Number:               & \bf 2439D                      \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 10999\footnotemark[1] \\
+Word Count:         & \bf 11874\footnotemark[1] \\
 Line Count:         & \bf 0 \simon{TODO: calculate} \\
 Project Originator: & Professor Andrew W. Moore                \\
 Supervisor:         & Professor Andrew W. Moore                \\ 
@@ -1142,27 +1142,20 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
 
 
     
-\subsection{qlog and qvis}
-% TODO
-\simon{TODO give a high-level overview of qlog format}
+\subsection{\texttt{Qlog} and \texttt{qvis}}
 
-\simon{TODO: why is it hard to visualise QUIC's behaviour?}
-
-\simon{Finally, add an example of qvis chart}
+\texttt{Qlog} is a new standard format to record \texttt{QUIC} events~\cite{draft-marx-qlog-event-definitions-quic-h3}.
+Some \texttt{QUIC} implementations, such as \texttt{ngtcp2}, can produce these event logs from both server's and client's perspective.
+Then, I used \texttt{qvis}\footnote{\url{https://qvis.quictools.info/##/files}}, \texttt{QUIC} event visualisation tool, to debug \texttt{QUIC} (see Figure~\ref{fig:qvis}).
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/qvis.png}
+    \caption[Example of \texttt{qvis} visualisation]{Example of \texttt{qvis} visualisation. This diagram demonstrates that \texttt{server} is unable to send a reply to the \texttt{client}.}
+    \label{fig:qvis}
+    \end{figure}
+    
 
 
 
