@@ -1541,6 +1541,10 @@ In addition, I shared configuration instructions (see Appendix~\ref{preparation_
 
 As this project builds on the ideas presented in~\cite{Making_QUIC_Quicker}, I thought that it would be reasonable to replicate a similar testing environment to obtain comparable results.
 
+As a side note, different tools and vendors use different notation to represent throughput and memory units.
+To make experiments consistent, I used SI units (1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes and 1~Gbit = 1000~Mbits = 1~000~000~Kbits = 1~000~000~000~bits).
+Furthermore, where applicable, I added additional logic to represent throughput measurements as Mbits/second, completion time in terms of milliseconds and memory in terms of MBytes.
+
 \subsection{Logical Setup}
 To test a simple single flow performance, it is sufficient to have a single \texttt{QUIC} server-client pair, as depicted in Figure~\ref{fig:Logical_testing_environment}.
 To measure \texttt{QUIC} performance under different conditions, a network emulator between the \texttt{QUIC} client and the \texttt{QUIC} server has to be added.
@@ -1835,7 +1839,6 @@ In particular, I used a testing topology similar to the one shown in  Figure~\re
 However, in this experiment I replaced the \texttt{QUIC} client and the server with the corresponding \texttt{iperf3} client-server pair.
 In addition, I did not add any additional packet delay or packet loss on the intermediate machine.
 Furthermore, I repeated each individual test ten times and measured both the mean and standard deviation of these samples.
-Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 As a side note, the Large Receive Offload is disabled on both the testing and intermediate machines.
 
 
@@ -1893,7 +1896,20 @@ This explains \texttt{UDP} throughput decrease at the end of the measurement.
 
 Similarly, Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} demonstrates \texttt{TCP} throughput measurements using the same testing environment as described in the previous subsection (see \S~\ref{section_Throughput_of_Parallel_UDP_Streams}).
 In other words, I repeated each individual experiment ten times, packets travelled via the intermediate machine that was configured not to add any additional packet delay or packet loss.
-In addition, here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes and 1~Gbit = 1000~Mbits = 1~000~000~Kbits = 1~000~000~000~bits.
+
+\simon{Combine these two paragraphs sections}
+
+Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} shows the effect of increased transferred file size for the throughput of \texttt{TCP}.
+Naturally, it takes less time to transfer a small file than the large one.
+However, this means that \texttt{TCP} spends most of the time in the \enquote{slow start} phase when sending small files because their transfer time is shorter than the duration of the \enquote{slow start}.
+As a result, reported \texttt{TCP}'s throughput when sending small files was low.
+In contrast, transferring larger files allowed \texttt{TCP} to discover the maximum sustainable network capacity and thus increase the total throughput.
+In addition, the transfer of large files allowed \texttt{TCP} to amortise the overhead of initial \texttt{TCP} handshake.
+Hence, when sending 1~GByte of data, \texttt{TCP} was able to approach the maximum link capacity that was 10~Gbits/s.
+
+\enquote{Slow start} effect is partially visible in Figure~\ref{fig:TCP_throughput_in_time} that illustrates \texttt{TCP} throughput in time.
+However, resolution of this diagram is limited by the \texttt{iperf3} resolution, which is 0.1 s.
+
 
 
 
@@ -1917,17 +1933,6 @@ In addition, here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes
 
 
 
-
-Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} shows the effect of increased transferred file size for the throughput of \texttt{TCP}.
-Naturally, it takes less time to transfer a small file than the large one.
-However, this means that \texttt{TCP} spends most of the time in the \enquote{slow start} phase when sending small files because their transfer time is shorter than the duration of the \enquote{slow start}.
-As a result, reported \texttt{TCP}'s throughput when sending small files was low.
-In contrast, transferring larger files allowed \texttt{TCP} to discover the maximum sustainable network capacity and thus increase the total throughput.
-In addition, the transfer of large files allowed \texttt{TCP} to amortise the overhead of initial \texttt{TCP} handshake.
-Hence, when sending 1~GByte of data, \texttt{TCP} was able to approach the maximum link capacity that was 10~Gbits/s.
-
-\enquote{Slow start} effect is partially visible in Figure~\ref{fig:TCP_throughput_in_time} that illustrates \texttt{TCP} throughput in time.
-However, resolution of this diagram is limited by the \texttt{iperf3} resolution, which is 0.1 s.
 
 % TODO
 \simon{TODO: comparison of TCP vs UDP}
@@ -1969,24 +1974,22 @@ Actually, it was speculated that firewalls could be a noticeable \texttt{QUIC} d
 
 \subsection{Throughput of Parallel \texttt{QUIC} Streams}
 
+Table~\ref{fig:QUIC_throughput_via_B_using_parallel_requests} summarises the impact of  parallel \texttt{QUIC} connections for \texttt{QUIC's} throughput.
+In particular, these experiments measured \texttt{QUIC} throughput between the encrypted server (i.e., \texttt{ngtcp2}) and client (i.e., \texttt{h2load}).
+
+ngtcp2-h2load version
+I transferred packets via the intermediate machine which was configured not to add any additional packet delay, loss or reordering.
+
+
 % TODO
 \simon{TODO: describe testing conditions in prose}
 
 Number of tests for each experiment: 10
 
-No added packet delay
 
-No added packet loss
-
-A1-B-A2
-
-Uses encrypted ngtcp2-h2load version
+Uses 
 
 GSO enabled
-
-
-Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
-
 
 
 
@@ -2005,13 +2008,8 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 \end{tabular}
     \centering
     \caption{Impact of parallel requests for encrypted \texttt{QUIC} throughput. Here packets travel via an intermediate machine. 
-    \simon{Still using MBytes/second. It should be MBits/second!}.
-    \simon{TODO: IDEA: behaves like UDP}
     \simon{h2load experiment is probably sending 1 or 10 separate "files" while iperf3 is probably sending just a single "file" over 1 or 10 connections}}
     \label{fig:QUIC_throughput_via_B_using_parallel_requests}
-    
-    
-
 \end{table}
 
 
@@ -2068,9 +2066,6 @@ Here 1~Gbyte = 1000~MBytes = 1~000~000~KBytes = 1~000~000~000~Bytes.
 \end{table}
 
 
-
-
-\simon{0. Add throughput measurements of both encrypted and unencrypted versions}
 
 \simon{1. Add a flame chart of ENCRYPTED ngtcp2 behaviour over some standard link and sufficiently large requested file size}
 
