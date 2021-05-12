@@ -1087,18 +1087,27 @@ In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did 
 
 
 \subsection{perf}
-\texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack.
-However, sampling-based performance analysers add lower overhead than event-based analysers because the performance measurement code is not executed for almost every instruction.
-Instead, \texttt{perf} inspects the CPU stack almost one thousand times a second to identify the most problematic functions.
-In particular, I used a sampling frequency of 997 samples per second in order to avoid introducing bias of sampling \enquote{round numbers}~\cite{perf-cpu-sample}.
-However, during this project, I realised that sampling-based performance analysers only work well if the program runs for a sufficiently long time and multiple stacks can be captured.
+\texttt{Perf}\footnote{https://perf.wiki.kernel.org/index.php/Main\_Page} is a performance analysis tool that measures CPU performance by sampling the call stack~\cite{CPU_Flame_graphs}.
+However, sampling-based performance analysers add lower overhead than event-based analysers.
+One reason for this is that event-based analysers add additional performance measurement code to the instructions of the program under test~\cite{CPU_Flame_graphs}.
+In contrast, \texttt{perf} inspects the CPU stack only periodically.
+In particular, I used a recommended sampling frequency of 997 samples per second in order to avoid introducing the sampling bias~\cite{perf-cpu-sample}.
+However, during this project, I realised that sampling-based performance analysers only work well if the program runs for a sufficiently long time and multiple stack frames can be captured.
 
 
 
 \subsection{Flame Graphs}
-\texttt{Flame Graphs} \footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool that is used to visualise the performance of the program.
-In this project I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous samples (see Figure~\ref{fig:perf_results_of_h2load}).
-To understand the \texttt{Flame Graphs}, it is worth looking at the simple example diagram first (see Figure~\ref{fig:Flame_Graphs_explanation}).
+\texttt{Flame Graphs}\footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool that is used to visualise the performance of the program.
+In this project I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous \texttt{perf} samples (see Figure~\ref{fig:perf_results_of_h2load}).
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
+    \caption[Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets were transferred via an intermediate machine (B)]{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets were transferred via an intermediate machine (B). This graph shows that the original \texttt{ngtcp2} client spent about 70\% of its CPU time performing cryptographic operations.} 
+    \label{fig:perf_results_of_h2load}
+    \end{figure}
+
+
 
     \begin{figure}[H]
     \centering
@@ -1107,25 +1116,21 @@ To understand the \texttt{Flame Graphs}, it is worth looking at the simple examp
     \label{fig:Flame_Graphs_explanation}
     \end{figure}
 
+
+To understand the \texttt{Flame Graphs}, it is worth looking at the simple example diagram first (see Figure~\ref{fig:Flame_Graphs_explanation}).
 Here y-axis of \texttt{Flame Graphs} represents the depth and frames of the call stack~\cite{CPU_Flame_graphs}.
+In other words, the y-axis illustrates the caller-callee relationship.
 For instance, as shown in Figure~\ref{fig:Flame_Graphs_explanation}, \textbf{function\_a()} invoked function calls \textbf{function\_b()} and \textbf{function\_g()}. 
-However, an important point to mention is that x-axis of \texttt{Flame Graphs} does not represent time~\cite{CPU_Flame_graphs}.
-Instead, function names are sorted alphabetically along the x-axis, and it represents the approximate percentage of stack frames that were in the call stack~\cite{CPU_Flame_graphs}.
+However, an important point to mention is that x-axis of \texttt{Flame Graphs} does not represent time or the order in which functions were called~\cite{CPU_Flame_graphs}.
+Instead, function names are sorted alphabetically along the x-axis, and the length of each block along the x-axis represents the approximate percentage of time CPU spent executing a specific function~\cite{CPU_Flame_graphs}.
 Hence, by looking at Figure~\ref{fig:Flame_Graphs_explanation} it is possible to tell that \textbf{function\_b()} and its \enquote{children} functions spent more time on CPU than \textbf{function\_g()} and its corresponding functions but it is impossible to tell the relative order in which these functions were called.
 Furthermore, in order to better identify the most frequent function calls, stack frames sampled at different times can be merged if they have a shared ancestor~\cite{CPU_Flame_graphs}.
 As a result, by looking at Figure~\ref{fig:Flame_Graphs_explanation} one can not differentiate whether or not function calls \textbf{function\_b()} and \textbf{function\_g()} did not interleave.
 
 In the standard \texttt{Flame Graph}, different frames are coloured differently in order to increase visual contrast between the neighbouring cells in the diagram~\cite{CPU_Flame_graphs} (see yellow, orange and red rows in Figure~\ref{fig:perf_results_of_h2load}).
 
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/perf_results_of_h2load.png}
-    \caption[Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B)]{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets are transferred via an intermediate machine (B). This graph shows that about 70\% of the time, default \texttt{ngtcp2} version spends doing cryptographic operations} 
-    \label{fig:perf_results_of_h2load}
-    \end{figure}
 
-
-However, in this project, I am also using \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
+However, in this project, I also used \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
 The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph}, but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
 
     \begin{figure}[H]
@@ -2066,7 +2071,7 @@ This performance improvement could be explained by comparing the call stacks of 
 \subsection{Performance Comparison of \textit{Null} Encryption in \texttt{MsQuic} and \texttt{ngtcp2}}
 
 As I have already mentioned, \texttt{MsQuic}, \texttt{Microsoft's} implementation of \texttt{QUIC}, has the pre-built option to disable cryptography.
-\enquote{\textit{Null} encryption} mechanism of  \texttt{MsQuic} works as follows.
+\textit{Null} encryption mechanism of  \texttt{MsQuic} works as follows.
 At first, communicating end hosts still have to complete a secure handshake~\cite{banks-quic-disable-encryption-00}.
 After that, if both client and server express their will to turn off encryption, then plaintext packets are used for communications (i.e. both packet headers and payloads are unencrypted)~\cite{banks-quic-disable-encryption-00}.
 However, according to Mr N. Banks, one drawback of continuing to use encryption for the first \texttt{QUIC} handshake is that performance of \texttt{QUIC} handshake is not improved.
@@ -2074,9 +2079,9 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 \simon{Add a chart showing throughput of encrypted/encrypted ngtcp2 throughput + encrypted/encrypted MsQuic throughput}
 
 
-\subsection{Performance Comparison of \textit{Null} Encryption in Application Layer}
+% \subsection{Performance Comparison of \textit{Null} Encryption in Application Layer}
 
-\simon{Compare throughputs of HTTP/3 with null crypto vs HTTP/2 with "--no-tls-proto" (h2load client supports that, now I just need to find HTTP/2 server)}
+% \simon{Compare throughputs of HTTP/3 with null crypto vs HTTP/2 with "--no-tls-proto" (h2load client supports that, now I just need to find HTTP/2 server)}
 
 \section{\texttt{QUIC} Performance Evaluation}
 
@@ -2098,7 +2103,9 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 \simon{What requested file size should I use for these measurements?}
 
 
+\subsection{Impact of Packet Reordering}
 
+\simon{Mention failing protocol}
 
 
 \section{Final the Most Optimised Version Of \texttt{QUIC}}
