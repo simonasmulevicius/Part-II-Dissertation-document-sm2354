@@ -1856,7 +1856,7 @@ As a side note, the Large Receive Offload is disabled on both the testing and in
 \begin{table}[H]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
-\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample\\ \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of thecompletion\\ timesample\\ side (Mbit/s)\end{tabular}} \\ \hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of thecompletion\\ timesample\\ side (Mbit/s)\end{tabular}} \\ \hline
 1                                                                                               & 1                                                                                                                       & 6492.92                                                                                                                                    & 379.66                                                                                                                               & 1.19                                                                                                  & 0.07                                                                                                                               \\ \hline
 1                                                                                               & 10                                                                                                                      & 7023.35                                                                                                                                    & 252.09                                                                                                                               & 1.17                                                                                                  & 0.05                                                                                                                               \\ \hline
 10                                                                                              & 1                                                                                                                       & 9759.24                                                                                                                                    & 100.66                                                                                                                               & 6.86                                                                                                  & 0.15                                                                                                                               \\ \hline
@@ -1872,45 +1872,20 @@ As a side note, the Large Receive Offload is disabled on both the testing and in
 \end{table}
 
 
-
-
-
-
-
-
-
-
-
-
 These experiments aimed to determine the impact of parallel \texttt{UDP} streams for the aggregated throughput of \texttt{UDP}.
-
-As demonstrated in Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}, adding concurrent \texttt{UDP} clients increased the aggregated goodput when transferring small files, e.g. 1 or 10 MBytes in size.
-\simon{Wait a minute, with the new tests, these results don't hold any more!}
-
-However, for very large files this effect is inverted -- additional concurrent \texttt{iperf3} clients decreased \texttt{UDP} throughput measured on the server-side.
-
-This interesting effect could be explained by the fact that there is an associated overhead of maintaining additional \texttt{iperf3} clients.
-
-%In other words, 
-% TODO
-\simon{TODO: explain these effects}
-
-\simon{TODO: context/queue switches? for concurrent streams penalise the transfer of large concurrent files, but with small files, these switches are more frequent.
-With a large number of clients, one can offer the server a variety of packets it can process}
-
-\simon{According to \url{https://fasterdata.es.net/performance-testing/network-troubleshooting-tools/iperf/multi-stream-iperf3/}, \texttt{iperf3} is a single threaded application so this might be a limiting testing factor}
-
-In addition, single flow \texttt{UDP} throughput reaches a plateau as transferred file size increases.
-This can be explained by the fact that there is a single \texttt{iperf3} server that processes all the packets.
-Hence, the server and its associated stack could form the performance bottleneck.
+As demonstrated in Table~\ref{fig:UDP_throughput_via_B_using_parallel_streams}, adding concurrent \texttt{UDP} clients marginally increased the aggregated goodput when transferring small (i.e., 1~Mbyte) files.
+In addition, \texttt{UDP} throughput reached a plateau as transferred file size increased.
+This can be explained by the fact that there was a single \texttt{iperf3} server that processed all the packets and that the underlying Ethernet links supported throughput up to 10 Gigabits per second.
+Change of \texttt{UDP} throughput in time is shown in Figure~\ref{fig:UDP_throughput_in_time}.
+Here throughput was measured at the granularity of 0.1 s.
+In this experiment I transferred fixed number of bytes meaning that during the last interval (0.8-0.9 s) the channel could not be fully utilised.
+This explains \texttt{UDP} throughput decrease at the end of the measurement. 
 
 
-% TODO
-\simon{TODO: explain function of UDP throughput in time (see Figure~\ref{fig:UDP_throughput_in_time}}
     \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/UDP_throughput_in_time.png}
-    \caption[Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine. Here throughput is measured at the granularity of 0.1 s.}
+    \includegraphics[width=0.8\textwidth]{figs/UDP_throughput_in_time.png}
+    \caption[Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine.}
     \label{fig:UDP_throughput_in_time}
     \end{figure}
 
@@ -1953,7 +1928,7 @@ In addition, the transfer of large files allows \texttt{TCP} to amortise the ove
 Hence, when sending 1GByte of data, \texttt{TCP} was able to approach the maximum link capacity that was 10~Gbits/s.
 
 
-\simon{describe the function of TCP throughput in time (see Figure~\ref{fig:TCP_throughput_in_time})}
+\enquote{Slow start} effect is partially visible in Figure~\ref{fig:TCP_throughput_in_time} that illustrates \texttt{TCP} throughput in time.
 
 
 \simon{First 4 rows of the table - there are 4 different experiments with different throughputs (differ by at least the factor of 2), and the average completion time of all of them was around 10ms. Hence, this example demonstrates that iperf3 does not have sufficient resolution to capture and visualise the effect of a slow start. }
