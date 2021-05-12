@@ -1103,7 +1103,8 @@ In this project I used CPU \texttt{Flame Graphs} that show the aggregated call s
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/zoomed_encrypted_flame_graph_1GByte_h2load.png}
-    \caption[Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets were transferred via an intermediate machine (B)]{Typical \texttt{perf} results of running \texttt{h2load} client against \texttt{ngtcp2} server on the same machine (A), when packets were transferred via an intermediate machine (B). This graph shows that the original \texttt{ngtcp2} client spent about 60\% of its CPU time performing cryptographic operations.} 
+    \caption[Flame Graph of \texttt{h2load} client running against \texttt{ngtcp2} server]{Flame Graph of encrypted \texttt{h2load} client running against \texttt{ngtcp2} server.
+    Server was on the same machine (A), 1~GByte amount of data was transferred via an intermediate machine (B). This graph shows that the original \texttt{ngtcp2} client spent about 60\% of its CPU time performing cryptographic operations.} 
     \label{fig:perf_results_of_h2load}
     \end{figure}
 
@@ -2040,20 +2041,15 @@ In order to measure the impact of \texttt{QUIC} cryptographic operations, I impl
 As usually, I sent packets via the intermediate machine that did not add any explicit packet loss, delay or reordering.
 Results are summarised in Table~\ref{fig:unencrypted_QUIC_throughput_via_B_using_parallel_requests}.
 Unencrypted \texttt{QUIC} had two or three times higher throughput in all categories.
-This performance improvement could be explained by comparing the call stacks of the two variants of \texttt{QUIC} implementations.
-
-
-\simon{1. Add a flame chart of ENCRYPTED ngtcp2 behaviour over some standard link and sufficiently large requested file size}
-
-\simon{2. Add a flame chart of UNENCRYPTED ngtcp2 behaviour over the same link and sufficiently large requested file size}
-
-See Figure~\ref{fig:perf_results_of_unencrypted_h2load}.
+This performance improvement could be explained by comparing the call stacks of encrypted (see Figure~\ref{fig:perf_results_of_h2load}) and unencrypted (see Figure~\ref{fig:perf_results_of_unencrypted_h2load}) \texttt{QUIC} implementations.
+The encrypted version of \texttt{ngtcp2} was limited by the cryptographic operations (i.e., 60\% of CPU tim) as opposed to the unencrypted version that spent only 4\% of CPU time performing cryptographic operations.
 
 
     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/zoomed_unencrypted_flame_graph_1GByte_h2load.png}
-    \caption{} 
+    \caption[Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server]{Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server.
+    Both client and server were on the same machine (A), 1~GByte amount of data was transferred via an intermediate machine (B).}  
     \label{fig:perf_results_of_unencrypted_h2load}
     \end{figure}
     
