@@ -56,7 +56,7 @@
 
 
 \newboolean{draft}
-\setboolean{draft}{false}
+\setboolean{draft}{true}
 
 \newboolean{comments}
 
@@ -177,7 +177,7 @@ Candidate Number:               & \bf 2439D                      \\
 College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 11874\footnotemark[1] \\
+Word Count:         & \bf 11777\footnotemark[1] \\
 Line Count:         & \bf 0 \simon{TODO: calculate} \\
 Project Originator: & Professor Andrew W. Moore                \\
 Supervisor:         & Professor Andrew W. Moore                \\ 
@@ -1894,22 +1894,26 @@ This explains \texttt{UDP} throughput decrease at the end of the measurement.
 
 \subsection{Throughput of Parallel \texttt{TCP} Streams}
 
-Similarly, Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} demonstrates \texttt{TCP} throughput measurements using the same testing environment as described in the previous subsection (see \S~\ref{section_Throughput_of_Parallel_UDP_Streams}).
-In other words, I repeated each individual experiment ten times, packets travelled via the intermediate machine that was configured not to add any additional packet delay or packet loss.
 
-\simon{Combine these two paragraphs sections}
 
 Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} shows the effect of increased transferred file size for the throughput of \texttt{TCP}.
-Naturally, it takes less time to transfer a small file than the large one.
+I used  the same testing environment as described in the previous subsection (see \S~\ref{section_Throughput_of_Parallel_UDP_Streams}).
+In addition, I repeated each individual experiment ten times, packets travelled via the intermediate machine that was configured not to add any additional packet delay or packet loss.
+
+Naturally, it takes less time for \texttt{TCP} to transfer a small file than the large one.
 However, this means that \texttt{TCP} spends most of the time in the \enquote{slow start} phase when sending small files because their transfer time is shorter than the duration of the \enquote{slow start}.
 As a result, reported \texttt{TCP}'s throughput when sending small files was low.
 In contrast, transferring larger files allowed \texttt{TCP} to discover the maximum sustainable network capacity and thus increase the total throughput.
 In addition, the transfer of large files allowed \texttt{TCP} to amortise the overhead of initial \texttt{TCP} handshake.
 Hence, when sending 1~GByte of data, \texttt{TCP} was able to approach the maximum link capacity that was 10~Gbits/s.
+Table~\ref{fig:TCP_throughput_via_B_using_parallel_streams} also illustrates the positive effect of additional concurrent \texttt{TCP} clients for small to medium size transfers.
+Each parallel \texttt{TCP} client might have been allocated additional resources (e.g., buffer space) that could have contributed to the increased total throughput.
+
 
 \enquote{Slow start} effect is partially visible in Figure~\ref{fig:TCP_throughput_in_time} that illustrates \texttt{TCP} throughput in time.
-However, resolution of this diagram is limited by the \texttt{iperf3} resolution, which is 0.1 s.
+However, granularity of this diagram is limited by the \texttt{iperf3} resolution, which is 0.1 s.
 
+\texttt{UDP} and \texttt{TCP} comparison (see Tables~\ref{fig:TCP_throughput_via_B_using_parallel_streams}~and~\ref{fig:UDP_throughput_via_B_using_parallel_streams}) reveals that \texttt{UDP} can approach the maximum network throughput with smaller transfer sizes.
 
 
 
@@ -1930,12 +1934,6 @@ However, resolution of this diagram is limited by the \texttt{iperf3} resolution
     \caption[Impact of parallel streams for \texttt{TCP} throughput]{Impact of parallel streams for \texttt{TCP} throughput. Here packets travel via an intermediate machine.}
     \label{fig:TCP_throughput_via_B_using_parallel_streams}
 \end{table}
-
-
-
-
-% TODO
-\simon{TODO: comparison of TCP vs UDP}
 
 
     \begin{figure}[H]
