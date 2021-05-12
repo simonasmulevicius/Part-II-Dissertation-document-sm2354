@@ -56,7 +56,7 @@
 
 
 \newboolean{draft}
-\setboolean{draft}{true}
+\setboolean{draft}{false}
 
 \newboolean{comments}
 
@@ -1439,7 +1439,7 @@ Furthermore, the testing environment setup became more predictable, allowing per
 
 
 
-\section{Using Null Encryption}
+\section{Using \textit{Null} Encryption}
 
 As mentioned in \S~\ref{QUIC_details_section}, \texttt{QUIC} uses encryption by default.
 It encrypts the payload of the packet and some fields in the packet headers.
@@ -1859,7 +1859,7 @@ As a side note, the Large Receive Offload is disabled on both the testing and in
 \begin{table}[H]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
-\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of thecompletion\\ timesample\\ side (Mbit/s)\end{tabular}} \\ \hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation of\\ the completion\\ time sample\\ side (Mbit/s)\end{tabular}} \\ \hline
 1                                                                                               & 1                                                                                                                       & 6492.92                                                                                                                                    & 379.66                                                                                                                               & 1.19                                                                                                  & 0.07                                                                                                                               \\ \hline
 1                                                                                               & 10                                                                                                                      & 7023.35                                                                                                                                    & 252.09                                                                                                                               & 1.17                                                                                                  & 0.05                                                                                                                               \\ \hline
 10                                                                                              & 1                                                                                                                       & 9759.24                                                                                                                                    & 100.66                                                                                                                               & 6.86                                                                                                  & 0.15                                                                                                                               \\ \hline
@@ -1916,7 +1916,7 @@ However, resolution of this diagram is limited by the \texttt{iperf3} resolution
 \begin{table}[H]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
-\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample\\ \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of thecompletion\\ timesample\\ side (Mbit/s)\end{tabular}} \\ \hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation  of\\ the completion\\ time sample\\ side (Mbit/s)\end{tabular}} \\ \hline
 1                                                                                               & 1                                                                                                                       & 2245.32                                                                                                                                    & 300.09                                                                                                                               & 2.45                                                                                                  & 0.26                                                                                                                               \\ \hline
 1                                                                                               & 10                                                                                                                      & 3376.85                                                                                                                                    & 192.65                                                                                                                               & 1.94                                                                                                  & 0.28                                                                                                                               \\ \hline
 10                                                                                              & 1                                                                                                                       & 4220.89                                                                                                                                    & 1364.76                                                                                                                              & 19.55                                                                                                 & 10.02                                                                                                                              \\ \hline
@@ -2074,7 +2074,7 @@ GSO enabled
 
 
 
-\subsection{Performance Comparison of \enquote{\textit{Null} encryption} in \texttt{MsQuic} and \texttt{ngtcp2}}
+\subsection{Performance Comparison of \textit{Null} encryption in \texttt{MsQuic} and \texttt{ngtcp2}}
 
 As I have already mentioned, \texttt{MsQuic}, \texttt{Microsoft's} implementation of \texttt{QUIC}, has the pre-built option to disable cryptography.
 \enquote{\textit{Null} encryption} mechanism of  \texttt{MsQuic} works as follows.
@@ -2085,7 +2085,7 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 \simon{Add a chart showing throughput of encrypted/encrypted ngtcp2 throughput + encrypted/encrypted MsQuic throughput}
 
 
-\subsection{Performance Comparison of \enquote{Null Encryption} in Application Layer}
+\subsection{Performance Comparison of \textit{Null} Encryption in Application Layer}
 
 \simon{Compare throughputs of HTTP/3 with null crypto vs HTTP/2 with "--no-tls-proto" (h2load client supports that, now I just need to find HTTP/2 server)}
 
