@@ -2093,6 +2093,11 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 \subsection{Impact of Link Delay}
 
+Table~\ref{fig:unencrypted_QUIC_throughput_via_B_with_packet_delay} summarises how throughput of unencrypted \texttt{ngtcp2} changes with the increasing additional packet delay incurred on the intermediate machine.
+Here no packet loss was added.
+It is worth pointing out that small additional packet delay did not significantly reduce \texttt{QUIC} throughput because there was already some latency implicitly added by the testing environment.
+
+
 \begin{table}[H]
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
@@ -2115,19 +2120,12 @@ However, according to Mr N. Banks, one drawback of continuing to use encryption 
 
 
 
-\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet DELAY. No packet loss should be added. Probably I should use similar delays like the ones that were used in other papers (e.g.,+10ms, +50ms, +100ms).}
-
-\simon{What requested file size should I use for these measurements?}
-
 \subsection{Impact of Packet Loss}
 
-\simon{Add a graph that would demonstrate how throughput of unencrypted ngtcp2 changes with the increasing additional packet LOSS. }
-
-\simon{Use packet loss: 1\%, 0.1\%, 0.01\%, 0.001\%}
-
-\simon{In addition, these loss values should be equal to the ones used in MsQuic performance dashboard}
-
-\simon{What requested file size should I use for these measurements?}
+Table~\ref{fig:unencrypted_QUIC_throughput_via_B_with_packet_loss} illustrates how throughput of unencrypted \texttt{ngtcp2} changes with the increasing additional packet loss.
+Trivially, additional packet loss reduced the goodput.
+However, more interesting observation is that packet loss smaller than 0.1\% did not have any substantial effect on the \texttt{QUIC} throughput for the large file transfers.
+This could be explained by the fact that in some low probability tests not a single packet might have been lost. 
 
 
 
@@ -2188,7 +2186,7 @@ Hence, by disabling packet and header encryption I might have disabled this mech
 In this project, I simulated offloading of cryptographic \texttt{QUIC} functions, and I measured the impact of this improvement.
 My dissertation reiterates the idea that, if implemented correctly, hardware offloading of \texttt{QUIC} could offer substantial performance improvements.
 
-\simon{Mention energy efficiency and application of QUIC for IoT https://calendar.perfplanet.com/2018/quic-and-http-3-too-big-to-fail/}
+% \simon{Mention energy efficiency and application of QUIC for IoT https://calendar.perfplanet.com/2018/quic-and-http-3-too-big-to-fail/}
 
 \section{Reflection}
 Before starting the project, prior expertise working with the \texttt{NetFPGA} platform would have substantially helped.
@@ -2200,13 +2198,8 @@ In particular, hands-on experience with the reference hardware projects during t
 Certain innovative network analysis tools, such as the aforementioned \texttt{MsQuic} performance analysis programs, were not adopted for \texttt{Ubuntu 20.04 LTS (Focal Fossa)} operating system.
 Hence, I could not compare performance of disabled encryption of \texttt{MsQuic} with the corresponding \texttt{TCP/TLS} stack.
 However, I hope that in the future, such experiments would be possible.
-
-% TODO
-\simon{TODO: suggest offloading crypto to hardware (as Gianni's team has already suggested)}
-
-\simon{TODO: critique that offloading \texttt{QUIC} to hardware might stifle innovation in the long term. }
-
-\simon{TODO: for example, look into invariants of \texttt{QUIC} and check if such offloading would be acceptable}
+Furthermore, my work demonstrates that \texttt{QUIC's} throughput could be improved by offloading or disabling its cryptographic functions.
+However, the design of offloaded logic should be flexible enough to support future \texttt{QUIC} versions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % the bibliography
