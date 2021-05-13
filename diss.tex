@@ -175,17 +175,19 @@ be made available to the students and staff of the University.
 {\large
 \begin{tabular}{ll}
 Candidate Number:               & \bf 2439D                      \\
-College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
 Word Count:         & \bf 11944\footnotemark[1] \\
-Line Count:         & \bf 8600 \\
+Line Count:         & \bf 5555\footnotemark[2] \\
 Project Originator: & Professor Andrew W. Moore                \\
 Supervisor:         & Professor Andrew W. Moore                \\ 
 \end{tabular}
 }
 \footnotetext[1]{This word count was computed
-by \texttt{texcount diss.tex}. In addition, \texttt{\%TC:ignore} and \texttt{\%TC:endignore} comments were added to ignore all but the five main sections}
+by \texttt{texcount diss.tex}. In addition, \texttt{\%TC:ignore} and \texttt{\%TC:endignore} comments were added to ignore all but the five main sections.}
+
+\footnotetext[2]{More details about the code composition are in \S~\ref{repository_overview_section}.}
+
 
 \stepcounter{footnote}
 
@@ -386,8 +388,8 @@ They then suggest that one reason for such behaviour is that reordered packets c
 
 
 In order to measure the impact of cryptography for \texttt{QUIC} performance, I extended one implementation of \texttt{QUIC} to support \enquote{Null-encryption}.
-However, later I discovered that the option to disable encryption of \texttt{QUIC} was already proposed~\cite{banks-quic-disable-encryption-00}.
-The author noted in private correspondence that this ideas had been already implemented in \texttt{MsQuic}, the aforementioned \texttt{Microsoft}'s implementation of \texttt{QUIC}.
+I also later discovered that the option to disable encryption of \texttt{QUIC} was already proposed~\cite{banks-quic-disable-encryption-00}.
+The author noted in private correspondence that this idea had been already implemented in \texttt{MsQuic}, the aforementioned \texttt{Microsoft}'s implementation of \texttt{QUIC}.
 
 
 
@@ -1312,7 +1314,7 @@ Then, I had to disable the packet header and payload encryption.
 After that, I configured a physical testing environment to run performance analysis tests (see Figure~\ref{fig:Physical_testing_environment}).
 Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behaviour in different conditions. 
 
-\section{Repository Overview} 
+\section{Repository Overview} \label{repository_overview_section}
 
     \begin{figure}[ht]
 \begin{forest}
@@ -1352,8 +1354,6 @@ Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behavi
     ]
   ]
   [Additional evaluation tools: {FlameGraph(0), iperf(0), msquic\_folder(0)}
-  ]
-  [Part-II-dissertation-document(3045)
   ]
 ]
 \end{forest}
