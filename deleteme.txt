@@ -1,5 +1,0 @@
-QUIC is a next-generation transport layer protocol whose network stack is demonstrated in Figure fig:QUIC_network_stack. In this diagram the UDP transport layer protocol is smaller than the TCP layer because UDP only provides multiplexing between the two processes of the two end hosts by using port numbers [Chapter 5.1]PetersonLarryL2007CNAS.
-UDP sends packets in fire and forget manner Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP.
-Hence, UDP does not guarantee reliable packet delivery and it does not provide congestion control [Chapter 5.1]PetersonLarryL2007CNAS.
-However, UDP checksum adds a mechanism to check that UDP packets are valid and arrive at the intended recipients
-[Chapter 5.1]PetersonLarryL2007CNAS,how-is-tcp-and-udp-checksum-calculated, udp-user-datagram-protocol.

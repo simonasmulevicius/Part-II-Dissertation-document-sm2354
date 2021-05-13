@@ -543,7 +543,7 @@ Finally, application layer Head-of-line blocking problems of \texttt{HTTP/1.1} c
 This diagram demonstrates that \texttt{HTTP/1.1} fails to address the Head-of-line blocking problem if the server has to transfer more web objects than there are open \texttt{TCP} connections~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 For example, the transfer of files 3 and 8 can not be started until the blocking resources (i.e. files 2 and 7) are sent. 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Head_of_line_blocking_of_HTTP1_1.png}
     \caption[Head-of-line blocking of \texttt{HTTP/1.1}]{Head-of-line blocking of \texttt{HTTP/1.1}. This diagram visualises the ideas presented in Robin Marx's description of the \texttt{HTTP/1.1} HOL problem~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
@@ -569,7 +569,7 @@ This diagram demonstrates that logical and independent streams are implemented u
 In particular, a single \texttt{TCP} packet may contain several frame headers with their associated payloads~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other on the client-side.
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{figs/Multiplexing_HTTP2.png}
     \caption[Multiplexing of \texttt{HTTP/2.0} using logical streams and frames]{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
@@ -628,7 +628,7 @@ The main reason for this is that \texttt{UDP} is an already deployed, supported 
 
 In conclusion, all these enhancements of \texttt{HTTP} can be summarised in the following historical timeline (see Figure~\ref{fig:cf-secure-web-timeline}).
 % TODO: reduce the size of this diagram and take only the most important developments
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     % \includegraphics[width=0.7\textwidth]{figs/cf-secure-web-timeline-1.png}
     
@@ -781,7 +781,7 @@ For completeness I will mention that \texttt{HTTP/3} layer is smaller than analo
 
 
 
-    % \begin{figure}[H]
+    % \begin{figure}[ht]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/IP_UDP_QUIC packets.png}
     % \caption[The relative packet structure of \texttt{IP/UDP/QUIC} network stack]{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn from the latest \texttt{IETF}'s description of \texttt{QUIC}~\cite{ietf-quic-transport-34}}
@@ -796,7 +796,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 
 
-    % \begin{figure}[H]
+    % \begin{figure}[ht]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/Short_QUIC_packet_header_format.PNG}
     % \caption[Short \texttt{QUIC} packet header format]{Short \texttt{QUIC} packet header format. The diagram is taken from \cite{UnderstandQUIC}. \simon{MAYBE TODO: describe QUIC packets and their field values (see Figure~\ref{fig:QUIC_packet_format})}}
@@ -839,7 +839,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the core innovations of \texttt{QUIC} is to combine the transport and security layer handshakes, thus reducing latency of the first \texttt{HTTP} request.
 
 
-     \begin{figure}[H]
+     \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
     \caption[Comparison of handshakes required to issue an \texttt{HTTP} request]{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of a similar diagram taken from~\cite{the-road-to-quic}.}
@@ -934,7 +934,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     Figure~\ref{fig:Impact_of_increasing_pkt_numbers} also demonstrates that \texttt{QUIC} uses frame byte ranges to identify missing frames and provide reliable delivery~\cite{UnderstandQUIC}.
     In subsequent paragraphs, I describe how \texttt{QUIC} packet numbers are used to avoid network congestion~\cite{UnderstandQUIC}.
     
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Impact_of_increasing_pkt_numbers.png}
     \caption[Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering]{Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering. The diagram visualises Hunter Dellaverson et al. ideas~\cite{UnderstandQUIC}.}
@@ -1070,7 +1070,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
 \texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
 \texttt{Wireshark} visualises key information about the packets -- source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
     \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display packet headers of \texttt{QUIC}. In particular, packet numbers (abbreviated PKN) are and displayed on the right hand side.}
@@ -1084,7 +1084,7 @@ Hence, I had to share the server's cryptographic certificate with \texttt{Wiresh
 I used \texttt{Wireshark} ethically, meaning that I only used it to analyse traffic between the dedicated network interfaces.
 In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because the testing environment used separate network interfaces. 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
     \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network, and I did not use \texttt{Wireshark} to capture packets from the college network}
@@ -1107,7 +1107,7 @@ However, during this project, I realised that sampling-based performance analyse
 \texttt{Flame Graphs}\footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool that is used to visualise the performance of the program.
 In this project, I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous \texttt{perf} samples (see Figure~\ref{fig:perf_results_of_h2load}).
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/zoomed_encrypted_flame_graph_1GByte_h2load.png}
     \caption[Flame Graph of \texttt{h2load} client running against \texttt{ngtcp2} server]{Flame Graph of encrypted \texttt{h2load} client running against \texttt{ngtcp2} server.
@@ -1117,7 +1117,7 @@ In this project, I used CPU \texttt{Flame Graphs} that show the aggregated call 
 
 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Flame_Graphs_explanation.png}
     \caption[Schematic diagram of \texttt{Flame Graphs}]{Schematic diagram of \texttt{Flame Graphs} adopted from Brendan Gregg's presentation~\cite{USENIX_ATC2017_flamegraphs}}
@@ -1141,7 +1141,7 @@ In the standard \texttt{Flame Graph}, different frames are coloured differently 
 However, in this project, I also used \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
 The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph}, but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.png}
     \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files. The red areas in the centre represent removed cryptographic functions from the unencrypted \texttt{ngtcp2} version which that previously formed a CPU bottleneck for \texttt{QUIC}}
@@ -1162,7 +1162,7 @@ Some \texttt{QUIC} implementations, such as \texttt{ngtcp2}, can produce these e
 Then, I used \texttt{qvis}\footnote{\url{https://qvis.quictools.info/##/files}}, \texttt{QUIC} event visualisation tool, to debug \texttt{QUIC} (see Figure~\ref{fig:qvis}).
 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/qvis.png}
     \caption[Example of \texttt{qvis} visualisation]{Example of \texttt{qvis} visualisation. This diagram demonstrates a situation when the \texttt{server} was unable to send a reply to the \texttt{client}.}
@@ -1339,29 +1339,39 @@ Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behavi
   }  
 [top level folder
   [unencrypted\_stack
-      [{openssl, ngtcp2, nghttp2, nghttp3}
+      [{openssl(0), ngtcp2(904), nghttp2(143), nghttp3(0)}
       ]
   ]
-  [Original encrypted stack: {openssl, ngtcp2, nghttp2, nghttp3}
+  [Original encrypted stack: {openssl(0), ngtcp2(0), nghttp2(0), nghttp3(0)}
   ]
-  [Part-II-dissertation
-    [testing-scripts
+  [Part-II-dissertation(4508)
+    [testing-scripts 
     ]
     [testing-results
     ]
     [testing-libraries
     ]
   ]
-  [Additional evaluation tools: {FlameGraph, iperf, msquic\_folder}
+  [Additional evaluation tools: {FlameGraph(0), iperf(0), msquic\_folder(0)}
   ]
-  [Part-II-dissertation-document
+  [Part-II-dissertation-document(3045)
   ]
 ]
 \end{forest}
 
-    \caption[High-level directory structure of the project]{High-level directory structure of the project}
+% nghttp2: initial: 5528bb62e9cf23212091a4384e50a690f5b5e96f
+% nghttp2: final: 8f01fc4809520c97e41c0f3f47fb7a2e716fca61
+% git diff --shortstat 5528bb62e9cf23212091a4384e50a690f5b5e96f 8f01fc4809520c97e41c0f3f47fb7a2e716fca61
+
+% ngtcp2: initial: 2624d0265719720b2af48cebe3dee7f66c0b13ba
+% ngtcp2: final:   855b3a270f094abb0053f3ffd04b09319fcd8dfc
+% git diff --shortstat 2624d0265719720b2af48cebe3dee7f66c0b13ba 855b3a270f094abb0053f3ffd04b09319fcd8dfc
+
+    \caption[High-level directory structure of the project]{High-level directory structure of the project. Numbers in brackets represent the number of lines I added to each repository}
     \label{fig:High_level_directory_structure_of_the_project}
     \end{figure}
+    
+    
 
 My project structure is illustrated in Figure~\ref{fig:High_level_directory_structure_of_the_project}.
 I implemented support for \textit{null} encryption (see Appendix~\ref{Implementation_of_Null_Encryption_packet_payload}, \ref{Implementation_of_Null_Decryption_packet_payload}, \ref{Implementation_of_mask_generation}) in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
@@ -1375,10 +1385,7 @@ It is important to mention that \texttt{h2load} was already provided in the orig
 
 I used the original encrypted \texttt{ngtcp2} stack (see Figure~\ref{fig:High_level_directory_structure_of_the_project}) during the development process to compare its behaviour with my implementation.
 In addition, I added unit and integration tests of \textit{null} encryption to the \texttt{ngtcp2} repository located in \texttt{unencrypted\_stack} folder. 
-
-
-
-
+I used \texttt{git diff} command to calculate my code contribution to \texttt{ngtcp2}\footnote{\texttt{git diff --shortstat 2624d0265719720b2af48cebe3dee7f66c0b13ba 855b3a270f094abb0053f3ffd04b09319fcd8df}} and \texttt{nghttp2}\footnote{\texttt{git diff --shortstat 5528bb62e9cf23212091a4384e50a690f5b5e96f 8f01fc4809520c97e41c0f3f47fb7a2e716fca61}} repositories.
 
 
 Performance analysis and evaluation scripts are placed under \texttt{Part-II-dissertation} folder.
@@ -1397,8 +1404,8 @@ The most of the work was done in \texttt{unencrypted\_stack/ngtcp2}, \texttt{une
 
 
 
-
 \subsection{Software Licences} 
+
 The vast majority of software used in this project was released under permissive \texttt{MIT}\footnote{\url{https://github.com/ngtcp2/nghttp3/blob/main/COPYING}, \\  \url{https://github.com/ngtcp2/ngtcp2/blob/main/COPYING}, \\
 \url{https://github.com/microsoft/msquic/blob/main/LICENSE}} or \texttt{Apache 2.0}\footnote{\url{https://github.com/quictls/openssl/blob/openssl-3.0.0-alpha15\%2Bquic/LICENSE.txt}} licences.
 As required by \texttt{Apache 2.0} licence, I declare that no changes were added to the \texttt{OpenSSL} library (i.e., adjustments of cryptographic functions were implemented in \texttt{ngtcp2} and \texttt{nghttp2} repositories).
@@ -1467,7 +1474,7 @@ Header encryption is performed by \texttt{XORing} relevant packet header fields 
 After that, the encrypted packet is sent over the potentially insecure channel.
 To decrypt the contents of \texttt{QUIC} packets receiver has to do the steps by first decrypting the header and then the payload.
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.97\textwidth]{figs/Cryptographic_procedures_of_quic.png}
     \caption[Original process of encrypting, transferring and decrypting \texttt{QUIC} packet]{Original process of encrypting (e.g., steps 1 and 2), transferring  (e.g., steps 3) and decrypting (e.g., steps 4 and 5) \texttt{QUIC} packet. Diagram summarises relevant sections of \texttt{IETF} \texttt{QUIC-TLS} draft~\cite[Section 5]{ietf-quic-tls-32}}
@@ -1491,7 +1498,7 @@ However, \texttt{QUIC} is a complex protocol, so removing these functions may ha
 Finally, \texttt{QUIC} headers are relatively small compared with the packet payloads, so further performance optimisations dealing with header encryption would have provided only limited performance improvements.
 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.97\textwidth]{figs/my_implementation_of_cryptographic_procedures_of_quic.png}
     \caption[My implementation of disabled encryption]{My implementation of disabled encryption}
@@ -1657,7 +1664,7 @@ Fortunately, using \texttt{Wireshark}, I observed that \texttt{MsQuic} also uses
 On the testing machines \texttt{hyper-threading} at first was implemented by assigning two virtual cores for every physical core (see Figure~\ref{fig:topology_with_hyperthreading}).
 For instance, in this diagram core \enquote{L \#0} has two \enquote{processing units} marked as \enquote{PU L\#0} and \enquote{PU L\#1}.
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/topology_with_hyperthreading.png}
     \caption[Memory topology of machine A when \texttt{hyper-threading} is turned on]{Memory topology of machine A when \texttt{hyper-threading} is turned on (Figure generated by \texttt{lstopo} command)}
@@ -1683,7 +1690,7 @@ Finally, the remaining two cores (marked as \enquote{P\#2} and \enquote{P\#3}) w
 This technique of assigning particular processes to particular cores is referred to as \texttt{hard CPU affinity}~\cite{CPU_Affinity}.
 Core pinning is important for performance analysis because it removes the overhead of reallocating processes from one core to another by reducing the frequency of cache misses~\cite{Tuning_10Gb_network_cards_on_Linux}.
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/memory_topology.png}
     \caption[Memory topology of machine A  when \texttt{hyper-threading} is turned off]{Memory topology of machine A  when \texttt{hyper-threading} is turned off (Figure generated by \texttt{lstopo} command)}
@@ -1703,7 +1710,7 @@ Hence, two data-intensive processes that run on the same core could compete for 
 In addition, Table~\ref{Standard_deviation_of_throughput_measurements} demonstrates that \texttt{h2load's} throughput was almost always more variable when both the client and the server used the same core.
 Because of the performance improvements and more consistent results, I use core pinning by default in all the experiments (if not stated otherwise).
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/QUIC Throughput when packets go via machine B (A1-to-B-to-A2).png}
     \caption[Impact of core pinning for \texttt{QUIC} throughput measured with \texttt{h2load}]{Impact of core pinning for \texttt{QUIC} throughput measured with \texttt{h2load}. In one case, both the server and the client ran on the same core, while in the second group of experiments, both endpoints ran on separate physical cores.}
@@ -1773,21 +1780,21 @@ Because of the performance improvements and more consistent results, I use core 
     
   
   
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.85\textwidth]{figs/UDP throughput using different MTUs and measured with nuttcp (packets travel via the intermediate machine).png}
     \caption{UDP throughput using different MTUs and measured with \texttt{nuttcp} (packets travel via the intermediate machine)}
     \label{fig:UDP_throughput_with_different_MTUs}
     \end{figure}
     
-    % \begin{figure}[H]
+    % \begin{figure}[ht]
     % \centering
     % \includegraphics[width=0.97\textwidth]{figs/Iperf3 UDP throughput using different MTUs (localhost).png}
     % \caption{Impact of MTU size for iperf throughput (when packets travel via localhost)}
     % \label{fig:MTU_impact_for_localhost_iperf_throughput}
     % \end{figure}
     
-    % \begin{figure}[H]
+    % \begin{figure}[ht]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/Iperf3 UDP throughput using different MTUs (A1-to-B-to-A2).png}
     % \caption{Impact of MTU size for iperf throughput (when packets travel via the intermediate machine)}
@@ -1895,7 +1902,7 @@ In this experiment, I transferred a fixed number of bytes meaning that during th
 This explains \texttt{UDP} throughput decrease at the end of the measurement. 
 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/UDP_throughput_in_time.png}
     \caption[Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine.}
@@ -1946,7 +1953,7 @@ However, the granularity of this diagram is limited by the \texttt{iperf3} resol
 \end{table}
 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/TCP_throughput_in_time.png}
     \caption[Change of \texttt{TCP} throughput in time when a single \texttt{iperf3} client sends \texttt{TCP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{TCP} throughput in time when a single \texttt{iperf3} client sends \texttt{TCP} traffic to the \texttt{iperf3} server via an intermediate machine. Here throughput is measured at the granularity of 0.1 s}
@@ -2049,7 +2056,7 @@ This performance improvement could be explained by comparing the call stacks of 
 The encrypted version of \texttt{ngtcp2} was limited by the cryptographic operations (i.e., 60\% of CPU time) as opposed to the unencrypted version that spent only 4\% of CPU time performing cryptographic operations.
 
 
-    \begin{figure}[H]
+    \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/zoomed_unencrypted_flame_graph_1GByte_h2load.png}
     \caption[Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server]{Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server.
