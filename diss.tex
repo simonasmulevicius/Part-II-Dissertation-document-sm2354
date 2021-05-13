@@ -1090,7 +1090,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
  I used this environment to run integration tests.
  
  Alternatively, I could have used Virtual machines to simulate the tests.
- However, there would have been software related performance penalty required to simulate the guest operating systems.
+ However, there would have been software related performance penalty required to implement the guest operating systems and simulate the network.
  
  Similarly, there was a design choice I had to make when selecting a tool that could add traffic perturbations.
  Yang et al.~\cite{Making_QUIC_Quicker} used \texttt{TLEM} network emulator that is suitable for the high throughput network emulation~\cite{Very_high_speed_link_emulation_with_TLEM}.
@@ -1196,7 +1196,7 @@ In addition, I did not end up using the high-speed network emulator called \text
 % ------------------------------------------------
 
 
-In this chapter, I first present my work required to disable encryption of \texttt{QUIC}.
+In this chapter, I first present my work to disable encryption of \texttt{QUIC}.
 Then, I describe the actual software engineering tasks that I completed to measure \texttt{QUIC} performance consistently and correctly.
 
 
@@ -1288,7 +1288,7 @@ Some of the tests used \texttt{ssh} commands to control the intermediate machine
 To reuse the code of common testing functions, I moved them to the \texttt{testing-libraries folder}.
 Results of several manually completed tests are stored in the \texttt{testing-results folder}.
 Some \texttt{QUIC} behaviour analysis tests use additional evaluation tools (e.g., \texttt{FlameGraph}, \texttt{iperf}, \texttt{MsQuic}).
-The most of the work was done in \texttt{unencrypted\_stack/ngtcp2}, \texttt{unencrypted\_stack/nghtt2} and \texttt{testing-scripts} sections.
+Most of the work was done in \texttt{unencrypted\_stack/ngtcp2}, \texttt{unencrypted\_stack/nghtt2} and \texttt{testing-scripts} sections.
 
 
 
@@ -1724,7 +1724,7 @@ One plausible explanation for this insignificant change could be that the testin
 \subsection{Size of the Buffers} 
 
 In order to saturate the links, I increased \texttt{nuttcp's} window size to be more than the bandwidth-delay product of the link.
-To be precise, the testing environment used 10 Gigabit Ethernet links, and the end-to-end delay between the client and the server was $0.262 \pm 0.065$ ms (see \S~\ref{physical_setup_subsection}), meaning that the window size was at least $10^{10}*2.62*10^{-4}$~bytes $= 2.62$~Mbytes.
+To be precise, the testing environment used 10 Gigabit Ethernet links, and the end-to-end delay between the client and the server was $0.262 \pm 0.065$ ms (see \S~\ref{physical_setup_subsection}), meaning that the window size was at least $10^{10} \times 2.62 \times 10^{-4}$~bytes $= 2.62$~Mbytes.
 
 % TODO
 \simon{TODO: 1. Update send and receive buffers according to: https://www.kernel.org/doc/ols/2009/ols2009-pages-169-184.pdf}
