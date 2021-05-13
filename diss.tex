@@ -17,6 +17,7 @@
 \usetikzlibrary{arrows.meta}
 \usepackage{forest}
 \usepackage{pdfpages}
+\usepackage{appendix}
 
 \definecolor{folderbg}{RGB}{255,165,0}
 \definecolor{folderborder}{RGB}{110,144,169}
@@ -2441,9 +2442,7 @@ int ngtcp2_crypto_hp_mask_unsecure(
 \end{verbatim}
 
 
-\chapter{Source B}
-
-    \section{GSO impact for \texttt{QUIC} throughput}
+\chapter{GSO impact for \texttt{QUIC} throughput}
 \begin{table}[H]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
@@ -2462,7 +2461,21 @@ yes                                                                             
     \label{GSO_impact_measurement_results}
 \end{table}
 
-\chapter{Project Proposal}
+
+
+% ----- ---------
+
+\chapter*{Project Proposal}
 \input{proposal}
+
+% \newpage
+
+% \chapter{Project Proposal}
+% \begin{appendices}
+% \input{proposal}
+% \end{appendices}
+
+
+
 %TC:endignore
  \end{document}
