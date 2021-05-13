@@ -934,7 +934,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     
     \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/Impact_of_increasing_pkt_numbers.png}
+    \includegraphics[width=\textwidth]{figs/Impact_of_increasing_pkt_numbers.png}
     \caption[Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering]{Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering. The diagram visualises Hunter Dellaverson et al. ideas~\cite{UnderstandQUIC}.}
     \label{fig:Impact_of_increasing_pkt_numbers}
     \end{figure}
@@ -1954,7 +1954,7 @@ However, the granularity of this diagram is limited by the \texttt{iperf3} resol
 
     \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/TCP_throughput_in_time.png}
+    \includegraphics[width=0.8\textwidth]{figs/TCP_throughput_in_time.png}
     \caption[Change of \texttt{TCP} throughput in time when a single \texttt{iperf3} client sends \texttt{TCP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{TCP} throughput in time when a single \texttt{iperf3} client sends \texttt{TCP} traffic to the \texttt{iperf3} server via an intermediate machine. Here throughput is measured at the granularity of 0.1 s}
     \label{fig:TCP_throughput_in_time}
     \end{figure}
@@ -2086,15 +2086,15 @@ The encrypted version of \texttt{ngtcp2} was limited by the cryptographic operat
 
 
 
-\subsection{Performance Comparison of \textit{Null} Encryption in \texttt{MsQuic} and \texttt{ngtcp2}}
+% \subsection{Performance Comparison of \textit{Null} Encryption in \texttt{MsQuic} and \texttt{ngtcp2}}
 
-As I have already mentioned, \texttt{MsQuic}, \texttt{Microsoft's} implementation of \texttt{QUIC}, has the pre-built option to disable cryptography.
-\textit{Null} encryption mechanism of  \texttt{MsQuic} works as follows.
-At first, communicating end hosts still have to complete a secure handshake~\cite{banks-quic-disable-encryption-00}.
-After that, if both client and server express their will to turn off encryption, then plaintext packets are used for communications (i.e. both packet headers and payloads are unencrypted)~\cite{banks-quic-disable-encryption-00}.
-However, according to Mr N. Banks, one drawback of continuing to use encryption for the first \texttt{QUIC} handshake is that performance of \texttt{QUIC} handshake is not improved.
+% As I have already mentioned, \texttt{MsQuic}, \texttt{Microsoft's} implementation of \texttt{QUIC}, has the pre-built option to disable cryptography.
+% \textit{Null} encryption mechanism of  \texttt{MsQuic} works as follows.
+% At first, communicating end hosts still have to complete a secure handshake~\cite{banks-quic-disable-encryption-00}.
+% After that, if both client and server express their will to turn off encryption, then plaintext packets are used for communications (i.e. both packet headers and payloads are unencrypted)~\cite{banks-quic-disable-encryption-00}.
+% However, according to Mr N. Banks, one drawback of continuing to use encryption for the first \texttt{QUIC} handshake is that performance of \texttt{QUIC} handshake is not improved.
 
-\simon{Add a chart showing throughput of encrypted/encrypted ngtcp2 throughput + encrypted/encrypted MsQuic throughput}
+% \simon{Add a chart showing throughput of encrypted/encrypted ngtcp2 throughput + encrypted/encrypted MsQuic throughput}
 
 
 % \subsection{Performance Comparison of \textit{Null} Encryption in Application Layer}
