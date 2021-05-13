@@ -179,15 +179,13 @@ College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
 Word Count:         & \bf 11944\footnotemark[1] \\
-Line Count:         & \bf 8600\footnotemark[2] \\
+Line Count:         & \bf 8600 \\
 Project Originator: & Professor Andrew W. Moore                \\
 Supervisor:         & Professor Andrew W. Moore                \\ 
 \end{tabular}
 }
 \footnotetext[1]{This word count was computed
 by \texttt{texcount diss.tex}. In addition, \texttt{\%TC:ignore} and \texttt{\%TC:endignore} comments were added to ignore all but the five main sections}
-
-\footnotetext[2]{2152 lines of \texttt{bash} code, 2356 lines of Python code}
 
 \stepcounter{footnote}
 
@@ -1143,8 +1141,8 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
 
     \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.png}
-    \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files. The red areas in the centre represent removed cryptographic functions from the unencrypted \texttt{ngtcp2} version which that previously formed a CPU bottleneck for \texttt{QUIC}}
+    \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.jpg}
+    \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100~MB files. The red areas in the centre represent removed cryptographic functions from the unencrypted \texttt{ngtcp2} version which that previously formed a CPU bottleneck for \texttt{QUIC}}
     \label{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}
     \end{figure}
 
@@ -1239,14 +1237,15 @@ In addition, I did not end up using the high-speed network emulator called \text
     Furthermore, I had Weekly progress updates with several other Part II students.
     During these virtual \enquote{stand-up meetings} I had an opportunity to reflect on project-related issues.
     To record my daily progress, I used a logbook, stored in the \texttt{Google Docs}.
-    Besides that, I used an application called \texttt{Trello}\footnote{\url{https://trello.com/en-GB}} to group, track and reorder subtasks according to their importance (see Figure~\ref{fig:Trello_board}).
+    Besides that, I used an application called \texttt{Trello}\footnote{\url{https://trello.com/en-GB}} to group, track and reorder subtasks according to their importance.
+    %(see Figure~\ref{fig:Trello_board}).
 
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/Trello_board.PNG}
-    \caption{\texttt{Trello} board of important tasks}
-    \label{fig:Trello_board}
-    \end{figure}
+    % \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.9\textwidth]{figs/Trello_board.PNG}
+    % \caption{\texttt{Trello} board of important tasks}
+    % \label{fig:Trello_board}
+    % \end{figure}
     
     During the winter vacation, I returned back home, so I had made the necessary steps beforehand to be able to have remote access to the specialised hardware.
     In particular, I first enabled permanent remote access to the testing machines using remote desktop access software called \texttt{TeamViewer}\footnote{\url{https://www.teamviewer.com/en/}}.
