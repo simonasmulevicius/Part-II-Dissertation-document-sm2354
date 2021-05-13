@@ -2337,9 +2337,96 @@ ip netns exec mr_server ethtool -k eth3 | grep tcp-segmentation-offload
 
 \end{verbatim}
 
+\chapter{Implementation of \textit{Null} Encryption} 
+
+\section{Implementation of \textit{Null} Encryption for Packet Payload}
+\label{Implementation_of_Null_Encryption_packet_payload}
+
+\begin{verbatim}
+// 2021, April
+// Added by Candidate Number:2439D
+int ngtcp2_crypto_encrypt_unsecure(
+    uint8_t *dest, 
+    __attribute__((unused)) const ngtcp2_crypto_aead *aead,
+    __attribute__((unused)) const ngtcp2_crypto_aead_ctx *aead_ctx,
+    const uint8_t *plaintext, 
+    size_t plaintextlen,
+    __attribute__((unused)) const uint8_t *nonce, 
+    __attribute__((unused)) size_t noncelen,
+    __attribute__((unused)) const uint8_t *ad, 
+    __attribute__((unused)) size_t adlen) {
+  // printf(" ---------------------------------------\n");
+  // printf(" [ Payload encryption is turned   OFF  ]\n");
+  // printf(" ---------------------------------------\n");
+
+  if (plaintextlen > 0 && plaintext != dest) {
+    // It is safe to copy because a precondition for |dest| is 
+    // that it should have enough space for |plaintextlen|
+    memmove(dest, plaintext, plaintextlen);
+  }
+  // Cyphertext has to be 16 bytes longer than the |plaintext|
+  // So simply pad copied |plaintext| with zeroes
+  memset(dest + plaintextlen, 0, 16);
+
+  return 0;
+}
+\end{verbatim}
+
+\section{Implementation of \textit{Null} Decryption for Packet Payload}
+\label{Implementation_of_Null_Decryption_packet_payload}
+
+\begin{verbatim}
+// 2021, April
+// Added by Candidate Number:2439D
+int ngtcp2_crypto_decrypt_unsecure(
+    uint8_t *dest, 
+    __attribute__((unused)) const ngtcp2_crypto_aead *aead,
+    __attribute__((unused)) const ngtcp2_crypto_aead_ctx *aead_ctx,
+    const uint8_t *ciphertext, 
+    size_t ciphertextlen,
+    __attribute__((unused)) const uint8_t *nonce, 
+    __attribute__((unused)) size_t noncelen,
+    __attribute__((unused)) const uint8_t *ad, 
+    __attribute__((unused)) size_t adlen) {
+
+  assert(16 <= ciphertextlen);
+  // printf(" ---------------------------------------\n");
+  // printf(" [ Payload encryption is turned   OFF  ]\n");
+  // printf(" ---------------------------------------\n");
+
+  // Ignore zeroes at the end of |ciphertext|
+  if (ciphertext != dest) {
+    memmove(dest, ciphertext, ciphertextlen - 16);
+  }
+  return 0;
+}
+\end{verbatim}
+
+\section{Implementation of Mask Construction for Disabled Encryption of \texttt{QUIC} Packet Header} 
+\label{Implementation_of_mask_generation}
+
+\begin{verbatim}
+// 2021, April
+// Added by Candidate Number:2439D
+int ngtcp2_crypto_hp_mask_unsecure(
+    uint8_t *dest, 
+    __attribute__((unused)) const ngtcp2_crypto_cipher *hp,
+    __attribute__((unused)) const ngtcp2_crypto_cipher_ctx *hp_ctx,
+    __attribute__((unused)) const uint8_t *sample) {
+  // printf(" ---------------------------------------\n");
+  // printf(" [ Header encryption is turned    OFF  ]\n");
+  // printf(" ---------------------------------------\n");
+
+  //set fixed length mask of zeroes
+  memset(dest,0,NGTCP2_HP_MASKLEN);
+  return 0;
+}
+\end{verbatim}
+
+
 \chapter{Source B}
 
-    \section{GSO impact measurement results}
+    \section{GSO impact for \texttt{QUIC} throughput}
 \begin{table}[H]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
