@@ -1654,12 +1654,32 @@ Because of the performance improvements and more consistent results, I use core 
   However, the major improvement of jumbo frames is that they can reduce CPU workload by combining data operations and thus reducing the number of interrupts required to process Ethernet packets~\cite{Extended_rame_Sizes_for_Next_Generation_Ethernets}.
   
   
+  
+\begin{table}[htbp]
+
+    \begin{tabular}{|c|l|r|r|r|r|}
+\hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}MTU \\ (Bytes)\end{tabular}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Completion  time (s)\end{tabular}}                            & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Throughput (Mbits/s)\end{tabular}}                            \\ \cline{3-6} 
+                                                                                & \multicolumn{1}{c|}{}                                                                       & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard  deviation\end{tabular}} & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard  deviation\end{tabular}} \\ \hline
+\multirow{3}{*}{1MByte}                                                         & \textbf{1280}                                                                               & 0.022                     & 0.001                                                                              & 370.147                   & 20.865                                                                             \\ \cline{2-6} 
+                                                                                & \textbf{1500}                                                                               & 0.021                     & 0.001                                                                              & 380.692                   & 21.364                                                                             \\ \cline{2-6} 
+                                                                                & \textbf{9000}                                                                               & 0.024                     & 0.001                                                                              & 333.447                   & 22.875                                                                             \\ \hline
+\multirow{3}{*}{1GByte}                                                         & \textbf{1280}                                                                               & 9.180                     & 0.166                                                                              & 871.996                   & 15.050                                                                             \\ \cline{2-6} 
+                                                                                & \textbf{1500}                                                                               & 8.674                     & 0.075                                                                              & 922.755                   & 7.899                                                                              \\ \cline{2-6} 
+                                                                                & \textbf{9000}                                                                               & 6.834                     & 0.092                                                                              & 1171.184                  & 15.540                                                                             \\ \hline
+\end{tabular}
+
+    \centering
+    \caption[Impact of Jumboframes for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files via an intermediate machine.}
+    \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
+\end{table}
+  
    Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput} summarises tests that measured the impact of different MTU sizes.    
     In particular, this experiment measured \texttt{QUIC} throughput between the server and the client when they were pinned to two different cores on the same machine, and their packets travelled via an intermediate machine (as demonstrated in Figure~\ref{fig:Physical_testing_environment}).
     Furthermore, a server used a single thread, a single data transfer was performed for each experiment, each experiment ran for ten seconds, and each test was repeated ten times.
     According to Table~\ref{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}, \texttt{QUIC} throughput could be improved by increasing the size of Ethernet frames.
     However, this improvement is only applicable when transferring large (e.g., 1 GByte) files.
-    It is important to note that in these tests I used \texttt{nuttcp}, a recommended \texttt{UDP} throughput measurement tool~\cite{network-troubleshooting-tools_nuttcp} because  \texttt{UDP's} throughput measured with \texttt{iperf3} was significantly lower than \texttt{TCP's} throughput under the same networking conditions.
+    It is important to note that in these tests I used \texttt{nuttcp} (see Figure~\ref{fig:UDP_throughput_with_different_MTUs}), a recommended \texttt{UDP} throughput measurement tool~\cite{network-troubleshooting-tools_nuttcp} because  \texttt{UDP's} throughput measured with \texttt{iperf3} was significantly lower than \texttt{TCP's} throughput under the same networking conditions.
     Furthermore, to reach the maximum \texttt{UDP} throughput, I had to increase the window size to 4 MBytes.
     
     MTUs above 1500 bytes are not prevalent on the Internet~\cite{why-is-ethernet-mtu-1500}.
@@ -1670,7 +1690,7 @@ Because of the performance improvements and more consistent results, I use core 
     
   
   
-    \begin{figure}[ht]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{figs/UDP throughput using different MTUs and measured with nuttcp (packets travel via the intermediate machine).png}
     \caption{UDP throughput using different MTUs and measured with \texttt{nuttcp} (packets travel via the intermediate machine)}
@@ -1692,24 +1712,6 @@ Because of the performance improvements and more consistent results, I use core 
     % \end{figure}
   
 
-\begin{table}[H]
-
-    \begin{tabular}{|c|l|r|r|r|r|}
-\hline
-\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}MTU \\ (Bytes)\end{tabular}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Completion  time (s)\end{tabular}}                            & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Throughput (Mbits/s)\end{tabular}}                            \\ \cline{3-6} 
-                                                                                & \multicolumn{1}{c|}{}                                                                       & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard  deviation\end{tabular}} & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard  deviation\end{tabular}} \\ \hline
-\multirow{3}{*}{1MByte}                                                         & \textbf{1280}                                                                               & 0.022                     & 0.001                                                                              & 370.147                   & 20.865                                                                             \\ \cline{2-6} 
-                                                                                & \textbf{1500}                                                                               & 0.021                     & 0.001                                                                              & 380.692                   & 21.364                                                                             \\ \cline{2-6} 
-                                                                                & \textbf{9000}                                                                               & 0.024                     & 0.001                                                                              & 333.447                   & 22.875                                                                             \\ \hline
-\multirow{3}{*}{1GByte}                                                         & \textbf{1280}                                                                               & 9.180                     & 0.166                                                                              & 871.996                   & 15.050                                                                             \\ \cline{2-6} 
-                                                                                & \textbf{1500}                                                                               & 8.674                     & 0.075                                                                              & 922.755                   & 7.899                                                                              \\ \cline{2-6} 
-                                                                                & \textbf{9000}                                                                               & 6.834                     & 0.092                                                                              & 1171.184                  & 15.540                                                                             \\ \hline
-\end{tabular}
-
-    \centering
-    \caption[Impact of Jumboframes for the throughput of \texttt{ngtcp2} completion time required to transfer specified files]{Impact of Jumbo frames on the throughput of \texttt{ngtcp2} completion time required to transfer specified files via an intermediate machine.}
-    \label{fig:Impact_of_Jumbo_frames_for_ngtcp2_throughput}
-\end{table}
   
 
   
@@ -1946,7 +1948,7 @@ This performance improvement could be explained by comparing the call stacks of 
 The encrypted version of \texttt{ngtcp2} was limited by the cryptographic operations (i.e., 60\% of CPU time) as opposed to the unencrypted version that spent only 4\% of CPU time performing cryptographic operations.
 
 
-    \begin{figure}[ht]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/zoomed_unencrypted_flame_graph_1GByte_h2load.png}
     \caption[Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server]{Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server.
@@ -1956,7 +1958,7 @@ The encrypted version of \texttt{ngtcp2} was limited by the cryptographic operat
     
     
 
-\begin{table}[H]
+\begin{table}[htbp]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of \\ parallel \\ clients \\ (1 request \\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total \\ throughput \\ measured \\ on the \\ receiver's \\ side (MBit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the \\ throughput \\ sample \\ (MBit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average \\ total \\ completion \\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the\\ completion \\ time \\ sample (ms)\end{tabular}} \\ \hline
@@ -2002,10 +2004,10 @@ Here no packet loss was added.
 It is worth pointing out that a small additional packet delay did not significantly reduce \texttt{QUIC} throughput because there was already some latency implicitly added by the testing environment.
 
 
-\begin{table}[H]
+\begin{table}[htbp]
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
-\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Additional\\ delay on the \\ intermediate \\ machine (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the \\ completion\\ time sample\\ side (Mbit/s)\end{tabular}} \\ \hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Additional\\ delay on the \\ intermediate \\ machine (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average total\\ throughput\\ measured on \\the receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation of \\ the throughput\\ sample\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\of the \\completion\\ time sample\\ side (ms)\end{tabular}} \\ \hline
 1                                                                                               & 0.0                                                                                                                    & 670.38                                                                                                                                     & 35.15                                                                                                                             & 11.97                                                                                                 & 0.67                                                                                                                                    \\ \hline
 1                                                                                               & 0.1                                                                                                                    & 614.11                                                                                                                                     & 12.88                                                                                                                             & 13.04                                                                                                 & 0.27                                                                                                                                    \\ \hline
 1                                                                                               & 1.0                                                                                                                    & 229.24                                                                                                                                     & 10.82                                                                                                                             & 34.99                                                                                                 & 1.68                                                                                                                                    \\ \hline
@@ -2023,6 +2025,13 @@ It is worth pointing out that a small additional packet delay did not significan
 \end{table}
 
 
+\subsection{Impact of Packet Reordering}
+Network emulator on the intermediate machine simulated packet reordering by delaying some randomly selected packets for a fixed period of time. 
+In particular, in this experiment, every packet had a small probability of 0.1 or 0.01 \% to be delayed for 10 milliseconds.
+However, the unencrypted \texttt{ngtcp2} version did not work - it occasionally announced protocol errors.
+One possible explanation could be that the cryptographic layer might be responsible for invalidating out-of-order \texttt{QUIC} packets.
+Hence, by disabling packet and header encryption, I might have disabled this mechanism as well.
+
 
 \subsection{Impact of Packet Loss}
 
@@ -2033,10 +2042,10 @@ This could be explained by the fact that in some low probability tests, not a si
 
 
 
-\begin{table}[H]
+\begin{table}[htbp]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
-\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Probability \\ of packet \\ loss\\ (\%)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the \\ completion\\ time sample\\ side (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample\\ side (Mbit/s)\end{tabular}} \\ \hline
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Probability \\ of packet \\ loss\\ (\%)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation  of \\ the completion\\ time sample\\ side (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average total\\ throughput\\ measured on \\ the receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation of \\ the throughput\\ sample\\ side (Mbit/s)\end{tabular}} \\ \hline
 1                                                                                               & 0.0000\%                                                                                             & 12.06                                                                                                 & 0.51                                                                                                                                & 665.01                                                                                                                                     & 26.98                                                                                                                             \\ \hline
 1                                                                                               & 0.0001\%                                                                                             & 11.75                                                                                                 & 0.33                                                                                                                                & 681.36                                                                                                                                     & 19.64                                                                                                                             \\ \hline
 1                                                                                               & 0.0010\%                                                                                             & 11.75                                                                                                 & 0.24                                                                                                                                & 681.50                                                                                                                                     & 14.15                                                                                                                             \\ \hline
@@ -2057,12 +2066,7 @@ This could be explained by the fact that in some low probability tests, not a si
 
 
 
-\subsection{Impact of Packet Reordering}
-Network emulator on the intermediate machine simulated packet reordering by delaying some randomly selected packets for a fixed period of time. 
-In particular, in this experiment, every packet had a small probability of 0.1 or 0.01 \% to be delayed for 10 milliseconds.
-However, the unencrypted \texttt{ngtcp2} version did not work - it occasionally announced protocol errors.
-One possible explanation could be that the cryptographic layer might be responsible for invalidating out-of-order \texttt{QUIC} packets.
-Hence, by disabling packet and header encryption, I might have disabled this mechanism as well.
+
 
 % \section{Final the Most Optimised Version Of \texttt{QUIC}}
 
