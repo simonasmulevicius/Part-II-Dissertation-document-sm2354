@@ -209,22 +209,31 @@ Finally, I demonstrated encryption overhead for \texttt{QUIC} packets.
 
 \section*{Special Difficulties}
 
-The project's initial goal was to write hardware components in \texttt{Verilog} that would offload packet reordering logic of \texttt{QUIC} packets to hardware.
-For this project, I had access to two dedicated experimental machines equipped with specialised hardware components -- \texttt{NetFPGA SUME} network interface cards.
-However, the software and hardware stack of \texttt{NetFPGA} platform was relatively complex.
-For instance, it took me unexpectedly long to prepare, configure and test the correct functionality of \texttt{NetFPGA SUME} boards because, as I have already mentioned, COVID-19 complicated the set-up process.
+The project's initial goal was to write hardware components in \texttt{Verilog} that would offload \texttt{QUIC} packet reordering logic.
+I had two machines equipped with specialised hardware (\texttt{NetFPGA SUME} network interface cards) in my college room.
+However, I faced accessibility issues during the winter vacation because I could not take the testing computers back home.
+I spent more than one month unsuccessfully configuring the remote set-up of both the main and the backup machines.
+Long configuration of complex  \texttt{NetFPGA} platform delayed project development.
+Hence, I decided to change the dissertation focus from hardware offloading to the software-oriented \texttt{QUIC} performance analysis. 
 
-To simplify the development process, I had a pair of the aforementioned machines in my college room.
-However, I faced accessibility issues during the winter vacation when I was abroad at home.
-In particular, the testing machines were expensive, heavy and fragile, so I could not take them with me for the winter vacation.
-Hence, to overcome this issue, I had to configure remote access to the testing environment.
-I spent more than one month working on the remote set-up of both the main pair of testing machines and the backup pair.
-Unfortunately, I could not configure two additional backup machines in the Computer Laboratory.
-A suspected issue was a possible hardware fault.
-Hence, to continue working on the project, I had to return to my college room.
-This lengthy preparation phase substantially delayed the actual development of the project.
-As a result, after consultation with the project supervisor, I decided to change the focus of the dissertation from hardware offloading to the software-oriented performance analysis of \texttt{QUIC}. 
-In conclusion, one could argue that in pre-pandemic times, physical access to the pre-configured and tested hardware could have saved me a lot of time.
+
+% % OLD "Special difficulties" section
+% The project's initial goal was to write hardware components in \texttt{Verilog} that would offload packet reordering logic of \texttt{QUIC} packets to hardware.
+% For this project, I had access to two dedicated experimental machines equipped with specialised hardware components -- \texttt{NetFPGA SUME} network interface cards.
+% However, the software and hardware stack of \texttt{NetFPGA} platform was relatively complex.
+% For instance, it took me unexpectedly long to prepare, configure and test the correct functionality of \texttt{NetFPGA SUME} boards because, as I have already mentioned, COVID-19 complicated the set-up process.
+
+% To simplify the development process, I had a pair of the aforementioned machines in my college room.
+% However, I faced accessibility issues during the winter vacation when I was abroad at home.
+% In particular, the testing machines were expensive, heavy and fragile, so I could not take them with me for the winter vacation.
+% Hence, to overcome this issue, I had to configure remote access to the testing environment.
+% I spent more than one month working on the remote set-up of both the main pair of testing machines and the backup pair.
+% Unfortunately, I could not configure two additional backup machines in the Computer Laboratory.
+% A suspected issue was a possible hardware fault.
+% Hence, to continue working on the project, I had to return to my college room.
+% This lengthy preparation phase substantially delayed the actual development of the project.
+% As a result, after consultation with the project supervisor, I decided to change the focus of the dissertation from hardware offloading to the software-oriented performance analysis of \texttt{QUIC}. 
+% In conclusion, one could argue that in pre-pandemic times, physical access to the pre-configured and tested hardware could have saved me a lot of time.
 
 
 %Professional Practice and Presentation 14%
