@@ -179,7 +179,7 @@ College:            & \bf Homerton College                     \\
 Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
 Word Count:         & \bf 11944\footnotemark[1] \\
-Line Count:         & \bf 4508\footnotemark[2] \\
+Line Count:         & \bf 8600\footnotemark[2] \\
 Project Originator: & Professor Andrew W. Moore                \\
 Supervisor:         & Professor Andrew W. Moore                \\ 
 \end{tabular}
@@ -543,7 +543,7 @@ Finally, application layer Head-of-line blocking problems of \texttt{HTTP/1.1} c
 This diagram demonstrates that \texttt{HTTP/1.1} fails to address the Head-of-line blocking problem if the server has to transfer more web objects than there are open \texttt{TCP} connections~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 For example, the transfer of files 3 and 8 can not be started until the blocking resources (i.e. files 2 and 7) are sent. 
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Head_of_line_blocking_of_HTTP1_1.png}
     \caption[Head-of-line blocking of \texttt{HTTP/1.1}]{Head-of-line blocking of \texttt{HTTP/1.1}. This diagram visualises the ideas presented in Robin Marx's description of the \texttt{HTTP/1.1} HOL problem~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
@@ -569,7 +569,7 @@ This diagram demonstrates that logical and independent streams are implemented u
 In particular, a single \texttt{TCP} packet may contain several frame headers with their associated payloads~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other on the client-side.
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figs/Multiplexing_HTTP2.png}
     \caption[Multiplexing of \texttt{HTTP/2.0} using logical streams and frames]{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
@@ -628,7 +628,7 @@ The main reason for this is that \texttt{UDP} is an already deployed, supported 
 
 In conclusion, all these enhancements of \texttt{HTTP} can be summarised in the following historical timeline (see Figure~\ref{fig:cf-secure-web-timeline}).
 % TODO: reduce the size of this diagram and take only the most important developments
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     % \includegraphics[width=0.7\textwidth]{figs/cf-secure-web-timeline-1.png}
     
@@ -761,7 +761,7 @@ For completeness I will mention that \texttt{HTTP/3} layer is smaller than analo
 % because \enquote{(...) data across streams is no longer fully  ordered}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 % TODO: what does it mean for QUIC streams not to be ordered
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Layers_in_the_protocol_stack.png}
     \caption[\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack]{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram combines ideas of Robin Marx's presentation about \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} as well as other sources \cite{overview_of_the_QUIC_protocol, IETF_presentation_about_QUIC, HTTP_3_the_past_the_present_and_the_future}.
@@ -781,7 +781,7 @@ For completeness I will mention that \texttt{HTTP/3} layer is smaller than analo
 
 
 
-    % \begin{figure}[ht]
+    % \begin{figure}[H]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/IP_UDP_QUIC packets.png}
     % \caption[The relative packet structure of \texttt{IP/UDP/QUIC} network stack]{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn from the latest \texttt{IETF}'s description of \texttt{QUIC}~\cite{ietf-quic-transport-34}}
@@ -796,7 +796,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 
 
-    % \begin{figure}[ht]
+    % \begin{figure}[H]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/Short_QUIC_packet_header_format.PNG}
     % \caption[Short \texttt{QUIC} packet header format]{Short \texttt{QUIC} packet header format. The diagram is taken from \cite{UnderstandQUIC}. \simon{MAYBE TODO: describe QUIC packets and their field values (see Figure~\ref{fig:QUIC_packet_format})}}
@@ -839,7 +839,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the core innovations of \texttt{QUIC} is to combine the transport and security layer handshakes, thus reducing latency of the first \texttt{HTTP} request.
 
 
-     \begin{figure}[ht]
+     \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
     \caption[Comparison of handshakes required to issue an \texttt{HTTP} request]{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of a similar diagram taken from~\cite{the-road-to-quic}.}
@@ -934,7 +934,7 @@ As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the cor
     Figure~\ref{fig:Impact_of_increasing_pkt_numbers} also demonstrates that \texttt{QUIC} uses frame byte ranges to identify missing frames and provide reliable delivery~\cite{UnderstandQUIC}.
     In subsequent paragraphs, I describe how \texttt{QUIC} packet numbers are used to avoid network congestion~\cite{UnderstandQUIC}.
     
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Impact_of_increasing_pkt_numbers.png}
     \caption[Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering]{Increasing packet numbers used by \texttt{QUIC} allow the protocol to differentiate between the packet loss and reordering. The diagram visualises Hunter Dellaverson et al. ideas~\cite{UnderstandQUIC}.}
@@ -1070,7 +1070,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
 \texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
 \texttt{Wireshark} visualises key information about the packets -- source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
     \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display packet headers of \texttt{QUIC}. In particular, packet numbers (abbreviated PKN) are and displayed on the right hand side.}
@@ -1084,7 +1084,7 @@ Hence, I had to share the server's cryptographic certificate with \texttt{Wiresh
 I used \texttt{Wireshark} ethically, meaning that I only used it to analyse traffic between the dedicated network interfaces.
 In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because the testing environment used separate network interfaces. 
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
     \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network, and I did not use \texttt{Wireshark} to capture packets from the college network}
@@ -1107,7 +1107,7 @@ However, during this project, I realised that sampling-based performance analyse
 \texttt{Flame Graphs}\footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool that is used to visualise the performance of the program.
 In this project, I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous \texttt{perf} samples (see Figure~\ref{fig:perf_results_of_h2load}).
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/zoomed_encrypted_flame_graph_1GByte_h2load.png}
     \caption[Flame Graph of \texttt{h2load} client running against \texttt{ngtcp2} server]{Flame Graph of encrypted \texttt{h2load} client running against \texttt{ngtcp2} server.
@@ -1117,7 +1117,7 @@ In this project, I used CPU \texttt{Flame Graphs} that show the aggregated call 
 
 
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Flame_Graphs_explanation.png}
     \caption[Schematic diagram of \texttt{Flame Graphs}]{Schematic diagram of \texttt{Flame Graphs} adopted from Brendan Gregg's presentation~\cite{USENIX_ATC2017_flamegraphs}}
@@ -1141,7 +1141,7 @@ In the standard \texttt{Flame Graph}, different frames are coloured differently 
 However, in this project, I also used \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
 The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph}, but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.png}
     \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files. The red areas in the centre represent removed cryptographic functions from the unencrypted \texttt{ngtcp2} version which that previously formed a CPU bottleneck for \texttt{QUIC}}
@@ -1162,7 +1162,7 @@ Some \texttt{QUIC} implementations, such as \texttt{ngtcp2}, can produce these e
 Then, I used \texttt{qvis}\footnote{\url{https://qvis.quictools.info/##/files}}, \texttt{QUIC} event visualisation tool, to debug \texttt{QUIC} (see Figure~\ref{fig:qvis}).
 
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/qvis.png}
     \caption[Example of \texttt{qvis} visualisation]{Example of \texttt{qvis} visualisation. This diagram demonstrates a situation when the \texttt{server} was unable to send a reply to the \texttt{client}.}
@@ -1241,7 +1241,7 @@ In addition, I did not end up using the high-speed network emulator called \text
     To record my daily progress, I used a logbook, stored in the \texttt{Google Docs}.
     Besides that, I used an application called \texttt{Trello}\footnote{\url{https://trello.com/en-GB}} to group, track and reorder subtasks according to their importance (see Figure~\ref{fig:Trello_board}).
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Trello_board.PNG}
     \caption{\texttt{Trello} board of important tasks}
@@ -1256,7 +1256,7 @@ In addition, I did not end up using the high-speed network emulator called \text
     This last step turned out to be useful because I was able to ask my fellow students to turn off the testing machines before the college network was shut down for maintenance operations.
     
 
-    \begin{figure}[ht]
+    \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Setup map.png}
     \caption[Contingency plan to work remotely]{Contingency plan to work remotely}
