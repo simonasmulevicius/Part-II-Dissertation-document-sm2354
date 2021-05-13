@@ -1362,7 +1362,7 @@ Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behavi
     \end{figure}
 
 My project structure is illustrated in Figure~\ref{fig:High_level_directory_structure_of_the_project}.
-I implemented support for \textit{null} encryption in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
+I implemented support for \textit{null} encryption (see Appendix~\ref{Implementation_of_Null_Encryption_packet_payload}, \ref{Implementation_of_Null_Decryption_packet_payload}, \ref{Implementation_of_mask_generation}) in the cloned repository of \texttt{ngtcp2} that is located in \texttt{unencrypted\_stack} folder.
 This folder also contains a forked networking stack required to run \texttt{ngtcp2}. 
 In particular, I worked on separate \texttt{OpenSSL} (embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2}, and \texttt{nghttp3} (application layers) repositories.
 This software stack is split into multiple repositories because it is implemented in a modular fashion.
