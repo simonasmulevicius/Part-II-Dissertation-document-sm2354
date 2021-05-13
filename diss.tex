@@ -259,7 +259,7 @@ The following people helped with the project setup or provided useful insights o
     \item \textbf{Dr Malcolm Scott} helped with the configuration of two remote backup machines in the Computer Laboratory during the winter vacation;
     \item \textbf{Mr Tatsuhiro Tsujikawa} is the author of the \texttt{ngtcp2} implementation of \texttt{QUIC}, and he answered usability questions related to it. Moreover, he provided guidance on how \textit{null} encryption could be turned on in \texttt{ngtcp2};
     \item \textbf{Mr Nick Banks}, software developer from \texttt{Microsoft}, is the co-author of the \texttt{MsQuic} implementation of \texttt{QUIC}, and he helped with the setup of this particular implementation of \texttt{QUIC};
-    \item Part II students \textbf{Ms Akvile Valentukonyte} and \textbf{Mr Justas Janickas} participated in our weekly meetings where we all shared our achieved progress;
+    % \item Part II students \textbf{Ms Akvile Valentukonyte} and \textbf{Mr Justas Janickas} participated in our weekly meetings where we all shared our achieved progress;
 \end{itemize}
 
 Furthermore, this document is written using a default dissertation template provided by Martin Richards~\cite{how_to_write_a_dissertation_in_LATEX}.
@@ -1387,7 +1387,7 @@ I implemented support for \textit{null} encryption (see Appendix~\ref{Implementa
 This folder also contains a forked networking stack required to run \texttt{ngtcp2}. 
 In particular, I worked on separate \texttt{OpenSSL} (embedded security layer), \texttt{ngtcp2} (transport layer), \texttt{nghttp2}, and \texttt{nghttp3} (application layers) repositories.
 This software stack is split into multiple repositories because it is implemented in a modular fashion.
-For instance, adopted \texttt{OpenSSL} library is used by other \texttt{QUIC} implementations, such as \texttt{MsQuic}\footnote{\url{https://github.com/quictls/openssl/tree/OpenSSL_1_1_1k+quic}}.
+For instance, adopted \texttt{OpenSSL} library is used by other \texttt{QUIC} implementations, such as \texttt{MsQuic}.
 \texttt{ngtcp2} uses code from \texttt{OpenSSL} repository, while \texttt{nghttp2} uses code from both \texttt{OpenSSL},  \texttt{ngtcp2}, and  \texttt{nghttp3} repositories because they are used to build an experimental performance analysis tool called \texttt{h2load} that can compare \texttt{HTTP/3} and \texttt{HTTP/2} throughput.
 It is important to mention that \texttt{h2load} was already provided in the original \texttt{nghttp2} repository.
 
@@ -1415,8 +1415,7 @@ The most of the work was done in \texttt{unencrypted\_stack/ngtcp2}, \texttt{une
 
 \subsection{Software Licences} 
 
-The vast majority of software used in this project was released under permissive \texttt{MIT}\footnote{\url{https://github.com/ngtcp2/nghttp3/blob/main/COPYING}, \\  \url{https://github.com/ngtcp2/ngtcp2/blob/main/COPYING}, \\
-\url{https://github.com/microsoft/msquic/blob/main/LICENSE}} or \texttt{Apache 2.0}\footnote{\url{https://github.com/quictls/openssl/blob/openssl-3.0.0-alpha15\%2Bquic/LICENSE.txt}} licences.
+The vast majority of software used in this project was released under permissive \texttt{MIT}~\cite{nghttp3-MIT-License, ngtcp2-MIT-License, msquic-MIT-License} or \texttt{Apache 2.0}~\cite{openssl-license} licences.
 As required by \texttt{Apache 2.0} licence, I declare that no changes were added to the \texttt{OpenSSL} library (i.e., adjustments of cryptographic functions were implemented in \texttt{ngtcp2} and \texttt{nghttp2} repositories).
 In addition, some other auxiliary repositories, such as \texttt{nghttp3} or \texttt{MsQuic} were not modified, so I did not submit them for assessment.
 
@@ -1485,7 +1484,7 @@ To decrypt the contents of \texttt{QUIC} packets receiver has to do the steps by
 
     \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.97\textwidth]{figs/Cryptographic_procedures_of_quic.png}
+    \includegraphics[width=0.9\textwidth]{figs/Cryptographic_procedures_of_quic.png}
     \caption[Original process of encrypting, transferring and decrypting \texttt{QUIC} packet]{Original process of encrypting (e.g., steps 1 and 2), transferring  (e.g., steps 3) and decrypting (e.g., steps 4 and 5) \texttt{QUIC} packet. Diagram summarises relevant sections of \texttt{IETF} \texttt{QUIC-TLS} draft~\cite[Section 5]{ietf-quic-tls-32}}
     \label{fig:Cryptographic_procedures_of_quic}
     \end{figure}
@@ -1509,7 +1508,7 @@ Finally, \texttt{QUIC} headers are relatively small compared with the packet pay
 
     \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.97\textwidth]{figs/my_implementation_of_cryptographic_procedures_of_quic.png}
+    \includegraphics[width=0.9\textwidth]{figs/my_implementation_of_cryptographic_procedures_of_quic.png}
     \caption[My implementation of disabled encryption]{My implementation of disabled encryption}
     \label{fig:my_implementation_of_cryptographic_procedures_of_quic}
     \end{figure}
@@ -1815,8 +1814,8 @@ Because of the performance improvements and more consistent results, I use core 
 
     \begin{tabular}{|c|l|r|r|r|r|}
 \hline
-\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}MTU \\ (Byte)\end{tabular}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Completion \\ time (s)\end{tabular}}                            & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Throughput\\ (Mbits/s)\end{tabular}}                            \\ \cline{3-6} 
-                                                                                & \multicolumn{1}{c|}{}                                                                       & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard \\ deviation\end{tabular}} & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard \\ deviation\end{tabular}} \\ \hline
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size\end{tabular}} & \multicolumn{1}{c|}{\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}MTU \\ (Bytes)\end{tabular}}} & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Completion  time (s)\end{tabular}}                            & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}Throughput (Mbits/s)\end{tabular}}                            \\ \cline{3-6} 
+                                                                                & \multicolumn{1}{c|}{}                                                                       & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard  deviation\end{tabular}} & \multicolumn{1}{c|}{mean} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}standard  deviation\end{tabular}} \\ \hline
 \multirow{3}{*}{1MByte}                                                         & \textbf{1280}                                                                               & 0.022                     & 0.001                                                                              & 370.147                   & 20.865                                                                             \\ \cline{2-6} 
                                                                                 & \textbf{1500}                                                                               & 0.021                     & 0.001                                                                              & 380.692                   & 21.364                                                                             \\ \cline{2-6} 
                                                                                 & \textbf{9000}                                                                               & 0.024                     & 0.001                                                                              & 333.447                   & 22.875                                                                             \\ \hline
