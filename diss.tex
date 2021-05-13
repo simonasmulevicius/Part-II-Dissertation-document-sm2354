@@ -1,5 +1,6 @@
 % Template for a Computer Science Tripos Part II project dissertation
-\documentclass[12pt,a4paper,twoside,openright]{report}
+% \documentclass[12pt,a4paper,twoside,openright]{report}
+\documentclass[12pt,a4paper]{report}
 \usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
 \usepackage[margin=25mm]{geometry}  % adjusts page layout
 \usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
@@ -56,7 +57,7 @@
 
 
 \newboolean{draft}
-\setboolean{draft}{true}
+\setboolean{draft}{false}
 
 \newboolean{comments}
 
@@ -197,8 +198,12 @@ Hence, the adjusted goals of this dissertation are to study the behaviour of \te
 
 \section*{Work Completed}
 
-I configured a network emulation and testing environment allowing the performance measurements of \texttt{QUIC}.
-Then, I measured \texttt{QUIC} throughput under different network conditions, e.g., when I applied additional packet delay, packet loss, and packet reordering.
+First of all, I disabled encryption of \texttt{QUIC} packets.
+In addition, I configured a network emulation and testing environment allowing the performance measurements of \texttt{QUIC}.
+Then, I measured \texttt{QUIC} throughput under different network conditions (additional packet delay, packet loss, and packet reordering).
+Alternative success criteria were met because I learned the core properties of \texttt{QUIC}, I inspected several implementations of \texttt{QUIC}, and I explained behaviour of \texttt{QUIC} under different scenarios.
+Furthermore, I compared \texttt{QUIC} with other transport layer protocols.
+Finally, I demonstrated encryption overhead for \texttt{QUIC} packets.
 
 \section*{Special Difficulties}
 
@@ -771,30 +776,30 @@ For completeness I will mention that \texttt{HTTP/3} layer is smaller than analo
 % ------------------------------
 
 
-As demonstrated in Figure~\ref{fig:IP_UDP_QUIC_packets}, \texttt{QUIC} packets are encapsulated inside \texttt{UDP} packets which in turn are sent using \texttt{IP} packets.
 
 
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/IP_UDP_QUIC packets.png}
-    \caption[The relative packet structure of \texttt{IP/UDP/QUIC} network stack]{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn from the latest \texttt{IETF}'s description of \texttt{QUIC}~\cite{ietf-quic-transport-34}}
-    \label{fig:IP_UDP_QUIC_packets}
-    \end{figure}
+
+    % \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.9\textwidth]{figs/IP_UDP_QUIC packets.png}
+    % \caption[The relative packet structure of \texttt{IP/UDP/QUIC} network stack]{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn from the latest \texttt{IETF}'s description of \texttt{QUIC}~\cite{ietf-quic-transport-34}}
+    % \label{fig:IP_UDP_QUIC_packets}
+    % \end{figure}
     
-\simon{Figure~\ref{fig:IP_UDP_QUIC_packets} could be removed if there is a lack of space}
+% \simon{Figure~\ref{fig:IP_UDP_QUIC_packets} could be removed if there is a lack of space}
 
 
-
+\texttt{QUIC} packets are encapsulated inside \texttt{UDP} packets which in turn are sent using \texttt{IP} packets.
 An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{Wireshark} network analysis tool, is shown in Figure~\ref{fig:Wireshark_screenshot}.
 
 
 
-    \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/Short_QUIC_packet_header_format.PNG}
-    \caption[Short \texttt{QUIC} packet header format]{Short \texttt{QUIC} packet header format. The diagram is taken from \cite{UnderstandQUIC}. \simon{MAYBE TODO: describe QUIC packets and their field values (see Figure~\ref{fig:QUIC_packet_format})}}
-    \label{fig:QUIC_packet_format}
-    \end{figure}
+    % \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.9\textwidth]{figs/Short_QUIC_packet_header_format.PNG}
+    % \caption[Short \texttt{QUIC} packet header format]{Short \texttt{QUIC} packet header format. The diagram is taken from \cite{UnderstandQUIC}. \simon{MAYBE TODO: describe QUIC packets and their field values (see Figure~\ref{fig:QUIC_packet_format})}}
+    % \label{fig:QUIC_packet_format}
+    % \end{figure}
 
 
 
@@ -1023,7 +1028,7 @@ Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning t
 
 
 
-\section{Benchmarking tools}
+\section{Benchmarking Tools}
 % Frame pointer points to the top/bottom of the stack (from https://www.youtube.com/watch?v=nXaxk27zwlk&ab_channel=CppCon)
 
 
@@ -2198,6 +2203,7 @@ In particular, hands-on experience with the reference hardware projects during t
 Certain innovative network analysis tools, such as the aforementioned \texttt{MsQuic} performance analysis programs, were not adopted for \texttt{Ubuntu 20.04 LTS (Focal Fossa)} operating system.
 Hence, I could not compare performance of disabled encryption of \texttt{MsQuic} with the corresponding \texttt{TCP/TLS} stack.
 However, I hope that in the future, such experiments would be possible.
+In addition, similar \texttt{QUIC} performance analysis could be performed to measure realistic workloads on the Internet.
 Furthermore, my work demonstrates that \texttt{QUIC's} throughput could be improved by offloading or disabling its cryptographic functions.
 However, the design of offloaded logic should be flexible enough to support future \texttt{QUIC} versions.
 
