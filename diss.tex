@@ -1649,7 +1649,7 @@ Because of the performance improvements and more consistent results, I use core 
   
   
   
-\begin{table}[htbp]
+\begin{table}[htb]
 
     \begin{tabular}{|c|l|r|r|r|r|}
 \hline
@@ -1684,7 +1684,7 @@ Because of the performance improvements and more consistent results, I use core 
     
   
   
-    \begin{figure}[htbp]
+    \begin{figure}[htb]
     \centering
     \includegraphics[width=0.85\textwidth]{figs/UDP throughput using different MTUs and measured with nuttcp (packets travel via the intermediate machine).png}
     \caption{UDP throughput using different MTUs and measured with \texttt{nuttcp} (packets travel via the intermediate machine)}
@@ -1759,7 +1759,7 @@ As a side note, the Large Receive Offload is disabled on both the testing and in
 
 
 
-\begin{table}[H]
+\begin{table}[htb]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation of\\ the completion\\ time sample\\ side (Mbit/s)\end{tabular}} \\ \hline
@@ -1788,7 +1788,7 @@ In this experiment, I transferred a fixed number of bytes meaning that during th
 This explains \texttt{UDP} throughput decrease at the end of the measurement. 
 
 
-    \begin{figure}[ht]
+    \begin{figure}[htb]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/UDP_throughput_in_time.png}
     \caption[Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine]{Change of \texttt{UDP} throughput in time when a single \texttt{iperf3} client sends \texttt{UDP} traffic to the \texttt{iperf3} server via an intermediate machine.}
@@ -1820,7 +1820,7 @@ However, the granularity of this diagram is limited by the \texttt{iperf3} resol
 
 
 
-\begin{table}[H]
+\begin{table}[htb]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of\\ parallel \\ clients\\ (1 request\\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample \\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation  of\\ the completion\\ time sample\\ side (ms)\end{tabular}} \\ \hline
