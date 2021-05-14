@@ -551,7 +551,7 @@ This diagram demonstrates that \texttt{HTTP/1.1} fails to address the Head-of-li
 
     \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/Head_of_line_blocking_of_HTTP1_1.png}
+    \includegraphics[width=0.8\textwidth]{figs/Head_of_line_blocking_of_HTTP1_1.png}
     \caption[Head-of-line blocking of \texttt{HTTP/1.1}]{Head-of-line blocking of \texttt{HTTP/1.1}. This diagram visualises the ideas presented in Robin Marx's description of the \texttt{HTTP/1.1} HOL problem~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
     \label{fig:Head_of_line_blocking_of_HTTP1_1}
     \end{figure}
@@ -654,7 +654,7 @@ For completeness I will mention that \texttt{HTTP/3} layer is smaller than analo
 
     \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/Layers_in_the_protocol_stack.png}
+    \includegraphics[width=0.7\textwidth]{figs/Layers_in_the_protocol_stack.png}
     \caption[\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack]{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram combines ideas from Robin Marx's presentation about \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} as well as other sources \cite{overview_of_the_QUIC_protocol, IETF_presentation_about_QUIC, HTTP_3_the_past_the_present_and_the_future}.
     }
     \label{fig:QUIC_network_stack}
@@ -882,7 +882,7 @@ In contrast, packet payloads are authenticated and encrypted to secure and hide 
 \subsection{\texttt{QUIC}'s Adoption}
 
 At the time of writing, $5.0\%$ of all the websites on the Internet used \texttt{QUIC} and $14.5\%$ used \texttt{HTTP/3}~\cite{bib_Adoption_comparison_Between_http2_http3_quic}.
-Similarly, according to Cloudflare\footnote{https://radar.cloudflare.com/}, at the same time 11\% of traffic used \texttt{HTTP/3}.
+Similarly, according to Cloudflare\cite{radar_cloudflare}, at the same time 11\% of traffic used \texttt{HTTP/3}.
 
 
 
@@ -954,13 +954,6 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
 
 \texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
 \texttt{Wireshark} visualises key information about the packets -- source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
-
-    \begin{figure}[!htb]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
-    \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display \texttt{QUIC} packet headers. In this figure \texttt{QUIC's} packet numbers are highlighted.}
-    \label{fig:Wireshark_screenshot}
-    \end{figure}
     
 When required, I ran \texttt{Wireshark} on the intermediate machine to inspect the size of the packets transferred between the \texttt{QUIC} client and server.
 It is worth mentioning that \texttt{QUIC} packets are encrypted.
@@ -968,14 +961,6 @@ Hence, I had to share the server's cryptographic certificate with \texttt{Wiresh
 
 I used \texttt{Wireshark} ethically, meaning that I only used it to analyse traffic between the dedicated network interfaces.
 In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because the testing environment used separate network interfaces. 
-
-    \begin{figure}[!htb]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
-    \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network, and I did not use \texttt{Wireshark} to capture packets from the college network}
-    \label{fig:Wireshark_separation}
-    \end{figure}
-
 
 
 \subsection{perf}
@@ -2115,12 +2100,31 @@ However, the design of offloaded logic should be flexible enough to support futu
 \appendix
 
 
+\chapter{\texttt{QUIC} packets captured with \texttt{Wireshark}} 
+    \begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
+    \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display \texttt{QUIC} packet headers. In this figure \texttt{QUIC's} packet numbers are highlighted.}
+    \label{fig:Wireshark_screenshot}
+    \end{figure}
+    
+    
+\chapter{Separation of testing and college networks} 
+    \begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
+    \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network, and I did not use \texttt{Wireshark} to capture packets from the college network}
+    \label{fig:Wireshark_separation}
+    \end{figure}
+    
+    
 
+\chapter{Evolution timeline of network technologies} 
     \begin{figure}[H]
     \centering
     % \includegraphics[width=0.7\textwidth]{figs/cf-secure-web-timeline-1.png}
 
-\chapter{Evolution timeline of network technologies} 
+
 % \label{preparation_script_from_zshrc}
 
 
