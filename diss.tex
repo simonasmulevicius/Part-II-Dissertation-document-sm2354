@@ -525,35 +525,31 @@ Finally, I describe software engineering tools and techniques used during this p
     \texttt{HTTP/1.0} suffers from using one \texttt{TCP} connection for every \texttt{HTTP} request-reply pair \cite{TCP_IP_Guide_Book, HTTP_3_the_past_the_present_and_the_future} --
     opening a new \texttt{TCP} connection for every web object causes \texttt{TCP} to remain in its \enquote{slow start} phase, thus small files are rarely sent at peak throughput~\cite{HTTP_3_the_past_the_present_and_the_future}.
     Furthermore, \texttt{HTTPS} suffers from every request needing to complete both \texttt{TCP} and \texttt{TLS} handshakes that take several round-trip times to complete~\cite{HTTP_3_the_past_the_present_and_the_future}.
-    Even though, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained~\cite{TCP_IP_Guide_Book_2}, it is not efficient to open and close a new \texttt{TCP} connection for each of the multiple embedded web objects associated with standard websites.
+    %Even though, HTTP/1.0 was a suitable solution for the early days of the Internet when all the HTML files were self-contained~\cite{TCP_IP_Guide_Book_2}, it is not efficient to open and close a new \texttt{TCP} connection for each of the multiple embedded web objects associated with standard websites.
 
 \subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{HTTP/1.1}}
 
 According to the initial draft of \texttt{HTTP/1.1}~\cite{RFC2068}, \texttt{HTTP/1.1} was proposed to mitigate some of the \texttt{HTTP/1.0} problems by introducing persistent connections.
 This in turn allows multiple \texttt{HTTP} requests to share the same \texttt{TCP} connection.
-Besides being beneficial for small objects, the advantage of using a shared \texttt{TCP} connection is that\texttt{TCP} can make better estimates of the actual round-trip time (\texttt{RTT}) between the server and the client~\cite{bib_Computer_Networking_L6}.
+Besides being beneficial for small objects, the advantage of using a shared \texttt{TCP} connection is that \texttt{TCP} can make better estimates of the actual round-trip time (\texttt{RTT}) between the server and the client~\cite{bib_Computer_Networking_L6}.
 More precise \texttt{RTT} measurements allow more consistent utilisation of networking resources.
 For example, by evaluating \texttt{TCP} parameters, such as retransmission-timeout, more accurately, the number of unnecessary pre-emptive \texttt{TCP} timeouts can be reduced~\cite{bib_rtt_tcp_Retransmissions}.
-
-Furthermore, \texttt{HTTP/1.1} enables pipelining of multiple \texttt{HTTP} requests over the same \texttt{TCP} connection.
-Hence, as stated in~\cite{bib_digital_ocean_http11_vs_http2}, the client does not need to wait for an \texttt{HTTP} reply from the server before sending consecutive \texttt{HTTP} requests.
+%Furthermore, \texttt{HTTP/1.1} enables pipelining of multiple \texttt{HTTP} requests over the same \texttt{TCP} connection.
+%Hence, as stated in~\cite{bib_digital_ocean_http11_vs_http2}, the client does not need to wait for an \texttt{HTTP} reply from the server before sending consecutive \texttt{HTTP} requests.
 However, the problem with \texttt{HTTP/1.1} is that \texttt{HTTP} replies need to be sent in order~\cite{RFC7540}. 
 So a missing packet of one \texttt{HTTP} request-reply pair could block subsequent \texttt{HTTP} replies~\cite{bib_digital_ocean_http11_vs_http2, head-of-line-blocking-in-quic-and-http-3-the-details}.
 In the literature, this issue is called Head-of-line blocking (abbreviated HOL).
-As Robin Marx wrote, HOL could have a detrimental effect on user experience when sequentially rendering web pages that have dynamically generated content or contain large embedded objects~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-
-
-
+%As Robin Marx wrote, HOL could have a detrimental effect on user experience when sequentially rendering web pages that have dynamically generated content or contain large embedded objects~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 One possible workaround to hide the effect of Head-of-line blocking is to use several shared \texttt{TCP} connections~\cite{bib_digital_ocean_http11_vs_http2}.
-In particular, \texttt{HTTP/1.1} uses six \texttt{TCP} connections ~\cite{bib_will-http2-make-my-site-faster, head-of-line-blocking-in-quic-and-http-3-the-details}.
+%In particular, \texttt{HTTP/1.1} uses six \texttt{TCP} connections ~\cite{bib_will-http2-make-my-site-faster, head-of-line-blocking-in-quic-and-http-3-the-details}.
 But, the use of a large number of \texttt{TCP} connections is not practical because there is an associated performance overhead of opening and using them ~\cite{bib_digital_ocean_http11_vs_http2, head-of-line-blocking-in-quic-and-http-3-the-details}.
-However, servers also have to share some of the overheads.
-For instance, additional \texttt{TCP} connections may require additional memory to store the associated \texttt{TCP} parameters on the server-side~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+%However, servers also have to share some of the overheads.
+%For instance, additional \texttt{TCP} connections may require additional memory to store the associated \texttt{TCP} parameters on the server-side~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 Finally, application layer Head-of-line blocking problems of \texttt{HTTP/1.1} could be summarised in Figure~\ref{fig:Head_of_line_blocking_of_HTTP1_1}.
 This diagram demonstrates that \texttt{HTTP/1.1} fails to address the Head-of-line blocking problem if the server has to transfer more web objects than there are open \texttt{TCP} connections~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-For example, the transfer of files 3 and 8 can not be started until the blocking resources (i.e. files 2 and 7) are sent. 
+%For example, the transfer of files 3 and 8 can not be started until the blocking resources (i.e. files 2 and 7) are sent. 
 
-    \begin{figure}[H]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Head_of_line_blocking_of_HTTP1_1.png}
     \caption[Head-of-line blocking of \texttt{HTTP/1.1}]{Head-of-line blocking of \texttt{HTTP/1.1}. This diagram visualises the ideas presented in Robin Marx's description of the \texttt{HTTP/1.1} HOL problem~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
@@ -567,19 +563,17 @@ For example, the transfer of files 3 and 8 can not be started until the blocking
 \subsection{Previous Attempt to Improve \texttt{HTTP} by Using \texttt{SPDY} and \texttt{HTTP/2.0}} \label{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}
 %[TODO describe \texttt{SPDY}]
 
-In order to improve \texttt{HTTP} performance, Google developed a session layer protocol called \texttt{SPDY}~\cite{bib_SPDY_white_paper}.
-Then, now obsolete \texttt{SPDY} protocol was used as a blueprint when building the next-generation version of \texttt{HTTP} called \texttt{HTTP/2.0}~\cite{bib_SPDY_vs_HTTP2}.
-As Ilya Grigorik states in his book \cite[Chapter~12]{bib_grigorik2013}, the primary achievements of \texttt{HTTP/2.0} are that, compared with \texttt{HTTP/1.1}, \texttt{HTTP/2.0} improves throughput and reduces latency of \texttt{HTTP} protocol by improving utilisation of existing resources.
-For example, \texttt{HTTP/2.0} introduced compression of header fields thus reducing communication overhead of \texttt{HTTP} \cite[Chapter~12]{bib_grigorik2013}.
-However, the major innovation of \texttt{HTTP/2.0} over \texttt{HTTP/1.1} is that \texttt{HTTP/2.0} improved resource multiplexing \cite[Chapter~12]{bib_grigorik2013}.
-Instead of using six \texttt{TCP} connections to hide the problem of Head-of-line blocking, \texttt{HTTP/2.0} uses a single \texttt{TCP} connection~\cite{bib_grigorik2013, head-of-line-blocking-in-quic-and-http-3-the-details}.
-As stated in Chapter 12 of Ilya Grigorik's book~\cite{bib_grigorik2013}, to solve the HOL problem at the application level, \texttt{HTTP/2.0} shares the aforementioned single \texttt{TCP} connection over the varying number of streams.
+In order to improve \texttt{HTTP} performance, Google developed a session layer protocol called \texttt{SPDY}~\cite{bib_SPDY_white_paper}, used as a blueprint for \texttt{HTTP/2.0}~\cite{bib_SPDY_vs_HTTP2}.
+The primary achievements of \texttt{HTTP/2.0} are that, compared with \texttt{HTTP/1.1}, \texttt{HTTP/2.0} improves throughput and reduces latency of \texttt{HTTP} protocol by improving utilisation of existing resources, e.g., \texttt{HTTP/2.0} introduced compression of header fields \cite[Chapter~12]{bib_grigorik2013}, .
+However, the major innovation of \texttt{HTTP/2.0} over \texttt{HTTP/1.1} is that \texttt{HTTP/2.0} improved resource multiplexing.
+Instead of using multiple \texttt{TCP} connections to overcome Head-of-line blocking; \texttt{HTTP/2.0} uses a single \texttt{TCP} connection~\cite{bib_grigorik2013, head-of-line-blocking-in-quic-and-http-3-the-details}.
+% As stated in Chapter 12 of Ilya Grigorik's book~\cite{bib_grigorik2013}, to solve the HOL problem at the application level, \texttt{HTTP/2.0} shares the aforementioned single \texttt{TCP} connection over the varying number of streams.
 Ideas of \texttt{HTTP/2.0} multiplexing are visualised in Figure~\ref{fig:Multiplexing_HTTP2}.
-This diagram demonstrates that logical and independent streams are implemented using frames~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-In particular, a single \texttt{TCP} packet may contain several frame headers with their associated payloads~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other on the client-side.
+This diagram illustrates that logical and independent streams are implemented using frames.
+A single \texttt{TCP} packet may contain several frame headers with their associated payloads~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other at the client-side.
 
-    \begin{figure}[H]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figs/Multiplexing_HTTP2.png}
     \caption[Multiplexing of \texttt{HTTP/2.0} using logical streams and frames]{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
@@ -594,15 +588,14 @@ These \texttt{HTTP/2.0} frame headers allow the protocol to identify different r
     
 
 
-\texttt{HTTP/2.0} solves the initial problem of \texttt{HTTP} Head-of-line blocking, but \texttt{TCP} still suffers from the Head-of-line blocking induced by the \texttt{TCP} itself~\cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue, head-of-line-blocking-in-quic-and-http-3-the-details}.
-In other words, if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets containing frames of other streams can not be delivered to the application layer until the missing packet is not retransmitted~\cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
-The reason for this is that \texttt{TCP} is a stream-oriented protocol, and it guarantees in-order data delivery.
-Furthermore, the underlying \texttt{TCP} transport layer is unaware of its byte-stream structure~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-As a result, \texttt{TCP} does not try to infer the boundaries of different \texttt{HTTP/2.0} frames~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-Hence, in the presence of packet loss, \texttt{TCP} would not deliver to the above layer the correctly-received in-order \texttt{HTTP} frames that were received in the subsequent \texttt{TCP} packets from different logical \texttt{HTTP} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-Even correctly delivered \texttt{HTTP} frames would not be delivered until the next correct retransmission of the missing previous \texttt{TCP} packets~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-\texttt{TCP} induced head-of-line blocking has other side effects.
-As Gaetano Carlucci et al.~\cite{HTTP_over_UDP_An_Experimental_Investigation_of_QUIC}, the lost \texttt{TCP} packet would reduce the congestion window for all streams multiplexed over the same \texttt{TCP} connection.
+\texttt{HTTP/2.0} solves the problem of \texttt{HTTP} Head-of-line blocking, but \texttt{TCP} still suffers from the Head-of-line blocking induced by the \texttt{TCP} itself: if a \texttt{TCP} packet containing frames of one stream is lost, then all the remaining \texttt{TCP} packets containing frames of other streams can not be delivered to the application layer until the missing packet is not retransmitted~\cite{bib_making_web_faster_with_http2, bib_TCP_Head_of_line_blocking_stackoverflow, How-does-HTTP-2-solve-the-Head-of-Line-blocking-HOL-issue}.
+% The reason for this is that \texttt{TCP} is a stream-oriented protocol, and it guarantees in-order data delivery.
+% Furthermore, the underlying \texttt{TCP} transport layer is unaware of its byte-stream structure~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+% As a result, \texttt{TCP} does not try to infer the boundaries of different \texttt{HTTP/2.0} frames~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+% Hence, in the presence of packet loss, \texttt{TCP} would not deliver to the above layer the correctly-received in-order \texttt{HTTP} frames that were received in the subsequent \texttt{TCP} packets from different logical \texttt{HTTP} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+% Even correctly delivered \texttt{HTTP} frames would not be delivered until the next correct retransmission of the missing previous \texttt{TCP} packets~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+\texttt{TCP} induced head-of-line blocking also has other side effects.
+The lost \texttt{TCP} packet would reduce the congestion window for all streams multiplexed over the same \texttt{TCP} connection~\cite{HTTP_over_UDP_An_Experimental_Investigation_of_QUIC}.
 
 
 
@@ -635,7 +628,7 @@ To simplify the deployment, \texttt{QUIC's} code operates in user space~\cite{qu
 In addition, to prevent NATs from interfering with \texttt{QUIC}, \texttt{QUIC's} packet headers are partially encrypted (see subsection \ref{subsection_QUIC_header_format})~\cite{bib_Netdev_0x13_QUIC_Tutorial}.
 Finally, instead of upgrading \texttt{TCP} or building a completely new transport layer on top of \texttt{IP}, \texttt{QUIC} builds on top of \texttt{UDP}~\cite{chromium_blog_about_quic}.
 The main reason for this is that \texttt{UDP} is an already deployed, supported and recognised transport protocol of the Internet~\cite{the-road-to-quic}.
-In conclusion, all these enhancements of \texttt{HTTP} can be summarised in the historical development timeline (see Figure~\ref{fig:cf-secure-web-timeline}).
+All these enhancements of \texttt{HTTP} can be summarised in the historical development timeline (see Figure~\ref{fig:cf-secure-web-timeline}).
 % TODO: reduce the size of this diagram and take only the most important developments
 
 
@@ -645,25 +638,24 @@ In conclusion, all these enhancements of \texttt{HTTP} can be summarised in the 
 
 \texttt{QUIC} is a next-generation transport layer protocol whose network stack is demonstrated in Figure~\ref{fig:QUIC_network_stack}. In this diagram, the \texttt{UDP} transport layer protocol is smaller than the \texttt{TCP} layer because \texttt{UDP} only provides multiplexing between the two processes of the two end hosts by using port numbers~\cite[Chapter 5.1]{PetersonLarryL2007CNAS}.
 \texttt{UDP} sends packets in \enquote{fire and forget} manner~\cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
-Hence, \texttt{UDP} does not guarantee reliable packet delivery, and it does not provide congestion control~\cite[Chapter 5.1]{PetersonLarryL2007CNAS}.
-However, \texttt{UDP} checksum adds a mechanism to verify that \texttt{UDP} packets are valid and arrive at the intended recipients
-\cite[Chapter 5.1]{PetersonLarryL2007CNAS}, \cite{how-is-tcp-and-udp-checksum-calculated, udp-user-datagram-protocol}.
+Hence, \texttt{UDP} does not guarantee reliable packet delivery or provide congestion control~\cite[Chapter 5.1]{PetersonLarryL2007CNAS}.
+However, \texttt{UDP} checksum adds a mechanism to verify that \texttt{UDP} packet payloads are uncorrupted at the receiver's end~\cite[Chapter 5.1]{PetersonLarryL2007CNAS}, \cite{how-is-tcp-and-udp-checksum-calculated, udp-user-datagram-protocol}.
 
 % [TODO: WHAT end-to-end LATENCY?]
 \texttt{TLS1.3} layer in Figure~\ref{fig:QUIC_network_stack} is shown as being part of the \texttt{QUIC} protocol because, as I have already mentioned in \S~\ref{Networking_Landscape_Before_QUIC},  \texttt{QUIC} aims to reduce end-to-end latency by combining handshakes of both transport (\texttt{QUIC}) and security (\texttt{TLS1.3}) layers~\cite{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP, HTTP_3_the_past_the_present_and_the_future}.
 
-Finally, \texttt{QUIC} requires a completely new application layer protocol, called \texttt{HTTP/3}, that is only compatible with \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
-For completeness I will mention that \texttt{HTTP/3} layer is smaller than analogous \texttt{HTTP/2} layer because some tasks usually associated with the application layer (e.g., stream multiplexing and connection management) are delegated to \texttt{QUIC}~\cite{bib_grigorik2013}, \cite[Chapter 12]{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
+\texttt{QUIC} provides a completely new application layer protocol: \texttt{HTTP/3}, that is only compatible with \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+For completeness I will mention that \texttt{HTTP/3} layer is smaller than analogous \texttt{HTTP/2} layer because some tasks often associated with the application layer (e.g., stream multiplexing and connection management) are delegated to \texttt{QUIC}~\cite{bib_grigorik2013}, \cite[Chapter 12]{Google_QUIC_protocol_moving_the_web_from_TCP_to_UDP}.
 
 
 % TODO - combine these ideas to explain the smaller HTTP3
 % because \enquote{(...) data across streams is no longer fully  ordered}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 % TODO: what does it mean for QUIC streams not to be ordered
 
-    \begin{figure}[H]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Layers_in_the_protocol_stack.png}
-    \caption[\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack]{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram combines ideas of Robin Marx's presentation about \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} as well as other sources \cite{overview_of_the_QUIC_protocol, IETF_presentation_about_QUIC, HTTP_3_the_past_the_present_and_the_future}.
+    \caption[\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack]{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram combines ideas from Robin Marx's presentation about \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} as well as other sources \cite{overview_of_the_QUIC_protocol, IETF_presentation_about_QUIC, HTTP_3_the_past_the_present_and_the_future}.
     }
     \label{fig:QUIC_network_stack}
     \end{figure}
@@ -712,16 +704,16 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
  % (https://peering.google.com/\#/learn-more/quic, https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/)
  
     % As I have already mentioned in the Introduction section, more than 90\% of all Internet users use mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
-     \textbf{Connection migration}. Nowadays, ubiquitous mobile devices~\cite{bib_number_of_mobile_users} can change their location, and thus their Internet access can frequently change too~\cite{PollardBarry2019HiAP}.
+     \textbf{Connection migration}. Nowadays, ubiquitous mobile devices~\cite{bib_number_of_mobile_users} can change their location, and thus their Internet IP addresses can change frequently too~\cite{PollardBarry2019HiAP}.
     This is particularly problematic for \texttt{TCP} because \texttt{TCP's} connection is tied to a particular \texttt{IP} address~\cite{PollardBarry2019HiAP}.
     As a result, \texttt{TCP} needs to establish a new connection every time the Wi-Fi network is changed~\cite{PollardBarry2019HiAP}.
     This means that frequent access point changes would hurt \texttt{TCP's} performance because \texttt{TCP} would have to spend more time in the \enquote{slow-start} phase and perform additional handshakes.
     In addition, because of the different signal paths, other access points may have distinct round-trip times.
     Hence, after changing its access point, the mobile device may incorrectly use RTT estimates from the previous Wi-Fi connection for the congestion control over the new access point.
     This example demonstrates that \texttt{TCP} protocol assumes that \texttt{IP} address would not frequently change~\cite{PollardBarry2019HiAP}.
-    In contrast, \texttt{QUIC} is more suitable to handle connections via mobile devices.
-    In particular, \texttt{QUIC} has an explicit connection ID that does not depend on the IP address~\cite{PollardBarry2019HiAP}.
-    Hence, \texttt{QUIC} clients can migrate between multiple different \texttt{IP} networks without having to re-establish a \texttt{QUIC} connection.
+    \texttt{QUIC} is more suitable for mobile device connections.
+    \texttt{QUIC} has an explicit connection ID that does not depend on the IP address.
+    Hence, \texttt{QUIC} clients can migrate between multiple different \texttt{IP} networks without having to re-establish a \texttt{QUIC} connection~\cite{PollardBarry2019HiAP}.
     
     
     
@@ -730,10 +722,10 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
  \textbf{Fast \texttt{TLS1.3} handshake}. As shown in Figure~\ref{fig:QUIC_handshake_vs_TCP-TLS_handshake}, one of the core innovations of \texttt{QUIC} is to combine the transport and security layer handshakes, thus reducing latency of the first \texttt{HTTP} request.
 
 
-     \begin{figure}[H]
+     \begin{figure}[htb]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/QUIC_handshake_vs_TCP-TLS_handshake.png}
-    \caption[Comparison of handshakes required to issue an \texttt{HTTP} request]{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is a reproduction of a similar diagram taken from~\cite{the-road-to-quic}.}
+    \caption[Comparison of handshakes required to issue an \texttt{HTTP} request]{Comparison of handshakes required to issue an \texttt{HTTP} request. The left section demonstrates that traditionally multiple round trip times are required to establish a connection to issue an \texttt{HTTP} request. The right section of the diagram shows that \texttt{QUIC}, on the other hand, combines transport and security layer handshakes. This diagram is adopted from~\cite{the-road-to-quic}.}
     \label{fig:QUIC_handshake_vs_TCP-TLS_handshake}
     \end{figure}
  
@@ -748,7 +740,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 
     According to the \texttt{IETF QUIC} draft, Section 1~\cite{ietf-quic-transport-draft-32}, \texttt{QUIC} offers \textbf{zero round-trip-time connections} (abbreviated \texttt{0-RTT}) provided that the server and client had an established connection in the recent past~\cite{introducing-0-rtt}.
-    In other words, under the aforementioned circumstances, \texttt{QUIC} server and client can start exchanging data without having to wait for the completion of the new handshake~\cite{ietf-quic-transport-draft-32}.
+    In other words, \texttt{QUIC} server and client could start exchanging data without having to wait for the completion of the new handshake~\cite{ietf-quic-transport-draft-32}.
   
   % \simon{If needed, add more details from: \url{https://qlog.edm.uhasselt.be/epiq/files/QUICImplementationDiversity_Marx_final_11jun2020.pd}}
   
@@ -930,12 +922,15 @@ Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning t
 \texttt{Iperf3}\footnote{\url{https://github.com/esnet/iperf}} is a tool that generates artificial \texttt{TCP} or \texttt{UDP} traffic and thus measures throughput of these protocols.
 \texttt{Iperf3} performs throughput measurements between \texttt{iperf3} server and client.
 One can assume that \texttt{UDP}'s throughput is a theoretical maximum of \texttt{QUIC} throughput as \texttt{QUIC} builds on top of \texttt{UDP}.
-However, as noted in~\ref{QUIC_details_section}, \texttt{UDP} does not guarantee reliable packet delivery, so the sender and receiver could see different throughput values.
+However, as noted in \S~\ref{QUIC_details_section}, \texttt{UDP} does not guarantee reliable packet delivery, so the sender and receiver could see different throughput values.
 Hence, to put \texttt{QUIC} into perspective, it is worth comparing its throughput against the throughput of the similar \texttt{TCP} protocol.
 An important aspect of \texttt{TCP} is that its congestion control mechanism allows the sender to discover an appropriate sending bitrate.
 In contrast, \texttt{UDP} does not take into account the state of the network.
-Consequently, if unlimited \texttt{UDP} throughput is allowed, then one could flood the network by running \texttt{iperf3} to measure \texttt{UDP} throughput.
-However, as shown in Figure~\ref{fig:Wireshark_separation}, performance analysis tests were executed on the separate testing network, so no damage was done to the public network.
+Hence, other protocols (e.g., \texttt{QUIC}) can build on top of \texttt{UDP} to implement congestion control.
+
+
+As a side note, if unlimited \texttt{UDP} throughput is allowed during the throughput measurement experiments, then one could flood the network.
+However, as shown in Figure~\ref{fig:Wireshark_separation}, my performance analysis tests were executed on the separate testing network, so no damage was done to the public network.
 
 There were other similar throughput measurement tools (e.g., \texttt{nuttcp}\footnote{http://nuttcp.net/nuttcp/} or \texttt{iperf2}\footnote{https://sourceforge.net/projects/iperf2/}).
 In particular, \texttt{nuttcp} is said to be better for high \texttt{UDP} throughput measurements~\cite{network-troubleshooting-tools_nuttcp} and it ought to provide more stable results when analysing \texttt{UDP}~\cite{Nuttcp_geant}.
@@ -965,7 +960,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
     \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
-    \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display packet headers of \texttt{QUIC}. In particular, packet numbers (abbreviated PKN) are and displayed on the right hand side.}
+    \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display \texttt{QUIC} packet headers. In this figure \texttt{QUIC's} packet numbers are highlighted.}
     \label{fig:Wireshark_screenshot}
     \end{figure}
     
