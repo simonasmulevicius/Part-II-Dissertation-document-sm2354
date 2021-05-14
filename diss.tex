@@ -827,17 +827,16 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
     
     
     
-    \texttt{QUIC} has \textbf{loss recovery} mechanism.
-    \texttt{QUIC} uses two ways to detect packet loss - by tracking unacknowledged packet numbers and using timeouts~\cite{UnderstandQUIC},~\cite[Section~6]{ietf-quic-recovery-32}.
+    \texttt{QUIC} has a \textbf{loss recovery} mechanism, that uses two ways to detect packet loss - by tracking unacknowledged packet numbers and using timeouts~\cite{UnderstandQUIC},~\cite[Section~6]{ietf-quic-recovery-32}.
     An important point to mention is that a \texttt{QUIC} packet may be declared as lost if it gets reordered, and some number (e.g., three for \texttt{ngtcp2}) of subsequent packets are acknowledged before the reordered packet,~\cite[Section~6]{ietf-quic-recovery-32}.
-    In case of the packet loss, \texttt{QUIC} passes other successfully received packets to the application layer above provided that a missing packet is from another stream~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
+    In case of the packet loss, \texttt{QUIC} passes other successfully received packets to the application layer, while the stream of the missing packet will have to wait~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
    
-   \texttt{QUIC} implements \textbf{congestion control} because, as I have already mentioned in the previous sections, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
+   \texttt{QUIC} implements \textbf{congestion control} because, the underlying transport protocol layer \texttt{UDP} does not provide this mechanism. 
    The same \texttt{QUIC} congestion control algorithm is applied over all \texttt{QUIC} streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
    Similarly, round-trip time estimations are also shared among different streams~\cite[Section~4.2]{ietf-quic-recovery-32}.
-   As a result, a single lost packet on one stream would likely impact the throughput of all streams, but a lost packet of one stream would not block the other streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
-   Actually, \texttt{QUIC} has to observe multiple systematic packet losses for a noticeable period of time to declare that there is persistent congestion in the network ~\cite[Section~4]{ietf-quic-recovery-32},~\cite{UnderstandQUIC}.
-   Then, the sender can reduce its congestion window~\cite{UnderstandQUIC}.
+   As a result, a single lost packet on one stream would impact the throughput of all streams; but a lost packet of one stream would not block the other streams~\cite{head-of-line-blocking-in-quic-and-http-3-the-details, UnderstandQUIC}.
+    \texttt{QUIC} has to observe multiple systematic packet losses for a noticeable period of time to declare that there is persistent congestion in the network ~\cite[Section~4]{ietf-quic-recovery-32},~\cite{UnderstandQUIC}.
+   The sender then reduces its congestion window~\cite{UnderstandQUIC}.
    As a side note, \texttt{ngtcp2}, the primary \texttt{QUIC} implementation that I am studying, uses \texttt{CUBIC} as the default congestion control mechanism (according to the private correspondence with the \texttt{ngtcp2} co-author).
   
   
@@ -851,7 +850,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
   In particular, the study revealed that in some cases, the time required to download contents of Google's main website was reduced by one second ~\cite{chromium_blog_about_quic}.
   One possible explanation of this effect could be that any packet loss decreases the effective \texttt{TCP} throughput (See Equation~\ref{eq:gass_stuff}).
   
-  Steady state throughput formula, as defined by Jitendra Padhye et.al.~\cite{TCP_throughput_formula}: 
+  Steady state throughput formula, as defined by Padhye et al.~\cite{TCP_throughput_formula}: 
     \begin{equation}
     \textrm{TCP throughput} (p) \approx \frac{1}{\textrm{RTT}}\sqrt{\frac{1}{2bp}} 
     \label{eq:gass_stuff}
@@ -866,7 +865,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 
 
-\subsection{Details about Encryption of \texttt{QUIC}} \label{subsection_QUIC_header_format}
+\subsection{Encryption in \texttt{QUIC}} \label{subsection_QUIC_header_format}
 
 
 \texttt{QUIC} partially encrypts packet headers and fully encrypts packet payloads~\cite{the-road-to-quic}.
@@ -895,17 +894,17 @@ According to \texttt{QUIC} Working Group~\cite{number_of_QUIC_implementations}, 
 
 \subsection{Selecting  \texttt{ngtcp2}}
 %TODO: fix style and grammar:
-There are many implementations of \texttt{QUIC} (see subsection \ref{List_of_QUIC_implementations}) written in different languages.
+There are many implementations of \texttt{QUIC} written in different languages.
 I considered  \texttt{aioquic}\footnote{https://github.com/aiortc/aioquic},  \texttt{MsQuic}\footnote{https://github.com/microsoft/msquic},  \texttt{ngtcp2}\footnote{https://github.com/ngtcp2/ngtcp2},  \texttt{mvfst}\footnote{https://github.com/facebookincubator/mvfst} and \texttt{Quant}\footnote{https://github.com/NTAP/quant}.
 Before changing the direction of the dissertation, one of the primary goals of the project was to turn off header encryption of \texttt{QUIC} packets so that I could inspect these packets in hardware.
 Hence, I performed a survey to find \texttt{QUIC} implementation, which had an API to control encryption. 
 \texttt{Aioquic}, \texttt{MsQuic} and \texttt{ngtcp2} seemed to be the most promising.
 However, despite being a simple and well-documented implementation of \texttt{QUIC}, \texttt{aioquic} did not have an active development team that could answer technical questions.
 Similarly, \texttt{MsQuic} seemed promising, but some of the performance measurement tools used by the \texttt{MsQuic} team were proprietary and not yet released to the public. 
-I thought that in this dissertation, it would be wise to use similar testing conditions as the ones used in the previous similar paper (Yang et al.~\cite{Making_QUIC_Quicker}).
-In particular, the authors of this paper evaluated several  or C\texttt{++} \texttt{QUIC} implementations.
-Hence, I decided to follow a similar approach, and I picked \texttt{ngtcp2}, written in C.
-I identified the experimental \texttt{QUIC} benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, which is compatible with \texttt{ngtcp2}.
+For this dissertation it seemed wisest to use similar testing conditions as the ones used in the previous paper (Yang et al.~\cite{Making_QUIC_Quicker}).
+In particular, the authors of this paper evaluated several C or C\texttt{++} \texttt{QUIC} implementations.
+Hence, following a similar approach, I picked \texttt{ngtcp2}, written in C.
+I identified the experimental \texttt{QUIC} benchmarking tool called \texttt{h2load}\footnote{https://github.com/nghttp2/nghttp2/tree/quic}, compatible with \texttt{ngtcp2}.
 Moreover, \texttt{h2load} is written by Mr Tatsuhiro  Tsujikawa (a co-author of \texttt{ngtcp2}).
 Both \texttt{h2load} and \texttt{ngtcp2} use similar library functions meaning that I could deploy software updates to both programs with minimal effort.
 
@@ -1089,7 +1088,7 @@ For example, usually, localhost connections use a maximum transmission unit (MTU
  
  Similarly, there was a design choice I had to make when selecting a tool that could add traffic perturbations.
  Yang et al.~\cite{Making_QUIC_Quicker} used \texttt{TLEM} network emulator that is suitable for the high throughput network emulation~\cite{Very_high_speed_link_emulation_with_TLEM}.
- \simon{Though TLEM is for "high-speed" networks, does it refer to low latency or high throughput?}
+%  \simon{Though TLEM is for "high-speed" networks, does it refer to low latency or high throughput?}
  However, I used \texttt{NetEm} (abbreviation for \enquote{Network Emulator}) tool instead because it was simple to deploy and use.
  Besides that, I measured additional packet delay latency induced by \texttt{NetEm} on the intermediate machine, and it was negligible.
  The overhead measurement results are located in \S~\ref{physical_setup_subsection}.
@@ -1113,7 +1112,7 @@ In addition, I did not end up using the high-speed network emulator called \text
 \section{Software Engineering Techniques and Tools} \label{Software_Engineering_Techniques_and_Tools}
     To track the code changes, I used \texttt{Git} source control tool.
     In particular, I used \texttt{GitHub} to store forked repositories of \texttt{ngtcp2}, \texttt{openssl}, \texttt{nghttp2} and \texttt{nghttp3}.
-    In addition, the dissertation document was written using the online \LaTeX\  editor Overleaf\footnote{\url{https://www.overleaf.com/}} and changes were also committed to a separate repository on \texttt{GitHub}.
+    In addition, the dissertation document was written using the online \LaTeX\  editor Overleaf\footnote{\url{https://www.overleaf.com/}} with changes also committed to a separate repository on \texttt{GitHub}.
     Furthermore, I used different coding environments.
     At first, I worked with \texttt{NetBeans} IDE.
     But as I was extensively analysing existing code written by other programmers (i.e. \texttt{ngtcp2} and its related components), I needed an effective tool to search through the codebase.
