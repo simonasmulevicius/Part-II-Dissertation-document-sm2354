@@ -549,7 +549,7 @@ Finally, application layer Head-of-line blocking problems of \texttt{HTTP/1.1} c
 This diagram demonstrates that \texttt{HTTP/1.1} fails to address the Head-of-line blocking problem if the server has to transfer more web objects than there are open \texttt{TCP} connections~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 %For example, the transfer of files 3 and 8 can not be started until the blocking resources (i.e. files 2 and 7) are sent. 
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Head_of_line_blocking_of_HTTP1_1.png}
     \caption[Head-of-line blocking of \texttt{HTTP/1.1}]{Head-of-line blocking of \texttt{HTTP/1.1}. This diagram visualises the ideas presented in Robin Marx's description of the \texttt{HTTP/1.1} HOL problem~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}}
@@ -573,7 +573,7 @@ This diagram illustrates that logical and independent streams are implemented us
 A single \texttt{TCP} packet may contain several frame headers with their associated payloads~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 These \texttt{HTTP/2.0} frame headers allow the protocol to identify different resources and reassemble them independently from each other at the client-side.
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=\textwidth]{figs/Multiplexing_HTTP2.png}
     \caption[Multiplexing of \texttt{HTTP/2.0} using logical streams and frames]{Multiplexing of \texttt{HTTP/2.0} using logical streams and frames. This diagram combines ideas from the Sutandi's Master project about \texttt{QUIC}
@@ -652,7 +652,7 @@ For completeness I will mention that \texttt{HTTP/3} layer is smaller than analo
 % because \enquote{(...) data across streams is no longer fully  ordered}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details}.
 % TODO: what does it mean for QUIC streams not to be ordered
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Layers_in_the_protocol_stack.png}
     \caption[\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack]{\texttt{QUIC/UDP/IP} network stack compared to \texttt{TCP/IP} network stack. This diagram combines ideas from Robin Marx's presentation about \texttt{QUIC}~\cite{head-of-line-blocking-in-quic-and-http-3-the-details} as well as other sources \cite{overview_of_the_QUIC_protocol, IETF_presentation_about_QUIC, HTTP_3_the_past_the_present_and_the_future}.
@@ -672,7 +672,7 @@ For completeness I will mention that \texttt{HTTP/3} layer is smaller than analo
 
 
 
-    % \begin{figure}[H]
+    % \begin{figure}[!htb]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/IP_UDP_QUIC packets.png}
     % \caption[The relative packet structure of \texttt{IP/UDP/QUIC} network stack]{The relative packet structure of \texttt{IP/UDP/QUIC} network stack. This diagram is drawn from the latest \texttt{IETF}'s description of \texttt{QUIC}~\cite{ietf-quic-transport-34}}
@@ -687,7 +687,7 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 
 
-    % \begin{figure}[H]
+    % \begin{figure}[!htb]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/Short_QUIC_packet_header_format.PNG}
     % \caption[Short \texttt{QUIC} packet header format]{Short \texttt{QUIC} packet header format. The diagram is taken from \cite{UnderstandQUIC}. \simon{MAYBE TODO: describe QUIC packets and their field values (see Figure~\ref{fig:QUIC_packet_format})}}
@@ -955,7 +955,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
 \texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
 \texttt{Wireshark} visualises key information about the packets -- source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
     \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display \texttt{QUIC} packet headers. In this figure \texttt{QUIC's} packet numbers are highlighted.}
@@ -969,7 +969,7 @@ Hence, I had to share the server's cryptographic certificate with \texttt{Wiresh
 I used \texttt{Wireshark} ethically, meaning that I only used it to analyse traffic between the dedicated network interfaces.
 In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because the testing environment used separate network interfaces. 
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
     \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network, and I did not use \texttt{Wireshark} to capture packets from the college network}
@@ -1026,7 +1026,7 @@ In the standard \texttt{Flame Graph}, different frames are coloured differently 
 However, in this project, I also used \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
 The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph}, but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.png}
     \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100~MB files. The red areas in the centre represent removed cryptographic functions from the unencrypted \texttt{ngtcp2} version. This diagram demonstrates cryptographic operations formed a CPU bottleneck for the encrypted version of \texttt{QUIC}.}
@@ -1042,7 +1042,7 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
     
 \subsection{\texttt{Qlog} and \texttt{qvis}}
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/qvis.png}
     \caption[Example of \texttt{qvis} visualisation]{Example of \texttt{qvis} visualisation. This diagram demonstrates a situation when the \texttt{server} was unable to send a reply to the \texttt{client}.}
@@ -1128,7 +1128,7 @@ In addition, I did not end up using the high-speed network emulator called \text
     Besides that, I used an application called \texttt{Trello}\footnote{\url{https://trello.com/en-GB}} to group, track and reorder subtasks according to their importance.
     %(see Figure~\ref{fig:Trello_board}).
 
-    % \begin{figure}[H]
+    % \begin{figure}[!htb]
     % \centering
     % \includegraphics[width=0.9\textwidth]{figs/Trello_board.PNG}
     % \caption{\texttt{Trello} board of important tasks}
@@ -1143,7 +1143,7 @@ In addition, I did not end up using the high-speed network emulator called \text
     This last step turned out to be useful because I was able to ask my fellow students to turn off the testing machines before the college network was shut down for maintenance operations.
     
 
-    \begin{figure}[H]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Setup map.png}
     \caption[Contingency plan to work remotely]{Contingency plan to work remotely}
@@ -1884,7 +1884,7 @@ In addition, Table~\ref{fig:QUIC_throughput_via_B_using_parallel_requests} illus
 A possible explanation of these results could be that \texttt{QUIC} adds congestion control and encryption that reduce throughput.
 
 
-\begin{table}[H]
+\begin{table}[!htb]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of \\ parallel \\ clients \\ (1 request \\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total \\ throughput \\ measured \\ on the \\ receiver's \\ side (MBit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the \\ throughput \\ sample \\ (MBit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average \\ total \\ completion \\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the\\ completion \\ time \\ sample (ms)\end{tabular}} \\ \hline
@@ -1942,7 +1942,7 @@ This performance improvement could be explained by comparing the call stacks of 
 The encrypted version of \texttt{ngtcp2} was limited by the cryptographic operations (i.e., 60\% of CPU time) as opposed to the unencrypted version that spent only 4\% of CPU time performing cryptographic operations.
 
 
-    \begin{figure}[htbp]
+    \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/zoomed_unencrypted_flame_graph_1GByte_h2load.png}
     \caption[Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server]{Flame Graph of unencrypted \texttt{h2load} client running against \texttt{ngtcp2} server.
@@ -1952,7 +1952,7 @@ The encrypted version of \texttt{ngtcp2} was limited by the cryptographic operat
     
     
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested \\ file size \\ (MBytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Number of \\ parallel \\ clients \\ (1 request \\ per client)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total \\ throughput \\ measured \\ on the \\ receiver's \\ side (MBit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the \\ throughput \\ sample \\ (MBit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average \\ total \\ completion \\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\ of the\\ completion \\ time \\ sample (ms)\end{tabular}} \\ \hline
@@ -1998,7 +1998,7 @@ Here no packet loss was added.
 It is worth pointing out that a small additional packet delay did not significantly reduce \texttt{QUIC} throughput because there was already some latency implicitly added by the testing environment.
 
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Additional\\ delay on the \\ intermediate \\ machine (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average total\\ throughput\\ measured on \\the receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation of \\ the throughput\\ sample\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation \\of the \\completion\\ time sample\\ side (ms)\end{tabular}} \\ \hline
@@ -2036,7 +2036,7 @@ This could be explained by the fact that in some low probability tests, not a si
 
 
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Probability \\ of packet \\ loss\\ (\%)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation  of \\ the completion\\ time sample\\ side (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average total\\ throughput\\ measured on \\ the receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation of \\ the throughput\\ sample\\ side (Mbit/s)\end{tabular}} \\ \hline
@@ -2439,7 +2439,7 @@ int ngtcp2_crypto_hp_mask_unsecure(
 
 
 \chapter{GSO impact for \texttt{QUIC} throughput}
-\begin{table}[H]
+\begin{table}[!htb]
 \begin{tabular}{|r|r|r|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}Is GSO \\ enabled\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Requested\\ file size \\ (Mbytes)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ completion\\ time (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the \\ completion\\ time sample\\ side (ms)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Average\\ total\\ throughput\\ measured\\ on the\\ receiver's\\ side (Mbit/s)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Standard \\ deviation\\ of the\\ throughput\\ sample\\ side (Mbit/s)\end{tabular}} \\ \hline
