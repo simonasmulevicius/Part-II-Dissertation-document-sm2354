@@ -747,12 +747,13 @@ An example of \enquote{real-life} \texttt{QUIC} packets, captured using \texttt{
 
 
   An interesting design choice of \texttt{QUIC} is that it is \textbf{implemented in user space rather than kernel space}~\cite{the-road-to-quic, Implementation_and_Performance_Evaluation_of_the_QUIC_Protocol_in_Linux_Kernel, quic-and-http-3-too-big-to-fail}.
-  The major advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly developed and deployed (e.g., by deploying protocol updates with the software updates)~\cite{the-road-to-quic}.
+  An advantage of this approach is that new versions of \texttt{QUIC}, associated with user-level programs, can be quickly developed and deployed (e.g., by deploying protocol updates with the software updates)~\cite{the-road-to-quic}.
   This explains why there are numerous different implementation of \texttt{QUIC} (see \S~\ref{List_of_QUIC_implementations}).
-  In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in the C language family.
-  There are numerous bootstrapping compilers written in C, meaning that any user-level program, potentially written in a different programming language, can be compiled and run.
-  In addition, despite several exceptions such as Google, Microsoft, and Apple, operating systems may not be controlled by the same companies as the ones that develop client-side software, such as browsers~\cite{2016-12-01-quic-tou}.
-  Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in userspace.
+ 
+%   In addition, all the major Operating Systems, e.g., Microsoft Windows~\cite{OS_implementations}, Linux~\cite{OS_implementations, linux_kernel_programming_language}, iOS~\cite{OS_implementations, IOKitFundamentals}, are written in the C language family.
+%   There are numerous bootstrapping compilers written in C, meaning that any user-level program, potentially written in a different programming language, can be compiled and run.
+%   In addition, despite several exceptions such as Google, Microsoft, and Apple, operating systems may not be controlled by the same companies as the ones that develop client-side software, such as browsers~\cite{2016-12-01-quic-tou}.
+%   Hence, there are additional incentives for the companies developing \texttt{QUIC} to deploy this protocol in userspace.
   
   However, there is an associated cost of the user space because data has to be copied from kernel space to user space~\cite{benchmarking-quic}.
   Furthermore, Langley et al. found that \texttt{YouTube's} servers used 350\% more \texttt{CPU} resources when delivering content via \texttt{QUIC} connections as opposed to using \texttt{TCP} with \texttt{TLS}~\cite{The_QUIC_Transport_Protocol_Design_and_Internet-Scale_Deployment}.
