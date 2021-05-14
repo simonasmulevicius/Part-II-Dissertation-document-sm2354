@@ -962,7 +962,7 @@ However, on \texttt{ping} could not be used to measure one-way delay because net
 \texttt{Wireshark}\footnote{https://www.wireshark.org/} is a conventional tool used to inspect captured network packets (see Figure~\ref{fig:Wireshark_screenshot}).
 \texttt{Wireshark} visualises key information about the packets -- source and destination \texttt{IP} addresses, type of protocol and time when the packet was received on the specified network interface.
 
-    \begin{figure}[H]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_screenshot.png}
     \caption[Example of \texttt{QUIC} packets captured with \texttt{Wireshark}]{Example of \texttt{QUIC} packets captured with \texttt{Wireshark}. This diagram demonstrates that \texttt{Wireshark} can decrypt, parse and display packet headers of \texttt{QUIC}. In particular, packet numbers (abbreviated PKN) are and displayed on the right hand side.}
@@ -976,7 +976,7 @@ Hence, I had to share the server's cryptographic certificate with \texttt{Wiresh
 I used \texttt{Wireshark} ethically, meaning that I only used it to analyse traffic between the dedicated network interfaces.
 In other words, as demonstrated in Figure~\ref{fig:Wireshark_separation}, I did not capture packets from the college network because the testing environment used separate network interfaces. 
 
-    \begin{figure}[H]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.95\textwidth]{figs/Wireshark_separation.png}
     \caption[Separation of testing and college networks]{Separation of testing and college networks. I performed testing on a private network, and I did not use \texttt{Wireshark} to capture packets from the college network}
@@ -996,8 +996,6 @@ However, during this project, I realised that sampling-based performance analyse
 
 
 \subsection{Flame Graphs}
-\texttt{Flame Graphs}\footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool that is used to visualise the performance of the program.
-In this project, I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous \texttt{perf} samples (see Figure~\ref{fig:perf_results_of_h2load}).
 
     \begin{figure}[!htb]
     \centering
@@ -1006,15 +1004,17 @@ In this project, I used CPU \texttt{Flame Graphs} that show the aggregated call 
     The server was on the same machine (A). 1~GByte amount of data was transferred via an intermediate machine (B). This graph shows that the original \texttt{ngtcp2} client spent about 58.2\% of its CPU time performing cryptographic operations.} 
     \label{fig:perf_results_of_h2load}
     \end{figure}
-
-
-
+    
+    
     \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/Flame_Graphs_explanation.png}
     \caption[Schematic diagram of \texttt{Flame Graphs}]{Schematic diagram of \texttt{Flame Graphs} adopted from Brendan Gregg's presentation~\cite{USENIX_ATC2017_flamegraphs}}
     \label{fig:Flame_Graphs_explanation}
     \end{figure}
+    
+\texttt{Flame Graphs}\footnote{\url{http://www.brendangregg.com/flamegraphs.html}} is a performance analysis tool that is used to visualise the performance of the program.
+In this project, I used CPU \texttt{Flame Graphs} that show the aggregated call stacks of numerous \texttt{perf} samples (see Figure~\ref{fig:perf_results_of_h2load}).
 
 
 To understand the \texttt{Flame Graphs}, it is worth looking at the simple example diagram first (see Figure~\ref{fig:Flame_Graphs_explanation}).
@@ -1033,7 +1033,7 @@ In the standard \texttt{Flame Graph}, different frames are coloured differently 
 However, in this project, I also used \texttt{Differential Flame Graphs} that depict the difference between the two \texttt{Flame Graphs}~\cite{Differential_Flame_Graphs}.
 The structure of \texttt{Differential Flame Graph} is identical to the standard \texttt{Flame Graph}, but the colouring information identifies which functions were more or less common in the second \texttt{Flame Graph} when compared with the reference \texttt{Flame Graph}~\cite{Differential_Flame_Graphs} (see Figure~\ref{fig:perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted}).
 
-    \begin{figure}[!htb]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/perf-kernel__johns_BIG_letter__encrypted_minus_perf-kernel__johns_BIG_letter__unencrypted.png}
     \caption[Difference between aggregated CPU stacks of sending encrypted and unencrypted 100MB files]{Difference between aggregated CPU stacks of sending encrypted and unencrypted 100~MB files. The red areas in the centre represent removed cryptographic functions from the unencrypted \texttt{ngtcp2} version. This diagram demonstrates cryptographic operations formed a CPU bottleneck for the encrypted version of \texttt{QUIC}.}
@@ -1049,17 +1049,18 @@ The structure of \texttt{Differential Flame Graph} is identical to the standard 
     
 \subsection{\texttt{Qlog} and \texttt{qvis}}
 
-\texttt{Qlog} is a new standard format to record \texttt{QUIC} events~\cite{draft-marx-qlog-event-definitions-quic-h3}.
-Some \texttt{QUIC} implementations, such as \texttt{ngtcp2}, can produce these event logs from both server's and client's perspective.
-Then, I used \texttt{qvis}\footnote{\url{https://qvis.quictools.info/##/files}}, \texttt{QUIC} event visualisation tool, to debug \texttt{QUIC} (see Figure~\ref{fig:qvis}).
-
-
-    \begin{figure}[H]
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/qvis.png}
     \caption[Example of \texttt{qvis} visualisation]{Example of \texttt{qvis} visualisation. This diagram demonstrates a situation when the \texttt{server} was unable to send a reply to the \texttt{client}.}
     \label{fig:qvis}
     \end{figure}
+
+\texttt{Qlog} is a new standard format to record \texttt{QUIC} events~\cite{draft-marx-qlog-event-definitions-quic-h3}.
+Some \texttt{QUIC} implementations, such as \texttt{ngtcp2}, can produce these event logs from both server's and client's perspective.
+Then, I used \texttt{qvis}\footnote{\url{https://qvis.quictools.info/##/files}}, \texttt{QUIC} event visualisation tool, to debug \texttt{QUIC} (see Figure~\ref{fig:qvis}).
+
+
     
 
 
