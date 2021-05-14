@@ -176,10 +176,11 @@ be made available to the students and staff of the University.
 {\large
 \begin{tabular}{ll}
 Candidate Number:               & \bf 2439D                      \\
-Project Title:      & \bf \texttt{QUIC} offloading using NetFPGA smart NICs \\
+Project Title:      & \bf Analysing the behaviour and \\
+                    & \bf performance of \texttt{QUIC} \\
 Examination:        & \bf Computer Science Tripos -- Part II, July 2021  \\
-Word Count:         & \bf 11944\footnotemark[1] \\
-Line Count:         & \bf 5555\footnotemark[2] \\
+Word Count:         & \bf 11326\footnotemark[1] \\
+Line Count:         & \bf 5805\footnotemark[2] \\
 Project Originator: & Professor Andrew W. Moore                \\
 Supervisor:         & Professor Andrew W. Moore                \\ 
 \end{tabular}
@@ -265,6 +266,10 @@ The following people helped with the project setup or provided useful insights o
 Furthermore, this document is written using a default dissertation template provided by Martin Richards~\cite{how_to_write_a_dissertation_in_LATEX}.
 However, some formatting ideas are taken from Alex Coplan's dissertation~\cite{Alex_Coplan_dissertation}, which is \enquote{highly commended by the examiners}~\cite{Computer_Lab_dissertations}.
 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % now for the chapters
 
@@ -315,7 +320,7 @@ Customers expect cheap, high-throughput and low latency Internet connections.
 However, in the last decade, several trends have emerged.
 For example, in recent years, mobile devices proliferated -- at the time of writing, around $92.6\%$ of Internet users used mobile devices to connect to the Internet~\cite{bib_number_of_mobile_users}.
 Furthermore, there are emerging new patterns in web development.
-In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g.,from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
+In particular, usual websites nowadays contain multiple embedded objects of various sizes (e.g., from \texttt{JavaScript} or \texttt{CSS} files to numerous images and videos)\cite{bib_Netdev_0x13_QUIC_Tutorial}.
 But, these websites look entirely different from the simple, single document \texttt{HTML} websites used in the early days of the Internet~\cite{RudmanRiaan2016DW3o}.
 Hence, the changing constraints and networking trends encourage us to re-evaluate past protocols.
 Innovative solutions can further improve the performance of the Internet. 
@@ -370,7 +375,7 @@ Otherwise, the low throughput of \texttt{QUIC} may prevent it from being widely 
  
 
 \subsection{High-Level Overview of \texttt{QUIC}}
-I detail \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but, briefly speaking, \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (which is also briefly mentioned in the later sections -- see \ref{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}).
+I detail \texttt{QUIC} in the later sections of the dissertation (see section~\ref{QUIC_details_section}) but, briefly speaking, \texttt{QUIC} is a new transport layer protocol that combines ideas of \texttt{TCP}, \texttt{HTTP} and other experimental protocols such as \texttt{SPDY} (see \S~\ref{Previous_attempt_to_improve_http_by_using_SPDY_and_HTTP2}).
 On the one hand, \texttt{QUIC} breaks the separation of transport and security layer protocols. 
 On the other hand, \texttt{QUIC} protocol offers some performance benefits for modern-day traffic flows (see section~\ref{QUIC_features}).
 
@@ -397,14 +402,13 @@ In addition, Yang et al.~\cite{Making_QUIC_Quicker} show that slight packet reor
 They then suggest that one reason for such behaviour is that reordered packets can be treated as lost packets~\cite{Making_QUIC_Quicker}. 
 
 
-In order to measure the impact of cryptography for \texttt{QUIC} performance, I extended one implementation of \texttt{QUIC} to support \enquote{Null-encryption}.
+In order to measure the impact of cryptography for \texttt{QUIC} performance, I extended one implementation of \texttt{QUIC} (i.e., \texttt{ngtcp2}) to support \textit{Null} encryption.
 I also later discovered that the option to disable encryption of \texttt{QUIC} had been proposed but not yet standardised~\cite{banks-quic-disable-encryption-00}.
 The author of this suggestion noted in private correspondence that this idea had been already implemented in \texttt{MsQuic}, the aforementioned \texttt{Microsoft}'s implementation of \texttt{QUIC}.
 
 
 
-An analysis of the \texttt{QUIC} protocol was published in 2018~\cite{overview_of_the_QUIC_protocol}.
-We both use the same implementation of \texttt{QUIC}, called \texttt{ngtcp2}.
+An analysis of the \texttt{QUIC} protocol (also involving \texttt{ngtcp2}) was published in 2018~\cite{overview_of_the_QUIC_protocol}.
 Indeed, \texttt{ngtcp2} has a well-documented code-base with several examples, e.g., client and server implementations.   
 However, \texttt{QUIC} in 2018 was still in the early development stage as it had only been publically published for several years~\cite{Chromium_Blog_Experimenting_with_quic}.
 Sanadhi~\cite{overview_of_the_QUIC_protocol} focused on the correctness of \texttt{ngtcp2} and another implementation of \texttt{QUIC} called \texttt{gQUIC}.
@@ -423,9 +427,9 @@ As a result, my work could be viewed as the continuation of the previous analysi
 \section{Completed Work}
 My analysis shows that a \texttt{QUIC} client can spend around 60\% of CPU time performing cryptographic operations. 
 My results are consistent with previous studies that identified cryptographic functions as the current bottleneck of \texttt{QUIC}~\cite{Making_QUIC_Quicker}.
-
-
-
+By extending one of the existing implementations of \texttt{QUIC} to support unencrypted packets, I was able to increase \texttt{QUIC} throughput by about 200-300\%.
+In addition, I replicated \texttt{QUIC} performance analysis tests by measuring the impact of additional packet delay, packet loss, and packet re-ordering for \texttt{QUIC} throughput.
+For this reason, I configured a precise testing environment.
 
 
 
@@ -1216,12 +1220,12 @@ Finally, I wrote several \texttt{bash} scripts to analyse \texttt{QUIC's} behavi
   ]
   [Original encrypted stack: {openssl(0), ngtcp2(0), nghttp2(0), nghttp3(0)}
   ]
-  [Part-II-dissertation(4508)
-    [testing-scripts 
+  [Part-II-dissertation(4758)
+    [testing-scripts(4441)
     ]
-    [testing-results
+    [testing-results(0)
     ]
-    [testing-libraries
+    [testing-libraries(317)
     ]
   ]
   [Additional evaluation tools: {FlameGraph(0), iperf(0), msquic\_folder(0)}
@@ -1385,7 +1389,7 @@ Hence, this performance analysis allowed me to identify potential bottlenecks of
 
 My final implementation of \textit{null} encryption has room for improvements.
 For instance, every encrypted \texttt{ngtcp2} packet uses additional 16 bytes to store the encryption header.
-However, in the null-encryption scenario, these additional fields are not required, but my implementation of disabling encryption does not use them, meaning that 16 unused bytes are transferred in a single \texttt{QUIC} packet.
+However, in the \textit{null} encryption scenario, these additional fields are not required, but my implementation of disabling encryption does not use them, meaning that 16 unused bytes are transferred in a single \texttt{QUIC} packet.
 In contrast, \texttt{MsQuic} does have a mechanism allowing unencrypted \texttt{QUIC} packets to re-use these additional 16 bytes for data transfer.
 
 
